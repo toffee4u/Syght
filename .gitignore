@@ -8,9 +8,8 @@ venv/
 ENV/
 env/
 build/
-develop-eggs/
-dist/
-downloads/
+/dist/
+!frontend/dist/
 eggs/
 .eggs/
 lib/
@@ -53,7 +52,7 @@ kaggle.json
 /data/processed/
 /data/interim/
 /data/sample/
-!react-frontend/src/data/
+!frontend/src/data/
 *.csv
 *.tsv
 *.parquet
@@ -95,7 +94,6 @@ scratch/
 
 # Node & Frontend Build Artifacts
 node_modules/
-react-frontend/node_modules/
 frontend/node_modules/
 .npm/
 npm-debug.log*

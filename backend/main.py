@@ -390,16 +390,13 @@ figures_dir = PROJECT_ROOT / "reports" / "figures"
 if figures_dir.exists():
     app.mount("/reports/figures", StaticFiles(directory=str(figures_dir)), name="figures")
 
-# Mount frontend directory for SPA (prefer built React production bundle)
-react_dist = PROJECT_ROOT / "react-frontend" / "dist"
+# Mount frontend directory for SPA (built React production bundle)
 frontend_dist = PROJECT_ROOT / "frontend" / "dist"
 frontend_dir = PROJECT_ROOT / "frontend"
 
-if react_dist.exists() and (react_dist / "index.html").exists():
-    app.mount("/", StaticFiles(directory=str(react_dist), html=True), name="frontend")
-elif frontend_dist.exists() and (frontend_dist / "index.html").exists():
+if frontend_dist.exists() and (frontend_dist / "index.html").exists():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
-elif frontend_dir.exists():
+elif frontend_dir.exists() and (frontend_dir / "index.html").exists():
     app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
 
 
