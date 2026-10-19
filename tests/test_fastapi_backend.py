@@ -15,8 +15,15 @@ def client():
         yield test_client
 
 
-def test_api_root_endpoint(client):
+def test_frontend_spa_root_endpoint(client):
     response = client.get("/")
+    assert response.status_code == 200
+    assert "Syght" in response.text
+    assert "Command Center" in response.text
+
+
+def test_api_json_root_endpoint(client):
+    response = client.get("/api")
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "online"
