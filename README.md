@@ -2,23 +2,24 @@
 
 # 🩺 Syght — Healthcare Fraud-Risk Detection Platform
 
-**A practical, high-precision machine learning system built for health insurance teams to spot suspicious billing anomalies, prioritize provider investigations, and protect healthcare funds.**
+**A transparent, high-precision machine learning system engineered for healthcare insurance teams to detect suspicious billing patterns, prioritize provider investigations, and protect healthcare funds.**
 
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-Proprietary%20%2F%20Research-blue?style=for-the-badge)](docs/reference_repositories.md)
 [![Tests](https://img.shields.io/badge/tests-21%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
-[![PR-AUC](https://img.shields.io/badge/Optimization-PR--AUC%20Focused-orange?style=for-the-badge)](#why-accuracy-is-deceptive-in-fraud-detection)
-[![Interpretability](https://img.shields.io/badge/Auditor%20Notes-Plain%20Language%20SHAP-purple?style=for-the-badge)](#transparent-auditor-explanations)
-[![Colab Ready](https://img.shields.io/badge/Google%20Colab-Ready%20to%20Train-F9AB00?style=for-the-badge&logo=googlecolab&logoColor=white)](#training-in-google-colab)
+[![PR-AUC](https://img.shields.io/badge/Metric-PR--AUC%20Optimized-orange?style=for-the-badge)](#why-accuracy-fails-in-healthcare-fraud)
+[![Transparency](https://img.shields.io/badge/Explainability-Plain%20Language%20SHAP-purple?style=for-the-badge)](#explainability--plain-language-risk-drivers)
+[![Notebook](https://img.shields.io/badge/Artifact-Colab%20Runnable-F9AB00?style=for-the-badge&logo=jupyter&logoColor=white)](notebooks/syght_model_training.ipynb)
 
 <p align="center">
   <a href="#why-syght">Why Syght</a> •
   <a href="#pipeline-architecture">Architecture</a> •
-  <a href="#benchmark-dataset--scope-guidelines">Dataset & Scope</a> •
+  <a href="#benchmark-dataset--scope-boundaries">Dataset & Scope</a> •
   <a href="#the-58-feature-suite">Feature Suite</a> •
-  <a href="#model-selection--evaluation">Evaluation</a> •
-  <a href="#training-in-google-colab">Colab Training</a> •
-  <a href="#running-predictions">Inference</a> •
+  <a href="#how-the-model-is-trained">Training Methodology</a> •
+  <a href="#evaluation-integrity--cost-modeling">Cost & Evaluation</a> •
+  <a href="#transparency-ethics--limitations">Transparency & Ethics</a> •
+  <a href="#production-inference">Inference</a> •
   <a href="#local-testing">Testing</a>
 </p>
 
@@ -27,26 +28,25 @@
 ---
 
 > [!NOTE]
-> **A Tool for Human Investigators, Not an Automated Judge**  
-> In healthcare insurance, an algorithm should never act as judge and jury. Syght is built strictly for **decision support**. It flags statistical anomalies, estimates risk probabilities, and ranks investigation queues so human auditors and Special Investigation Units (SIUs) can direct their time and expertise where financial exposure and suspicious patterns are highest.
+> **Decision Support Statement**: Syght is an operational decision-support platform designed to surface high-risk billing patterns and optimize investigative bandwidth for human auditors and Special Investigation Units (SIUs). **Predictions represent statistical risk scores, not legal proof of fraud.** Syght assists clinical auditors in identifying where financial exposure and suspicious behavior are highest.
 
 ---
 
 ## 💡 Why Syght?
 
-Healthcare billing fraud costs billions of dollars each year, but catching it is difficult:
-- **Needle in a haystack**: Legitimate claims vastly outnumber fraudulent ones (~9% base rate in benchmark studies). A naive model that simply marks everything "clean" achieves 91% accuracy while catching nothing.
-- **Auditor fatigue**: Human investigation takes hours per case. Flooding review teams with false positives wastes clinical resources and destroys confidence in automated tooling.
-- **Complex billing schemes**: Real-world fraud rarely happens in a single isolated claim. It reveals itself across longitudinal patterns: duplicate same-day procedures, artificial hospital stay lengths, and physician monopoly billing.
-- **Fairness & ethics**: Patient care should never be penalized by demographic bias.
+Healthcare billing fraud costs payers billions of dollars annually, yet automated detection faces severe operational challenges:
+- **Severe Class Imbalance**: Legitimate providers account for ~90% of entities in benchmark claims data. A naive algorithm that flags every provider as clean achieves over 90% accuracy while stopping $0 in fraudulent billing.
+- **Auditor Burnout**: Human audits take hours per provider. Flooding teams with false positives destroys trust in automated tools.
+- **Complex Organizational Billing**: Fraudulent behavior rarely manifests in a single claim. It reveals itself across longitudinal provider patterns: unbundled same-day duplicate procedures, artificial inpatient stays, and physician billing monopolies.
+- **Fairness & Patient Equity**: Clinical algorithms must never penalize facilities based on patient demographic backgrounds.
 
-Syght solves these operational hurdles by collapsing multi-table insurance claims into **58 defensible provider behavioral signals**, testing multiple machine learning candidates against **simple billing heuristics**, and picking operating thresholds based on **real-world investigation costs**.
+Syght addresses these challenges by transforming multi-table claims into **58 defensible behavioral signals**, testing machine learning candidates against **simple billing heuristics**, selecting models via the **1-Standard-Error rule**, and tuning thresholds against **real-world investigation economics**.
 
 ---
 
 ## 📐 Pipeline Architecture
 
-Syght processes complex healthcare billing through seven cohesive, leak-free stages:
+Syght processes claims through seven leak-free, modular stages:
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#EBF5FB', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#FADBD8'}}}%%
@@ -64,15 +64,15 @@ flowchart TD
         A2["📄 Outpatient Claims"]:::input
         A3["📄 Patient Health Profiles"]:::input
         A4["🏷️ Provider Labels"]:::input
-        A1 & A2 & A3 & A4 --> B1["🔍 Pre-Flight Quality Auditor<br/><i>Checks duplicates, label conflicts & structural nulls</i>"]:::audit
+        A1 & A2 & A3 & A4 --> B1["🔍 Pre-Flight Quality Auditor<br/><i>Validates schemas, duplicate claims, label conflicts & structural nulls</i>"]:::audit
     end
 
     subgraph Phase2["2. BEHAVIORAL FEATURE ENGINEERING"]
         B1 --> C1["⚙️ Provider Aggregation Engine"]:::feature
         C1 --> F1["📊 Volume & Scale<br/><i>Claims, benes, physician pool</i>"]:::feature
-        C1 --> F2["💰 Financial Signals<br/><i>Totals, p90/p99 tails, deductibles</i>"]:::feature
+        C1 --> F2["💰 Financial Profiles<br/><i>Totals, p90/p99 tails, deductibles</i>"]:::feature
         C1 --> F3["🚩 Behavioral Anomalies<br/><i>Duplicate same-day billing, LOS CV, conc.</i>"]:::feature
-        C1 --> F4["🏥 Clinical Patient Mix<br/><i>Chronic burden, age, renal rates</i>"]:::feature
+        C1 --> F4["🏥 Clinical Patient Mix<br/><i>Chronic disease burden, age, renal rates</i>"]:::feature
         C1 -.->|STRICT GUARD| S1["🛡️ Demographic Filter<br/><i>Drops Gender & Race permanently</i>"]:::feature
     end
 
@@ -92,7 +92,7 @@ flowchart TD
     subgraph Phase5["5. COST-AWARE THRESHOLD TUNING"]
         Sel --> OOF["Out-of-Fold Probabilities"]:::eval
         OOF --> T1["🎯 Max-F1 Optimization"]:::eval
-        OOF --> T2["💵 Expected Cost Curve Sweep<br/><i>Balances $250 audit cost vs recovered dollars</i>"]:::eval
+        OOF --> T2["💵 Expected Cost Curve Sweep<br/><i>Balances $250 audit cost vs recovered exposure</i>"]:::eval
     end
 
     subgraph Phase6["6. FROZEN EVALUATION & PLAIN-LANGUAGE NOTES"]
@@ -112,18 +112,18 @@ flowchart TD
 
 ---
 
-## 📊 Benchmark Dataset & Scope Guidelines
+## 📊 Benchmark Dataset & Scope Boundaries
 
-Syght evaluates performance against an established public healthcare claims benchmark ([Kaggle Claims Dataset](https://www.kaggle.com/datasets/rohitrox/healthcare-provider-fraud-detection-analysis)) containing multi-table institutional billing records.
+Syght evaluates performance against an established public healthcare billing claims benchmark ([Kaggle Claims Dataset](https://www.kaggle.com/datasets/rohitrox/healthcare-provider-fraud-detection-analysis)) containing multi-table institutional billing records.
 
-### Core Design Rules & Scope Boundaries
+### Core Design Principles
 
-| Dimension | Syght Standard | Why This Matters |
+| Dimension | Syght Standard | Operational Rationale |
 |---|---|---|
-| **Unit of Analysis** | **Provider Level (`Provider`)** | Ground truth fraud labels attach to billing facilities and physician groups, not isolated claim lines. Evaluating claims in isolation causes data leakage; evaluating providers reflects how actual billing fraud operates. |
-| **Protected Demographics** | **Excluded by Design** | Patient demographics (`Gender`, `Race`) are stripped from the feature space before modeling. Providers are evaluated purely on billing patterns, volume ratios, and clinical concentrations. |
-| **Privacy & Storage** | **Cloud-Only Raw Data** | Raw claims data lives exclusively in temporary Google Colab cloud storage during training. Raw records and credentials are never stored locally or pushed to Git. |
-| **Claim-Level Caution** | **Provider-Trained Context** | A high provider risk score reflects suspicious organizational billing patterns. It does not prove that every single claim from that provider is fraudulent. Separate claim-level audits require dedicated claim-level validation. |
+| **Unit of Analysis** | **Provider Level (`Provider`)** | Ground truth fraud labels attach to billing facilities and physician groups, not isolated line items. Aggregating to the provider level captures organizational billing habits and eliminates claim-to-provider data leakage. |
+| **Demographic Exclusions** | **Protected Attributes Dropped** | Patient demographic attributes (`Gender`, `Race`) are permanently stripped from the feature space prior to training. Models score providers purely on billing behaviors, clinical concentrations, and utilization anomalies. |
+| **Data Privacy** | **Cloud Ephemeral Storage** | Raw claims data lives exclusively in temporary cloud storage during training. Raw records and credentials are never stored locally or pushed to Git. |
+| **Scope of Inference** | **Risk Prioritization** | A high provider risk score reflects suspicious organizational billing patterns. It indicates priority for audit review; it does not constitute legal proof of guilt, nor does it imply every individual claim is fraudulent. |
 
 ---
 
@@ -135,7 +135,7 @@ Raw hospital claims and patient records are condensed into **58 high-signal feat
 Measures the operational footprint and billing velocity of the provider:
 - `n_claims`: Total claims billed during the observation period.
 - `n_inpatient_claims`, `n_outpatient_claims`, `inpatient_share`: Distribution between hospitalization and ambulatory care.
-- `n_unique_beneficiaries`: Patient pool size.
+- `n_unique_beneficiaries`: Total distinct patient reach.
 - `n_unique_attending_physicians`, `n_unique_operating_physicians`, `n_unique_other_physicians`: Medical staffing diversity.
 - `claims_per_beneficiary`, `claims_per_attending_physician`, `claims_per_operating_physician`: Utilization density per clinician and patient.
 - `inpatient_claims_per_beneficiary`, `outpatient_claims_per_beneficiary`: Setting-specific patient utilization rates.
@@ -174,102 +174,150 @@ Accounts for genuine patient sickness to prevent penalizing clinics treating hig
 
 ---
 
-## ⚖️ Model Selection & Evaluation
+## 🔬 How the Model is Trained
 
-### Why Accuracy is Deceptive in Fraud Detection
-In healthcare billing, legitimate providers account for roughly 90% of all entities. A naive baseline that marks every single provider as legitimate scores **90.65% accuracy** while catching exactly **zero fraud**.
-
-For this reason, Syght treats **Precision-Recall AUC (PR-AUC / Average Precision)** as the primary benchmark metric:
+Syght employs a strict, leak-free training methodology designed to prevent over-optimistic evaluation and ensure model reproducibility.
 
 ```
-               ┌────────────────────────────────────────────────────────┐
-               │              Primary Evaluation Metrics                │
-               ├─────────────────────────┬──────────────────────────────┤
-               │ PR-AUC (Average Prec.)  │ Primary Benchmark Criterion  │
-               │ ROC-AUC                 │ Secondary Discrimination     │
-               │ 95% Bootstrap CIs       │ Statistical Significance     │
-               │ Brier Score             │ Probability Calibration      │
-               │ Precision@K & Recall@K  │ Real-World Investigation Load│
-               └─────────────────────────┴──────────────────────────────┘
+       [Raw Claims Data] ──▶ [Pre-Flight Quality Audit] ──▶ [58 Engineered Features]
+                                                                     │
+                                             ┌───────────────────────┴───────────────────────┐
+                                             ▼                                               ▼
+                                  [Training Providers 80%]                       [Frozen Test Set 20%]
+                                             │                                               │
+               ┌─────────────────────────────┼─────────────────────────────┐                 │
+               ▼                             ▼                             ▼                 │
+        [5-Fold CV Splits]          [Fitted Preprocessing]         [Candidate Suite]         │
+               │                                                           │                 │
+               └─────────────────────────────┬─────────────────────────────┘                 │
+                                             ▼                                               │
+                                 [1-SE Parsimony Selection]                                  │
+                                             │                                               │
+                                             ▼                                               │
+                              [Out-of-Fold Threshold Tuning]                                 │
+                                             │                                               │
+                                             └───────────────────────┬───────────────────────┘
+                                                                     ▼
+                                                       [Single-Pass Held-Out Eval]
+                                                                     │
+                                                                     ▼
+                                                      [Model Bundle & Report Export]
 ```
 
-### The 1-Standard-Error Parsimony Rule
-More complex models are not always better. Syght evaluates 3 heuristic rule baselines alongside 5 ML candidates. An ML model is only adopted if its cross-validated PR-AUC is **statistically higher than simple billing volume rules by at least 1 Standard Error**. If two models perform within 1 SE of each other, the simpler, more regularized model is selected to guard against overfitting.
+### 1. Ingestion & Pre-Flight Quality Auditing
+Before modeling begins, [`ml_pipeline/data_audit.py`](file:///c:/toffee/Syght/ml_pipeline/data_audit.py) performs structural sanity checks:
+- Distinguishes **structural nulls** (e.g., outpatient claims lacking admission dates) from unintended data loss.
+- Checks for **duplicate claims** across claim identifiers and identical patient billing dates.
+- Audits **label integrity** to verify zero conflicting fraud labels for any single provider.
+- Confirms baseline fraud prevalence (~9.35% base rate).
 
-### Real-World Cost Optimization Curve
-Default $0.50$ thresholds assume false alarms and missed fraud carry equal cost. In reality, reviewing a flagged provider costs investigator time, while missing an active fraud ring costs significant financial exposure.
+### 2. Leakage-Free Provider Splitting
+- An 80/20 train/test stratified split is performed **strictly at the provider level**.
+- Programmatic assertions (`check_split_leakage`) verify zero provider ID overlap between training and testing splits: $\text{Train Providers} \cap \text{Test Providers} = \emptyset$.
+- Claims for a given provider never cross the partition boundary.
 
-Syght computes the optimal operating threshold by minimizing total operational cost:
-$$\text{Cost}(\theta) = (\text{TP}(\theta) + \text{FP}(\theta)) \times C_{\text{investigate}} + \sum_{i \in \text{FN}(\theta)} (\text{Exposure}_i \times R_{\text{recovery}})$$
+### 3. Fold-Fitted Preprocessing
+- Preprocessing comprises median imputation for missing values followed by standard scaling.
+- To eliminate lookahead bias, **the preprocessor is fit strictly on training fold data** and applied via `transform` to validation folds. The test set remains completely unseen until final evaluation.
 
-- **Investigation Cost ($C_{\text{investigate}}$)**: ~$250 fixed cost per human case audit.
-- **Recovery Fraction ($R_{\text{recovery}}$)**: Realistic estimated recovery rate (typically 30%) on missed fraudulent exposure.
+### 4. Multi-Model Benchmark Suite
+Syght evaluates 8 candidate estimators across 5-fold cross-validation:
+- **Heuristic Baselines (3)**: `Rule_ClaimVolume` (total claim volume ranking), `Rule_TotalReimbursed` (dollar amount ranking), `Rule_MeanReimbursed` (average payout per claim).
+- **Linear Models (2)**: `LogisticRegression_L1` (sparse feature selection via Lasso), `LogisticRegression_L2` (Ridge regularization).
+- **Tree Ensembles (3)**: `RandomForest` (bagging ensemble with balanced class weights), `LightGBM` (gradient boosting with `is_unbalance=True`), `XGBoost` (gradient boosting with tuned `scale_pos_weight`).
 
-### Investigation Queue Simulation (Top-K Capacity)
-Audit teams rarely have unlimited capacity. Syght models what happens when a team can only review a fixed percentage of providers:
+### 5. The 1-Standard-Error Parsimony Rule
+To prevent selecting complex models that merely overfit fold noise, Syght implements the **1-SE Rule**:
+1. It computes the mean and standard error of PR-AUC across all 5 validation folds for each candidate.
+2. It tests whether the top machine learning candidate statistically outperforms the best heuristic rule baseline ($p < 0.05$).
+3. Among models within 1 SE of the best PR-AUC, Syght automatically selects the **simplest, most regularized architecture** (Linear > Random Forest > Boosting).
 
-| Capacity Tier | Typical Workload | Recommended Strategy | Expected Outcome |
-|---|---|---|---|
-| **Top 1%** | ~11 providers | High-probability ranking | Quick wins, high precision, minimal auditor fatigue |
-| **Top 5%** | ~54 providers | Balanced probability & exposure | Core SIU workload, optimal cost-recovery balance |
-| **Top 10%** | ~108 providers | Stratified size-banded review | Broad network review covering large facilities and small clinics |
-| **Top 20%** | ~216 providers | Maximum recovery audit | Broad regulatory sweep, near-complete exposure capture |
+### 6. Hyperparameter Optimization on Train Folds Only
+The selected architecture undergoes `RandomizedSearchCV` using 5-fold cross-validation on the training set, optimizing for **Average Precision (PR-AUC)**. Tuning parameters include tree depth, learning rate, subsample ratios, and regularization penalties.
+
+### 7. Validation-Only Threshold Tuning
+Decision thresholds are never tuned on the held-out test set. Using out-of-fold predicted probabilities from cross-validation, Syght identifies two operational thresholds:
+- **Max-F1 Threshold**: The probability cutoff maximizing $F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$.
+- **Cost-Optimal Threshold**: The cutoff minimizing expected net financial losses based on audit review cost ($C_{\text{investigate}} = \$250$) and expected recovery rate ($R_{\text{recovery}} = 30\%$).
+
+### 8. Single-Pass Frozen Held-Out Evaluation
+The selected model and thresholds are applied to the frozen test set in a **single evaluation pass**. Metrics include:
+- **PR-AUC and ROC-AUC** with 1,000-sample bootstrap 95% confidence intervals.
+- **Brier Calibration Score** assessing probability reliability.
+- **Top-K Queue Simulations** evaluating capture rates at 1%, 5%, 10%, and 20% review capacities.
 
 ---
 
-## 💡 Transparent Auditor Explanations
+## ⚖️ Evaluation Integrity & Cost Modeling
 
-Black-box scores frustrate investigators. When Syght flags a provider, it translates underlying SHAP values into readable, human-friendly notes:
+### Why Accuracy Fails in Healthcare Fraud
+Because legitimate providers represent ~90% of entities, a trivial model predicting zero fraud achieves **90.65% accuracy** while capturing zero misallocated funds. Syght relies on:
+1. **Precision-Recall AUC (PR-AUC / Average Precision)**: Measures detection precision across all possible operating thresholds.
+2. **ROC-AUC**: Evaluates overall ranking capability between legitimate and fraudulent providers.
+3. **95% Bootstrap Confidence Intervals**: Reports statistical error bands (`[lower, upper]`) from 1,000 resamples.
+4. **Brier Calibration Score**: Measures whether a predicted 80% risk score truly corresponds to an 80% empirical fraud probability.
+
+### Operational Cost Curve Optimization
+Default $0.50$ thresholds treat false positives and false negatives as equally costly. In operational settings, auditing a flagged provider costs human time, whereas missing a fraudulent provider risks substantial unrecovered funds:
+
+$$\text{Cost}(\theta) = (\text{TP}(\theta) + \text{FP}(\theta)) \times C_{\text{investigate}} + \sum_{i \in \text{FN}(\theta)} (\text{Exposure}_i \times R_{\text{recovery}})$$
+
+- **Investigation Cost ($C_{\text{investigate}} = \$250$)**: Fixed cost of human auditor case review.
+- **Exposure ($\text{Exposure}_i$)**: Total reimbursed dollars for missed fraudulent provider $i$.
+- **Recovery Fraction ($R_{\text{recovery}} = 30\%$)**: Estimated collectible recovery upon audit.
+
+### Investigation Queue Simulation (Top-K Review Capacity)
+Auditing teams have finite capacity. Syght simulates performance across realistic operational workload tiers:
+
+| Capacity Tier | Providers Reviewed | Recommended Strategy | Operational Focus |
+|---|---|---|---|
+| **Top 1%** | ~11 providers | High-probability ranking | Early wins, high precision, low false alarm fatigue |
+| **Top 5%** | ~54 providers | Balanced probability & exposure | Core Special Investigation Unit workload |
+| **Top 10%** | ~108 providers | Stratified size-banded review | Broad facility audit covering both large hospitals and small clinics |
+| **Top 20%** | ~216 providers | Maximum recovery audit | Comprehensive compliance sweep, near-complete exposure coverage |
+
+---
+
+## 💡 Explainability & Plain-Language Risk Drivers
+
+Complex model weights are translated into readable notes using SHAP (SHapley Additive exPlanations):
 
 ```
 Provider PRV51001 — Risk Score: 84.2% [CRITICAL PRIORITY]
-Recommendation: High priority for Special Investigation Unit audit.
+Audit Action: Flagged for Special Investigation Unit review.
 
-Key Billing Factors Contributing to Risk:
-  ▲ [HIGH RISK]   18.4% of claims had duplicate same-day billing for identical patients (Unbundling pattern)
-  ▲ [HIGH RISK]   85.2% of all billing was concentrated under a single attending physician
-  ▲ [HIGH RISK]   Inpatient Length of Stay CV was 1.45 (Abnormally uniform hospital duration)
+Key Contributing Billing Factors:
+  ▲ [HIGH RISK]   18.4% duplicate same-day billing for identical patients (Unbundling pattern)
+  ▲ [HIGH RISK]   85.2% of billing concentrated under a single attending physician
+  ▲ [HIGH RISK]   Inpatient Length of Stay CV was 1.45 (Abnormally uniform stay durations)
   ▼ [MITIGATING]  Patient panel had an average of 4.8 chronic conditions (High clinical complexity)
 ```
 
 ---
 
-## 🚀 Training in Google Colab
+## 🛡️ Transparency, Ethics & Limitations
 
-The entire training, cross-validation, tuning, evaluation, and artifact bundling process runs in a single Google Colab notebook:
-👉 **[`notebooks/syght_model_training.ipynb`](https://colab.research.google.com/github/toffee4u/Syght/blob/main/notebooks/syght_model_training.ipynb)**
+To maintain institutional trust, Syght documents both capabilities and boundaries transparently:
 
-### Step-by-Step Training Guide
+### 1. Ethical Data Safeguards
+- **Protected Demographics Excluded**: Gender and race are permanently dropped before feature engineering. A provider's score depends solely on verifiable billing patterns, clinical complexity, and documentation completeness.
+- **Fairness Across Facility Sizes**: Syght includes size-banded evaluation to ensure small independent practices are not disproportionately targeted compared to large hospital systems with naturally higher volume.
 
-#### 1. Open the Notebook
-Click the link above to open `syght_model_training.ipynb` directly in Google Colab, then click **Connect** in the top right.
+### 2. Operational Limitations
+- **Decision Support Only**: Syght generates statistical risk scores to assist human investigators. It does not generate legal determinations of fraud or replace formal audits.
+- **Provider-Level vs. Claim-Level Scope**: The model is trained on provider-level labels. A flagged provider indicates suspicious organizational billing; it does not prove that every single claim from that provider is illegitimate.
+- **Distribution Shifts**: Models trained on public historical benchmarks may require recalibration before deployment on commercial private-payer or international reimbursement structures.
 
-#### 2. Provide Kaggle Credentials
-To let Colab download the benchmark dataset:
-- Head to [Kaggle](https://www.kaggle.com/) → **Settings** → **Create New Token** (downloads `kaggle.json`).
-- In Google Colab's left sidebar, click the **Secrets (🔑)** tab:
-  - Add `KAGGLE_USERNAME` = your Kaggle username.
-  - Add `KAGGLE_KEY` = your Kaggle API key.
-  - Turn **Notebook access** ON for both.
-  *(Alternatively, you can upload `kaggle.json` directly when prompted in Cell 3).*
-
-#### 3. Run All Cells
-Select **Runtime ➔ Run all** (`Ctrl + F9`). The notebook will:
-1. Install dependencies (`xgboost==2.1.3`, `shap==0.49.1`, etc.).
-2. Clone your repository (`https://github.com/toffee4u/Syght.git`).
-3. Download and extract the claims benchmark into Colab's temporary memory (`/content/data/raw`).
-4. Run pre-flight quality checks and build all 58 features.
-5. Perform 5-fold cross-validation across all baseline rules and ML models.
-6. Select the winning model via the 1-SE rule and optimize the decision threshold.
-7. Run the frozen held-out test evaluation, generating PR, ROC, confusion matrix, and cost plots.
-8. Generate SHAP explanations and simulate Top-K investigation queues.
-9. Package everything into `syght_deployment_bundle.zip` and trigger an automatic browser download!
+### 3. Reproducibility Guarantee
+- Random seed fixed at `42` across all splits, cross-validation folds, and model initializations.
+- Exact dependencies pinned (`xgboost==2.1.3`, `shap==0.49.1`, `scikit-learn>=1.4.0`).
+- Automated offline test suite verifying schema preservation and zero-leakage constraints.
 
 ---
 
-## 💻 Running Predictions
+## 💻 Production Inference
 
-Once you have your trained `syght_model_bundle.joblib`, you can score providers directly with clean, readable code:
+Deploy and score providers with the `SyghtPredictor` interface:
 
 ```python
 from ml_pipeline.predict import SyghtPredictor
@@ -277,7 +325,7 @@ from ml_pipeline.predict import SyghtPredictor
 # 1. Load the trained deployment bundle
 predictor = SyghtPredictor.load("models/syght_model_bundle.joblib")
 
-# 2. Score a provider's engineered billing profile
+# 2. Score a provider's billing profile
 provider_data = {
     "Provider": "PRV51001",
     "n_claims": 240,
@@ -303,7 +351,7 @@ for driver in prediction["key_risk_drivers"]:
     print(f"  • {driver['factor']} ({driver['importance_weight']:+.3f})")
 ```
 
-### Structured Output Format
+### Output Schema
 ```json
 {
   "provider_id": "PRV51001",
@@ -335,7 +383,7 @@ for driver in prediction["key_risk_drivers"]:
 
 ## 🛠️ Local Testing
 
-You don't need access to Kaggle or real data to verify code locally. Syght includes a built-in simulated data generator ([`ml_pipeline/medicare_simulator.py`](file:///c:/toffee/Syght/ml_pipeline/medicare_simulator.py)) that produces exact-schema data in memory:
+Syght includes an in-memory simulated data engine ([`ml_pipeline/medicare_simulator.py`](file:///c:/toffee/Syght/ml_pipeline/medicare_simulator.py)) allowing 100% of pipeline tests to run locally without downloading external datasets:
 
 ```bash
 # Clone the repository
@@ -350,7 +398,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 pip install -e .
 
-# Run the full automated test suite (21 unit & integration tests)
+# Run all 21 automated unit and integration tests
 pytest -v tests
 ```
 
@@ -377,7 +425,7 @@ Syght/
 │   ├── report.py                     # Markdown and JSON benchmark report generation
 │   └── artifacts.py                  # Model bundle serialization (.joblib) & deployment zip packager
 ├── notebooks/
-│   └── syght_model_training.ipynb    # End-to-end 38-cell Google Colab training workflow
+│   └── syght_model_training.ipynb    # End-to-end 38-cell Colab training & export workflow
 ├── tests/                            # Automated Test Suite (21 Passing Tests)
 ├── docs/                             # In-depth architectural & benchmark documentation
 ├── requirements.txt                  # Pinned dependencies (xgboost==2.1.3, shap==0.49.1, etc.)
