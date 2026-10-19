@@ -1,5 +1,5 @@
 """
-Syght Visualization Module: Production & Hackathon-grade visual analytics for
+Syght Visualization Module: Production & Enterprise-grade visual analytics for
 healthcare insurance fraud detection. Generates benchmark comparison charts,
 decision tree paths, confusion matrices, calibration curves, and collusion network graphs.
 """

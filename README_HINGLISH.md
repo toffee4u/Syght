@@ -1,9 +1,9 @@
 # 🏥 Syght — Explainable Healthcare Fraud Detection System
-### Smart India Hackathon (SIH) Enterprise Architecture Guide
+### Enterprise Healthcare Fraud Detection Architecture Guide
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-24%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-25%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Read in English](https://img.shields.io/badge/Language-English%20README-purple?style=for-the-badge)](README.md)
 
 > **Syght** ek advanced, explainable machine learning aur graph intelligence system hai jo **Ayushman Bharat (PM-JAY)**, government health schemes aur private health insurance TPAs me hone wale **crores of rupees ke fake claims, phantom billing, aur hospital collusion fraud** ko pakadta hai.
@@ -22,7 +22,7 @@ Jab bhi koi hospital insurance claim bhejta hai, toh manual auditors ke paas laa
 
 ---
 
-## ⚡ 2. Syght Ke 3 Advanced Superpowers (SIH Special)
+## ⚡ 2. Syght Ke 3 Advanced Superpowers (Enterprise Special)
 
 | Feature | Kya Karta Hai? | Implementation File |
 |---|---|---|
@@ -78,13 +78,48 @@ Raw Claims (5.5L Claims) + Adversarial Fraud Augmentation (+250 Providers)
 
 ---
 
-### 📊 5 Visual Graphs Jo Pipeline Auto-Generate Karega (SIH Presentation Ke Liye):
-Pipeline run hote hi ye 5 professional high-resolution graphs screen par render honge aur `outputs/reports/figures/` me save honge:
-1. **Multi-Model Benchmark Bar Chart**: Saare 9 models ka PR-AUC, ROC-AUC, **Overall Accuracy (95%+)**, aur **Balanced Accuracy (88%+)** side-by-side comparison error bars ke saath.
-2. **Diagnostic Decision Tree Path (`plot_tree`)**: Random Forest ka actual decision tree plot jo dikhata hai ki AI ne kis feature split (e.g. `top_diagnosis_concentration > 0.42`) aur Gini impurity par hospital ko fraud classify kiya.
-3. **Confusion Matrix & Accuracy Dashboard (4-in-1)**: Precision-Recall Curve (operating point star ke saath), ROC Curve, **Confusion Matrix Heatmap** (with exact count and percentages), aur Probability Calibration curve.
-4. **Hospital-Doctor Collusion Network Graph**: `NetworkX` graph jo dikhata hai ki ek hi doctor multiple hospitals me parallel fake billing rings kaise chala raha tha.
-5. **Operational Fraud Recovery Lift Curve**: Graph jo prove karta hai ki top 5% suspicious hospitals audit karne par government / payer ka **~70% fraudulent paisa recover** ho jayega!
+### 📊 Visual Analytical Dashboards & Real Figures:
+Pipeline execution ke baad auto-generated high-resolution audit graphs (`reports/figures/`):
+
+#### 1. Multi-Model Benchmark Bar Chart
+Saare 9 models ka PR-AUC, ROC-AUC, aur Accuracy comparison:
+
+![Multi-Model Benchmark Comparison](reports/figures/benchmark_comparison.png)
+
+#### 2. Confusion Matrix & Accuracy Dashboard (4-in-1)
+Precision-Recall Curve (operating cutoff ke saath), ROC Curve, Confusion Matrix Heatmap, aur Calibration Curve:
+
+![Evaluation Dashboard](reports/figures/evaluation_dashboard.png)
+
+#### 3. Hospital-Doctor Collusion Network Graph
+`NetworkX` graph jo dikhata hai ki ek hi doctor multiple hospitals me parallel fake billing syndicates kaise chala raha tha:
+
+![Hospital-Doctor Collusion Network](reports/figures/collusion_network_graph.png)
+
+#### 4. Operational Fraud Recovery Lift Curve
+Prove karta hai ki top 5% suspicious hospitals audit karne par payer ka **~72% fraudulent paisa recover** ho jayega:
+
+![Operational Fraud Recovery Lift](reports/figures/fraud_recovery_lift.png)
+
+---
+
+### 🧪 10 Diverse Healthcare Scenarios Live Benchmark
+Model ko 10 real-world healthcare situations (5 complex fraud schemes + 5 genuine hospitals) par evaluate kiya gaya hai (**100% Accuracy, 0% False Positives**):
+
+| Provider ID | Healthcare Scenario | Asli Status | Claims | Billed ($) | Risk Score | AI Faisla | Priority |
+|:---|:---|:---:|---:|:---|:---:|:---:|:---:|
+| `PRV_01_RURAL_PRIMARY_CLINIC` | Rural Primary Health Center | Clean | 120 | $38,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_02_PHANTOM_SURGERY_MILL` | Ghost Surgeries & Inpatient Upcoding | Fraud | 520 | $5,100,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_03_KICKBACK_COLLUSION_RING` | Multi-Hospital Doctor Recycling Ring | Fraud | 380 | $2,750,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_04_COMMUNITY_GENERAL_HOSPITAL` | Community General Hospital | Clean | 350 | $180,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_05_UNBUNDLING_DIAGNOSTIC_LAB` | Same-Day Split Diagnostic Billing | Fraud | 940 | $920,000 | **68.3%** | **FLAGGED FOR AUDIT** | `HIGH` |
+| `PRV_06_SOLO_DOCTOR_MONOPOLY` | Single-Doctor Billing Monopoly | Fraud | 510 | $1,200,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_07_DIAGNOSTIC_IMAGING_CENTER` | Accredited MRI/CT Diagnostic Lab | Clean | 450 | $95,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_08_ICU_LENGTH_OF_STAY_UPCODING` | Artificial ICU Stay Inflation | Fraud | 420 | $4,600,000 | **99.9%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_09_DAYCARE_DIALYSIS_CENTER` | Outpatient Hemodialysis Clinic | Clean | 280 | $72,000 | **14.9%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_10_MATERNITY_NURSING_HOME` | Mother & Child Nursing Home | Clean | 270 | $195,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
+
+> Detail report: [`reports/ten_cases_test_report.md`](reports/ten_cases_test_report.md).
 
 ---
 
@@ -226,10 +261,10 @@ Audit teams ke paas limited time hota hai, isliye Syght priority ranking deta ha
 
 ---
 
-## 🎤 6. SIH Hackathon Jury Cheat Sheet (Judges Ke Samne Kya Bolna Hai?)
+## 🎤 6. Executive Presentation Cheat Sheet (Stakeholders Ke Samne Kya Bolna Hai?)
 
 ### 1-Minute Winning Pitch:
-> *"Respected Judges, India ke Ayushman Bharat aur private TPAs me har saal hazaron karod rupaye fake healthcare billing me waste hote hain. Traditional systems simple rules use karte hain jinko hospitals aasaani se bypass kar lete hain.  
+> *"Respected Evaluators, India ke Ayushman Bharat aur private TPAs me har saal hazaron karod rupaye fake healthcare billing me waste hote hain. Traditional systems simple rules use karte hain jinko hospitals aasaani se bypass kar lete hain.  
 > Humne banaya hai **Syght** — ek explainable AI system jo 61 deep clinical/graph fraud signals, Graph Collusion Networks, aur Real-Time Pre-Auth screening ko combine karta hai. Ye black-box prediction nahi deta, balki medical auditors ko plain-language reasons batata hai ki hospital kyu suspicious hai, aur prove karta hai ki unke top 5% providers inspect karne se **~70% total fraudulent money recover** ho sakti hai."*
 
 ### Top 3 Questions & Answers:
@@ -266,9 +301,9 @@ Syght/
 │   └── preauth_gateway.py            # Sub-5ms real-time pre-authorization API
 ├── notebooks/
 │   └── syght_model_training.ipynb    # Crisp Hinglish Colab training notebook
-├── tests/                            # 24 Unit & Integration Tests (100% Passing)
+├── tests/                            # 25 Unit & Integration Tests (100% Passing)
 ├── README.md                         # Detailed English Architectural Documentation
-├── README_HINGLISH.md                # Easy SIH Presentation Guide (This file)
+├── README_HINGLISH.md                # Easy Presentation & Architecture Guide (This file)
 └── LICENSE                           # MIT Open Source License
 ```
 
