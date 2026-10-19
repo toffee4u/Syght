@@ -98,8 +98,8 @@ class PreAuthFraudGateway:
             risk_score += 0.30
             flags.append("SUSPECTED_PACKAGE_UPCODING")
             reasons.append(
-                f"Requested amount ₹{request.requested_amount:,.0f} is {request.requested_amount / max(expected_base_cost, 1):.1f}x "
-                f"higher than standard package rate (₹{expected_base_cost:,.0f})."
+                f"Requested amount INR {request.requested_amount:,.0f} is {request.requested_amount / max(expected_base_cost, 1):.1f}x "
+                f"higher than standard package rate (INR {expected_base_cost:,.0f})."
             )
 
         # 3. Phantom Beneficiary Collision Check (Recent Multi-Hospital Admissions)

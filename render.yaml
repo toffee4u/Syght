@@ -1,0 +1,19 @@
+# ==============================================================================
+# Render Blueprint Specification for Syght API
+# Docs: https://render.com/docs/blueprint-spec
+# ==============================================================================
+
+services:
+  - type: web
+    name: syght-fraud-api
+    runtime: python
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 2"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SYGHT_MODEL_PATH
+        value: models/syght_model_bundle.joblib
+    healthCheckPath: /health
+    autoDeploy: true
+    plan: free
