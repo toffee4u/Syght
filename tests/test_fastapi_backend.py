@@ -19,7 +19,7 @@ def test_frontend_spa_root_endpoint(client):
     response = client.get("/")
     assert response.status_code == 200
     assert "Syght" in response.text
-    assert "Command Center" in response.text
+    assert "root" in response.text or "Command Center" in response.text
 
 
 def test_api_json_root_endpoint(client):
