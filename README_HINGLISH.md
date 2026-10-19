@@ -176,7 +176,57 @@ Browser me automatically download hogi: **`syght_deployment_bundle.zip`**:
 
 ---
 
-## 🎤 5. SIH Hackathon Jury Cheat Sheet (Judges Ke Samne Kya Bolna Hai?)
+## 📊 5. Pipeline Ka Official Benchmark & Performance Report (Real Model Data)
+
+Syght pipeline ko **5,660 healthcare providers** aur **571,018 claims** par train aur test kiya gaya hai. Iska auto-generated official report [`reports/benchmark_report.md`](reports/benchmark_report.md) me saved hai.
+
+### 🏆 Model Comparison Table (5-Fold Stratified Cross-Validation):
+
+| Model / Architecture | CV PR-AUC (Mean ± Std) | CV ROC-AUC (Mean ± Std) | Brier Loss (Calibration) | Status |
+|---|---|---|---|---|
+| `Rule_ClaimVolume` (Heuristic) | 0.4067 ± 0.0432 | 0.8072 ± 0.0151 | 0.0864 | Simple Baseline |
+| `Rule_TotalReimbursed` (Heuristic) | 0.6732 ± 0.0398 | 0.9298 ± 0.0129 | 0.0793 | Best Rule Baseline |
+| `Rule_MeanReimbursed` (Heuristic) | 0.2236 ± 0.0304 | 0.7768 ± 0.0189 | 0.0881 | Weak Baseline |
+| `LogisticRegression_L1` (Linear) | 0.7142 ± 0.0421 | 0.9451 ± 0.0094 | 0.0891 | Linear Lasso |
+| `LogisticRegression_L2` (Linear) | 0.6968 ± 0.0408 | 0.9410 ± 0.0082 | 0.0878 | Linear Ridge |
+| `RandomForest` (Deep Ensemble) | 0.7113 ± 0.0530 | 0.9489 ± 0.0121 | 0.0458 | 800 Trees Bagging |
+| `ExtraTrees` (Randomized Trees) | 0.7141 ± 0.0487 | 0.9474 ± 0.0123 | 0.0480 | Noise-Proof Trees |
+| `GradientBoosting` (Boosting) | 0.7159 ± 0.0561 | 0.9443 ± 0.0106 | 0.0520 | 400 Trees Boosting |
+| **`LightGBM` (Gradient Boosted Trees)** | **0.7378 ± 0.0318** | **0.9470 ± 0.0101** | **0.0500** | **HIGHEST PR-AUC** |
+| `XGBoost` (Gradient Boosted Trees) | **0.7313 ± 0.0411** | **0.9477 ± 0.0109** | **0.0490** | Extreme Gradient Boost |
+
+> **Complexity Justified**: Top ML Model ne Best Volume Rule ko **+0.0646 PR-AUC (> 1 SE)** se defeat kiya — iska matlab complex machine learning rules se kahi zyada better fraud patterns pakadti hai!
+
+### 🎯 Frozen Test Set Ke Final Results (1,132 Providers Par Single Pass):
+- **Overall Test Accuracy**: **93.73%** (1,061 / 1,132 providers bilkul sahi classify huye)
+- **Specificity (Genuine Hospitals Safe)**: **96.78%** (1,024 me se 991 genuine clinics par koi jhootha aarop nahi laga)
+- **PR-AUC (Average Precision)**: **0.7135** (95% CI: `[0.6220, 0.7986]`)
+- **ROC-AUC**: **0.9383** (95% CI: `[0.9105, 0.9623]`)
+- **Fraud Precision**: **67.96%** (Flagged hospitals me se ~68% confirm fraud nikle)
+- **Fraud Recall**: **64.81%** (Pura 65% hidden fraud AI ne single sweep me capture kar liya)
+- **F1-Score**: **0.6635**
+
+#### Test Confusion Matrix (Threshold = 0.5364):
+| | Predicted Legitimate | Predicted Suspicious (Flagged) | Category Accuracy |
+|---|---|---|---|
+| **Actual Legitimate** | **991 (True Negatives)** | 33 (False Positives) | **96.78% Specificity** |
+| **Actual Fraud** | 38 (False Negatives) | **70 (True Positives)** | **64.81% Sensitivity** |
+
+### 💰 Investigation Queue ROI (Auditor Workload Simulation):
+Audit teams ke paas limited time hota hai, isliye Syght priority ranking deta hai:
+
+| Capacity % | Providers Checked | Precision@K | Total Fraud Money Captured | Net Projected Savings |
+|---|---|---|---|---|
+| **Top 1%** | 11 providers | **90.9%** | **25.3% – 32.7%** | $14.2 Million |
+| **Top 5%** | 57 providers | **82.5%** | **72.1% – 75.8%** | **$45.9 Million** |
+| **Top 10%** | 113 providers | **65.5%** | **89.2% – 89.8%** | $56.8 Million |
+| **Top 20%** | 226 providers | **42.5%** | **98.4%** | $62.1 Million |
+
+> **Jury Winning Stat**: Sirf **Top 5% suspicious providers** ko inspect karne par **~72% se 75% fraud exposure capture** ho jata hai, jisse scheme ka **$45.9 Million (~380 Crore INR)** net clawback bachta hai!
+
+---
+
+## 🎤 6. SIH Hackathon Jury Cheat Sheet (Judges Ke Samne Kya Bolna Hai?)
 
 ### 1-Minute Winning Pitch:
 > *"Respected Judges, India ke Ayushman Bharat aur private TPAs me har saal hazaron karod rupaye fake healthcare billing me waste hote hain. Traditional systems simple rules use karte hain jinko hospitals aasaani se bypass kar lete hain.  
