@@ -372,7 +372,7 @@ function setupSoundToggle() {
   const btn = document.getElementById('btn-toggle-sound');
   btn.addEventListener('click', () => {
     state.soundEnabled = !state.soundEnabled;
-    btn.textContent = state.soundEnabled ? '🔊' : '🔇';
+    btn.innerHTML = state.soundEnabled ? '<i class="hgi-stroke hgi-volume-high"></i>' : '<i class="hgi-stroke hgi-volume-mute-01"></i>';
     showToast(state.soundEnabled ? 'Alert chimes unmuted' : 'Alert chimes muted');
   });
 }
@@ -421,7 +421,7 @@ function populateDashboardQueue() {
       <td><span style="font-family: var(--font-mono);">$${c.reimbursement.toLocaleString()}</span></td>
       <td style="font-size: 0.74rem; color: #cbd5e1; max-width: 280px;">${c.primaryShap}</td>
       <td>
-        <button class="btn-table-action" onclick="inspectCaseInAnalyzer('${c.id}')">⚡ Inspect</button>
+        <button class="btn-table-action" onclick="inspectCaseInAnalyzer('${c.id}')"><i class="hgi-stroke hgi-search-01"></i> Inspect</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -466,10 +466,10 @@ function populateFullQueue(filter = 'all') {
       <td style="font-size: 0.75rem; color: #cbd5e1; max-width: 250px;">${c.primaryShap}</td>
       <td>
         <div style="display: flex; gap: 0.35rem;">
-          <button class="btn-table-action" onclick="inspectCaseInAnalyzer('${c.id}')" title="Inspect SHAP">⚡ Score</button>
+          <button class="btn-table-action" onclick="inspectCaseInAnalyzer('${c.id}')" title="Inspect SHAP"><i class="hgi-stroke hgi-flash"></i> Score</button>
           ${c.riskScore > 0.5 ? 
-            `<button class="btn-table-action btn-freeze" onclick="triageAction('${c.id}', 'FREEZE')" title="Freeze Payouts">🚫 Freeze</button>` :
-            `<button class="btn-table-action btn-clear" onclick="triageAction('${c.id}', 'CLEAR')" title="Auto-Clear">✅ Clear</button>`
+            `<button class="btn-table-action btn-freeze" onclick="triageAction('${c.id}', 'FREEZE')" title="Freeze Payouts"><i class="hgi-stroke hgi-shield-ban"></i> Freeze</button>` :
+            `<button class="btn-table-action btn-clear" onclick="triageAction('${c.id}', 'CLEAR')" title="Auto-Clear"><i class="hgi-stroke hgi-checkmark-circle-02"></i> Clear</button>`
           }
         </div>
       </td>
@@ -500,12 +500,12 @@ function triageAction(caseId, action) {
   if (action === 'FREEZE') {
     item.status = 'FROZEN';
     playAlertChime('danger');
-    showToast(`🚫 <strong>Payouts Frozen</strong> for ${item.id} ($${item.reimbursement.toLocaleString()})! Investigation file opened.`, 'danger');
+    showToast(`<i class="hgi-stroke hgi-shield-ban"></i> <strong>Payouts Frozen</strong> for ${item.id} ($${item.reimbursement.toLocaleString()})! Investigation file opened.`, 'danger');
     state.reviewedTodayCount += 1;
   } else if (action === 'CLEAR') {
     item.status = 'REVIEWED';
     playAlertChime('success');
-    showToast(`✅ <strong>Auto-Cleared</strong> ${item.id} — expedited claim reimbursement authorized.`, 'success');
+    showToast(`<i class="hgi-stroke hgi-checkmark-circle-02"></i> <strong>Auto-Cleared</strong> ${item.id} — expedited claim reimbursement authorized.`, 'success');
     state.reviewedTodayCount += 1;
   }
 
@@ -867,7 +867,7 @@ function initCollusionGraph() {
       }
     });
     playAlertChime('danger');
-    showToast('🚨 <strong>Kickback Collusion Ring (PRV_03)</strong> highlighted with 9 shared doctors!');
+    showToast('<i class="hgi-stroke hgi-alert-circle"></i> <strong>Kickback Collusion Ring (PRV_03)</strong> highlighted with 9 shared doctors!');
   });
 
   document.getElementById('btn-restart-graph')?.addEventListener('click', () => {
@@ -960,7 +960,7 @@ async function runLivePrediction() {
   const docs = parseFloat(document.getElementById('inp-unique-docs').value) || 1;
 
   const btn = document.getElementById('btn-run-prediction');
-  btn.textContent = '⏳ Evaluating 61 Features via LightGBM...';
+  btn.innerHTML = '<i class="hgi-stroke hgi-loading-01 spin"></i> Evaluating 61 Features via LightGBM...';
   btn.disabled = true;
 
   try {
@@ -1010,7 +1010,7 @@ async function runLivePrediction() {
     };
     renderAnalyzerResults(matched);
   } finally {
-    btn.textContent = '⚡ Run Live AI Fraud Prediction';
+    btn.innerHTML = '<i class="hgi-stroke hgi-flash"></i> Run Live AI Fraud Prediction';
     btn.disabled = false;
   }
 }
@@ -1027,7 +1027,7 @@ function renderApiPredictionResults(apiRes) {
   arc.style.stroke = score > 0.5 ? '#ef4444' : '#10b981';
 
   document.getElementById('gauge-score-text').textContent = apiRes.risk_percentage;
-  document.getElementById('gauge-decision-title').textContent = isFlagged ? '🚨 FLAGGED FOR AUDIT' : '✅ AUTO-CLEARED (CLEAN)';
+  document.getElementById('gauge-decision-title').innerHTML = isFlagged ? '<i class="hgi-stroke hgi-alert-circle text-danger"></i> FLAGGED FOR AUDIT' : '<i class="hgi-stroke hgi-checkmark-circle-02 text-success"></i> AUTO-CLEARED (CLEAN)';
   document.getElementById('gauge-decision-title').style.color = isFlagged ? 'var(--accent-crimson)' : 'var(--accent-emerald)';
 
   document.getElementById('result-priority-pill').textContent = `${apiRes.priority_level} PRIORITY`;
@@ -1054,10 +1054,10 @@ function renderApiPredictionResults(apiRes) {
 
   if (isFlagged) {
     playAlertChime('danger');
-    showToast(`🚨 High Risk Detected: ${apiRes.provider_id} (${apiRes.risk_percentage})`, 'danger');
+    showToast(`<i class="hgi-stroke hgi-alert-circle"></i> High Risk Detected: ${apiRes.provider_id} (${apiRes.risk_percentage})`, 'danger');
   } else {
     playAlertChime('success');
-    showToast(`✅ Provider Cleared: ${apiRes.provider_id} (${apiRes.risk_percentage})`, 'success');
+    showToast(`<i class="hgi-stroke hgi-checkmark-circle-02"></i> Provider Cleared: ${apiRes.provider_id} (${apiRes.risk_percentage})`, 'success');
   }
 }
 
@@ -1071,7 +1071,7 @@ function renderAnalyzerResults(item) {
   arc.style.stroke = score > 0.5 ? '#ef4444' : '#10b981';
 
   document.getElementById('gauge-score-text').textContent = item.riskPct;
-  document.getElementById('gauge-decision-title').textContent = item.decision.includes('FLAGGED') ? '🚨 FLAGGED FOR AUDIT' : '✅ AUTO-CLEARED (CLEAN)';
+  document.getElementById('gauge-decision-title').innerHTML = item.decision.includes('FLAGGED') ? '<i class="hgi-stroke hgi-alert-circle text-danger"></i> FLAGGED FOR AUDIT' : '<i class="hgi-stroke hgi-checkmark-circle-02 text-success"></i> AUTO-CLEARED (CLEAN)';
   document.getElementById('gauge-decision-title').style.color = item.decision.includes('FLAGGED') ? 'var(--accent-crimson)' : 'var(--accent-emerald)';
 
   document.getElementById('result-priority-pill').textContent = `${item.priority} PRIORITY`;
@@ -1204,10 +1204,10 @@ function renderPreAuthResponse(res) {
 
   if (isReject) {
     playAlertChime('danger');
-    showToast(`🚨 Pre-Auth Rejection: ${res.claim_id} intercepted at admission!`, 'danger');
+    showToast(`<i class="hgi-stroke hgi-alert-circle"></i> Pre-Auth Rejection: ${res.claim_id} intercepted at admission!`, 'danger');
   } else {
     playAlertChime('success');
-    showToast(`✅ Pre-Auth Approved: ${res.claim_id} authorized in ${res.latency_ms.toFixed(2)}ms.`, 'success');
+    showToast(`<i class="hgi-stroke hgi-checkmark-circle-02"></i> Pre-Auth Approved: ${res.claim_id} authorized in ${res.latency_ms.toFixed(2)}ms.`, 'success');
   }
 }
 
@@ -1230,11 +1230,11 @@ function closeImageModal() {
 // -----------------------------------------------------------------------------
 function startLiveAlertTicker() {
   const alerts = [
-    "🚨 PRV_02_PHANTOM_SURGERY_MILL: 460 Inpatient Surgeries Billed by 2 Doctors ($5.1M) — Critical Risk",
-    "🚨 PRV_03_KICKBACK_COLLUSION_RING: Doctor Recycling Syndicate (95% Shared Physicians across 11 Hospitals)",
-    "🚨 PRV_08_ICU_LENGTH_OF_STAY_UPCODING: Artificial ICU Prolongation (16.8 Days Mean LOS, Max 48 Days)",
-    "⚠️ PRV_05_UNBUNDLING_DIAGNOSTIC_LAB: 44% Duplicate Same-Day Beneficiary Tests Detected",
-    "✅ PRV_01_RURAL_PRIMARY_CLINIC: Rural Primary Healthcare Center Clean & Auto-Cleared"
+    '<i class="hgi-stroke hgi-alert-circle text-danger"></i> PRV_02_PHANTOM_SURGERY_MILL: 460 Inpatient Surgeries Billed by 2 Doctors ($5.1M) — Critical Risk',
+    '<i class="hgi-stroke hgi-alert-circle text-danger"></i> PRV_03_KICKBACK_COLLUSION_RING: Doctor Recycling Syndicate (95% Shared Physicians across 11 Hospitals)',
+    '<i class="hgi-stroke hgi-alert-circle text-danger"></i> PRV_08_ICU_LENGTH_OF_STAY_UPCODING: Artificial ICU Prolongation (16.8 Days Mean LOS, Max 48 Days)',
+    '<i class="hgi-stroke hgi-alert-01 text-warning"></i> PRV_05_UNBUNDLING_DIAGNOSTIC_LAB: 44% Duplicate Same-Day Beneficiary Tests Detected',
+    '<i class="hgi-stroke hgi-checkmark-circle-02 text-success"></i> PRV_01_RURAL_PRIMARY_CLINIC: Rural Primary Healthcare Center Clean & Auto-Cleared'
   ];
   let idx = 0;
   setInterval(() => {
