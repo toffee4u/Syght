@@ -563,15 +563,45 @@ curl http://localhost:8000/health
 
 ---
 
-## 🚀 One-Click Render Cloud Deployment
+## 🚀 Render Cloud Web Service Deployment
 
-Syght includes a production Render Blueprint ([`render.yaml`](render.yaml)) supporting both unified fullstack serving and high-performance static site CDN hosting:
+Deploy Syght directly as a **Web Service** on [Render](https://render.com) without any complex Blueprint setup.
 
-1. Connect your GitHub repository to [Render Dashboard](https://dashboard.render.com/).
-2. Select **New** -> **Blueprint**.
-3. Choose `render.yaml`. Render automatically provisions:
-   - **`syght-fraud-api`**: Python web service with automatic model bundle loading, `/health`, `/docs`, and embedded React SPA.
-   - **`syght-fraud-frontend`**: Global Edge CDN static site with rewrites to `/index.html`.
+### Option A: Unified Full-Stack Web Service (Recommended — Single Free Tier Service)
+Hosts both the FastAPI backend and the pre-compiled React frontend under a single URL with zero CORS issues:
+
+1. Go to [Render Dashboard](https://dashboard.render.com/) and click **New +** → **Web Service**.
+2. Select your repository: **`toffee4u/Syght`**.
+3. Fill in the following exact settings:
+   - **Name**: `syght-fraud-api`
+   - **Language / Runtime**: `Python 3`
+   - **Branch**: `main`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 2`
+   - **Health Check Path**: `/health`
+4. Under **Advanced** → **Environment Variables**, add:
+   - `PYTHON_VERSION`: `3.11.9`
+   - `SYGHT_MODEL_PATH`: `models/syght_model_bundle.joblib`
+5. Click **Create Web Service**.
+   - Your React UI will be live at `https://syght-fraud-api.onrender.com/`
+   - API endpoints at `https://syght-fraud-api.onrender.com/api/v1/...`
+   - Health check at `https://syght-fraud-api.onrender.com/health`
+   - Interactive Swagger docs at `https://syght-fraud-api.onrender.com/docs`
+
+---
+
+### Option B: Dedicated Static Site for Frontend (Optional)
+If you prefer a separate standalone frontend URL on Render's Edge CDN:
+1. Click **New +** → **Static Site**.
+2. Select your repository: **`toffee4u/Syght`**.
+3. Settings:
+   - **Name**: `syght-frontend`
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm install && npm run build`
+   - **Publish Directory**: `dist`
+4. Under **Environment Variables**:
+   - `VITE_API_URL`: Your backend URL (e.g., `https://syght-fraud-api.onrender.com`)
+5. Click **Create Static Site**.
 
 ---
 
