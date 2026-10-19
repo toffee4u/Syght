@@ -6,7 +6,8 @@
 
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-21%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/tests-24%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Read in Hinglish](https://img.shields.io/badge/Language-Hinglish%20Guide-orange?style=for-the-badge)](README_HINGLISH.md)
 [![PR-AUC](https://img.shields.io/badge/Metric-PR--AUC%20Optimized-orange?style=for-the-badge)](#why-accuracy-fails-in-healthcare-fraud)
 [![Transparency](https://img.shields.io/badge/Explainability-Plain%20Language%20SHAP-purple?style=for-the-badge)](#explainability--plain-language-risk-drivers)
 [![Notebook](https://img.shields.io/badge/Artifact-Colab%20Runnable-F9AB00?style=for-the-badge&logo=jupyter&logoColor=white)](notebooks/syght_model_training.ipynb)
