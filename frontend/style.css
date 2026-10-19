@@ -1755,3 +1755,94 @@ body {
     align-items: stretch;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Hugeicons Stroke Rounded Integration & Aesthetics
+   -------------------------------------------------------------------------- */
+.hgi-stroke {
+  font-family: "hugeicons-stroke-rounded" !important;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+  font-size: 1.15em;
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.logo-icon .hgi-stroke {
+  font-size: 1.45rem;
+  color: var(--accent-cyan);
+  filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.7));
+}
+
+.tab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-icon .hgi-stroke {
+  font-size: 1.15rem;
+}
+
+.nav-tab:hover .tab-icon .hgi-stroke,
+.nav-tab.active .tab-icon .hgi-stroke {
+  color: var(--accent-cyan);
+  transform: translateY(-1px);
+}
+
+.kpi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.kpi-icon .hgi-stroke {
+  font-size: 1.28rem;
+}
+
+.kpi-card:hover .kpi-icon .hgi-stroke {
+  transform: scale(1.15);
+}
+
+.panel-icon .hgi-stroke,
+.card-title .hgi-stroke,
+.page-title .hgi-stroke,
+.directive-title .hgi-stroke,
+.section-subtitle .hgi-stroke,
+.filter-btn .hgi-stroke,
+.btn-primary .hgi-stroke,
+.btn-secondary .hgi-stroke,
+.btn-table-action .hgi-stroke {
+  margin-right: 0.35rem;
+}
+
+.modal-close .hgi-stroke {
+  margin-right: 0;
+  font-size: 1.3rem;
+}
+
+.btn-icon .hgi-stroke {
+  font-size: 1.25rem;
+}
+
+.text-danger { color: #f43f5e !important; }
+.text-warning { color: #fbbf24 !important; }
+.text-success { color: #10b981 !important; }
+.text-accent { color: #38bdf8 !important; }
+
+.spin {
+  animation: hgiSpin 1s linear infinite;
+}
+
+@keyframes hgiSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
