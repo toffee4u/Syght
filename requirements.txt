@@ -22,6 +22,7 @@ pyyaml>=6.0
 # Visualization & Reporting
 matplotlib>=3.7.0
 seaborn>=0.12.0
+networkx>=3.0
 
 # Google Colab & Dataset Ingestion
 kaggle>=1.5.16

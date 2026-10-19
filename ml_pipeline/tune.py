@@ -38,12 +38,18 @@ def get_tuning_param_distributions(model_name: str) -> Dict[str, Any]:
             "colsample_bytree": [0.6, 0.7, 0.8],
             "n_estimators": [150, 250, 350],
         }
-    elif "RandomForest" in model_name:
+    elif "RandomForest" in model_name or "ExtraTrees" in model_name:
         return {
-            "n_estimators": [200, 300, 400],
-            "max_depth": [4, 6, 8, 10, None],
-            "min_samples_leaf": [2, 5, 10],
-            "max_features": ["sqrt", "log2", 0.3, 0.5],
+            "n_estimators": [600, 800, 1000],
+            "max_depth": [16, 20, 25, None],
+            "min_samples_leaf": [1, 2],
+            "max_features": ["sqrt", "log2", 0.3],
+        }
+    elif "GradientBoosting" in model_name:
+        return {
+            "n_estimators": [300, 400, 500],
+            "max_depth": [5, 6, 7],
+            "learning_rate": [0.03, 0.05, 0.08],
         }
     elif "LogisticRegression" in model_name:
         return {

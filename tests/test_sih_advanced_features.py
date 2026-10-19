@@ -104,3 +104,39 @@ def test_clinical_discharge_cross_verification():
     assert res_fake.is_suspicious is True
     assert res_fake.discrepancy_score >= 0.50
     assert "FREEZE_PAYMENT" in res_fake.auditor_action
+
+
+def test_visualization_suite():
+    import numpy as np
+    from sklearn.ensemble import RandomForestClassifier
+    from ml_pipeline.visualization import (
+        plot_model_benchmarks,
+        plot_decision_tree_explanation,
+        plot_evaluation_dashboard,
+        plot_fraud_recovery_lift,
+    )
+
+    cv_df = pd.DataFrame({
+        "model": ["Rule_ClaimVolume", "RandomForest", "ExtraTrees"],
+        "pr_auc_mean": [0.45, 0.74, 0.76],
+        "pr_auc_std": [0.03, 0.02, 0.02],
+        "roc_auc_mean": [0.70, 0.91, 0.92],
+        "accuracy_mean": [0.88, 0.95, 0.96],
+        "balanced_acc_mean": [0.65, 0.86, 0.88],
+    })
+    fig1 = plot_model_benchmarks(cv_df)
+    assert fig1 is not None
+
+    rf = RandomForestClassifier(n_estimators=5, max_depth=3, random_state=42)
+    rf.fit(np.random.randn(50, 4), np.random.randint(0, 2, 50))
+    fig2 = plot_decision_tree_explanation(rf, ["f1", "f2", "f3", "f4"])
+    assert fig2 is not None
+
+    y_test = np.array([0, 0, 1, 1, 0, 1])
+    p_test = np.array([0.1, 0.2, 0.8, 0.9, 0.3, 0.7])
+    fig3 = plot_evaluation_dashboard(y_test, p_test, 0.5)
+    assert fig3 is not None
+
+    fig4 = plot_fraud_recovery_lift(y_test, p_test, np.array([100, 200, 500, 1000, 50, 300]))
+    assert fig4 is not None
+
