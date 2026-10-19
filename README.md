@@ -5,7 +5,7 @@
 **A transparent, high-precision machine learning system engineered for healthcare insurance teams to detect suspicious billing patterns, prioritize provider investigations, and protect healthcare funds.**
 
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-Proprietary%20%2F%20Research-blue?style=for-the-badge)](docs/reference_repositories.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-21%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![PR-AUC](https://img.shields.io/badge/Metric-PR--AUC%20Optimized-orange?style=for-the-badge)](#why-accuracy-fails-in-healthcare-fraud)
 [![Transparency](https://img.shields.io/badge/Explainability-Plain%20Language%20SHAP-purple?style=for-the-badge)](#explainability--plain-language-risk-drivers)
@@ -430,8 +430,15 @@ Syght/
 ├── docs/                             # In-depth architectural & benchmark documentation
 ├── requirements.txt                  # Pinned dependencies (xgboost==2.1.3, shap==0.49.1, etc.)
 ├── pyproject.toml                    # Package configuration
+├── LICENSE                           # MIT Open Source License
 └── README.md                         # Project documentation
 ```
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
 ---
 

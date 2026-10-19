@@ -5,10 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "syght"
 version = "1.0.0"
-description = "Explainable Healthcare Insurance Fraud-Risk Detection Pipeline"
+description = "Healthcare Insurance Fraud-Risk Detection Pipeline"
 readme = "README.md"
+license = { text = "MIT" }
 requires-python = ">=3.9"
-authors = [{ name = "Syght ML Engineering" }]
+authors = [{ name = "toffee4u" }]
 dependencies = [
     "numpy>=1.24.0",
     "pandas>=2.0.0",
