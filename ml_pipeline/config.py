@@ -192,6 +192,12 @@ class SyghtConfig:
         )
 
     @property
+    def feature_names(self) -> List[str]:
+        """Alias for all_features."""
+        return self.all_features
+
+
+    @property
     def size_features(self) -> List[str]:
         """Features reflecting absolute provider scale rather than operational ratios."""
         return [
