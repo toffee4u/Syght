@@ -48,11 +48,12 @@ kaggle.json
 *token*
 
 # Data Directories & Datasets (Raw & Processed Data Must NEVER be committed)
-data/
-data/raw/
-data/processed/
-data/interim/
-data/sample/
+/data/
+/data/raw/
+/data/processed/
+/data/interim/
+/data/sample/
+!react-frontend/src/data/
 *.csv
 *.tsv
 *.parquet
@@ -66,6 +67,7 @@ data/sample/
 
 # Large Model Binaries & Artifact Bundles
 models/*.joblib
+!models/syght_model_bundle.joblib
 models/*.pkl
 models/*.bin
 models/*.onnx
@@ -90,3 +92,11 @@ Thumbs.db
 *.swo
 *~
 scratch/
+
+# Node & Frontend Build Artifacts
+node_modules/
+react-frontend/node_modules/
+frontend/node_modules/
+.npm/
+npm-debug.log*
+

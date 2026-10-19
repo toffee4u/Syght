@@ -513,9 +513,65 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 pip install -e .
 
-# Run all 21 automated unit and integration tests
+# Run all 32 automated unit and integration tests
 pytest -v tests
 ```
+
+---
+
+## ⚡ 1-Click Kaggle Dataset Downloader
+
+Download and verify all 8 official CMS Medicare Provider Fraud tables (5,410 providers, ~558,000 claims) in under 30 seconds:
+
+```bash
+# Downloads and unzips raw data into data/raw/
+python scripts/download_dataset.py
+```
+
+---
+
+## 🌐 Enterprise React Frontend & FastAPI Gateway
+
+Syght features a full-stack, Cyber-Glassmorphism React SPA interface built with Vite, React, Lucide/Hugeicons stroke-rounded icons, interactive canvas graphs, and Chart.js animations:
+
+```bash
+# 1. Run the unified FastAPI server (serves React frontend at http://localhost:8000)
+python backend/main.py
+
+# 2. Or run Vite React dev server independently with live hot-reload
+cd react-frontend
+npm install
+npm run dev  # Accessible at http://localhost:3000 (proxied to :8000)
+```
+
+### Health & Monitoring Endpoint
+Verify model readiness and configuration:
+```bash
+curl http://localhost:8000/health
+```
+```json
+{
+  "status": "healthy",
+  "version": "1.0.0",
+  "model_loaded": true,
+  "selected_model": "LightGBM",
+  "decision_threshold": 0.5364,
+  "total_features_tracked": 61,
+  "docs_url": "/docs"
+}
+```
+
+---
+
+## 🚀 One-Click Render Cloud Deployment
+
+Syght includes a production Render Blueprint ([`render.yaml`](render.yaml)) supporting both unified fullstack serving and high-performance static site CDN hosting:
+
+1. Connect your GitHub repository to [Render Dashboard](https://dashboard.render.com/).
+2. Select **New** -> **Blueprint**.
+3. Choose `render.yaml`. Render automatically provisions:
+   - **`syght-fraud-api`**: Python web service with automatic model bundle loading, `/health`, `/docs`, and embedded React SPA.
+   - **`syght-fraud-frontend`**: Global Edge CDN static site with rewrites to `/index.html`.
 
 ---
 
