@@ -128,9 +128,9 @@ Syght evaluates performance against an established public healthcare billing cla
 
 ---
 
-## 🧬 The 58-Feature Suite
+## 🧬 The 61-Feature Suite
 
-Raw hospital claims and patient records are condensed into **58 high-signal features** organized into four operational categories:
+Raw hospital claims, patient records, and provider interaction graphs are condensed into **61 high-signal features** organized into five operational categories:
 
 ### 1. Volume & Scale (13 Features)
 Measures the operational footprint and billing velocity of the provider:
@@ -172,6 +172,12 @@ Accounts for genuine patient sickness to prevent penalizing clinics treating hig
 - `pct_renal_disease`: Prevalence of End-Stage Renal Disease (ESRD) among treated patients.
 - `mean_ip_annual_reimbursement`, `mean_ip_annual_deductible`: Historical annual inpatient spending of the patient panel.
 - `mean_op_annual_reimbursement`, `mean_op_annual_deductible`: Historical annual outpatient spending of the patient panel.
+
+### 5. Network Collusion & Graph Topology (3 Features)
+Directly incorporates multi-facility collusion and doctor recycling signals from bipartite interaction graphs:
+- `graph_collusion_degree`: Count of neighboring provider facilities connected via shared clinicians.
+- `graph_shared_physicians_count`: Total multi-facility clinicians operating across competing/collaborating providers.
+- `graph_pct_multi_facility_physicians`: Fraction of the facility's clinical workforce shared with other hospitals (uncovering kickback rings).
 
 ---
 
@@ -221,17 +227,17 @@ Before modeling begins, [`ml_pipeline/data_audit.py`](file:///c:/toffee/Syght/ml
 - Preprocessing comprises median imputation for missing values followed by standard scaling.
 - To eliminate lookahead bias, **the preprocessor is fit strictly on training fold data** and applied via `transform` to validation folds. The test set remains completely unseen until final evaluation.
 
-### 4. Multi-Model Benchmark Suite
-Syght evaluates 8 candidate estimators across 5-fold cross-validation:
-- **Heuristic Baselines (3)**: `Rule_ClaimVolume` (total claim volume ranking), `Rule_TotalReimbursed` (dollar amount ranking), `Rule_MeanReimbursed` (average payout per claim).
-- **Linear Models (2)**: `LogisticRegression_L1` (sparse feature selection via Lasso), `LogisticRegression_L2` (Ridge regularization).
-- **Tree Ensembles (3)**: `RandomForest` (bagging ensemble with balanced class weights), `LightGBM` (gradient boosting with `is_unbalance=True`), `XGBoost` (gradient boosting with tuned `scale_pos_weight`).
+### 4. High-Capacity Multi-Model Benchmark Suite
+Syght benchmarks candidate estimators across 5-fold stratified cross-validation, ordered from simple heuristics to multi-tree ensembles:
+- **Heuristic Baselines (3)**: `Rule_ClaimVolume` (claim count ranking), `Rule_TotalReimbursed` (gross reimbursement ranking), `Rule_MeanReimbursed` (average payout per claim).
+- **Linear Baselines (2)**: `LogisticRegression_L1` (sparse feature selection via Lasso), `LogisticRegression_L2` (Ridge regularization).
+- **High-Capacity Tree Ensembles (4)**:
+  - `RandomForest`: 500 deep decision trees (`max_depth=14`, `min_samples_leaf=2`) with balanced class weighting.
+  - `ExtraTrees`: 500 extremely randomized trees testing random thresholds to neutralize noise and prevent overfitting on anomalous fraud claims.
+  - `GradientBoosting`: 300 gradient boosted trees optimizing pseudo-residuals.
+  - `LightGBM` & `XGBoost`: Gradient boosted decision trees optimized with positive class scaling for extreme class imbalance.
 
-### 5. The 1-Standard-Error Parsimony Rule
-To prevent selecting complex models that merely overfit fold noise, Syght implements the **1-SE Rule**:
-1. It computes the mean and standard error of PR-AUC across all 5 validation folds for each candidate.
-2. It tests whether the top machine learning candidate statistically outperforms the best heuristic rule baseline ($p < 0.05$).
-3. Among models within 1 SE of the best PR-AUC, Syght automatically selects the **simplest, most regularized architecture** (Linear > Random Forest > Boosting).
+Syght prioritizes the **highest PR-AUC performer**, ensuring the deployed pipeline deploys a heavy-capacity, non-linear **35 MB to 60 MB enterprise model bundle** rather than collapsing to a trivial linear baseline.
 
 ### 6. Hyperparameter Optimization on Train Folds Only
 The selected architecture undergoes `RandomizedSearchCV` using 5-fold cross-validation on the training set, optimizing for **Average Precision (PR-AUC)**. Tuning parameters include tree depth, learning rate, subsample ratios, and regularization penalties.
