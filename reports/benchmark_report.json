@@ -1,0 +1,595 @@
+{
+  "timestamp_utc": "2026-10-19T15:48:02.494304+00:00",
+  "audit": {
+    "status": "PASSED",
+    "labels": {
+      "n_rows": 5660,
+      "n_unique_providers": 5660,
+      "duplicate_provider_records": 0,
+      "class_distribution": {
+        "legitimate_0": 5119,
+        "fraud_1": 541
+      },
+      "fraud_rate": 0.0956,
+      "providers_with_conflicting_labels": 0
+    },
+    "claims": {
+      "n_inpatient_claims": 42763,
+      "n_outpatient_claims": 528255,
+      "n_total_claims": 571018,
+      "duplicate_claim_ids": 0,
+      "providers_in_claims": 5660,
+      "providers_with_claims_and_labels": 5660,
+      "labelled_providers_without_claims": 0,
+      "claims_providers_without_labels": 0,
+      "overlap_fraction": 1.0,
+      "negative_reimbursements": 0,
+      "negative_deductibles": 0,
+      "reimbursement_stats": {
+        "min": 0.0,
+        "mean": 1023.73,
+        "median": 90.0,
+        "max": 125697.0,
+        "p99": 17000.0
+      },
+      "invalid_claim_date_order": 0,
+      "date_range": {
+        "earliest_claim_start": "2008-11-27",
+        "latest_claim_end": "2010-10-22"
+      },
+      "inpatient_invalid_discharge_before_admit": 0
+    },
+    "beneficiary": {
+      "n_beneficiary_records": 139356,
+      "n_unique_beneficiaries": 139356,
+      "duplicate_beneficiary_ids": 0,
+      "invalid_chronic_condition_encodings": {},
+      "pct_beneficiaries_visiting_multiple_providers": 0.6634
+    }
+  },
+  "cv_summary": [
+    {
+      "model": "Rule_ClaimVolume",
+      "pr_auc_mean": 0.40671999999999997,
+      "pr_auc_std": 0.04319359906282411,
+      "roc_auc_mean": 0.80718,
+      "roc_auc_std": 0.015083998143728319,
+      "accuracy_mean": 0.9055,
+      "balanced_acc_mean": 0.50576,
+      "f1_mean": 0.022560000000000004,
+      "brier_mean": 0.08635999999999999
+    },
+    {
+      "model": "Rule_TotalReimbursed",
+      "pr_auc_mean": 0.67316,
+      "pr_auc_std": 0.03975315081852005,
+      "roc_auc_mean": 0.9298400000000001,
+      "roc_auc_std": 0.012948088662038055,
+      "accuracy_mean": 0.9055,
+      "balanced_acc_mean": 0.50576,
+      "f1_mean": 0.02262,
+      "brier_mean": 0.07926
+    },
+    {
+      "model": "Rule_MeanReimbursed",
+      "pr_auc_mean": 0.22359999999999997,
+      "pr_auc_std": 0.03037466049192979,
+      "roc_auc_mean": 0.77684,
+      "roc_auc_std": 0.01893047807108948,
+      "accuracy_mean": 0.90242,
+      "balanced_acc_mean": 0.49892000000000003,
+      "f1_mean": 0.0,
+      "brier_mean": 0.0881
+    },
+    {
+      "model": "LogisticRegression_L1",
+      "pr_auc_mean": 0.71416,
+      "pr_auc_std": 0.042061716560311754,
+      "roc_auc_mean": 0.94512,
+      "roc_auc_std": 0.00938200405030824,
+      "accuracy_mean": 0.8767400000000001,
+      "balanced_acc_mean": 0.87188,
+      "f1_mean": 0.5735,
+      "brier_mean": 0.08908
+    },
+    {
+      "model": "LogisticRegression_L2",
+      "pr_auc_mean": 0.6967800000000001,
+      "pr_auc_std": 0.04084907587693999,
+      "roc_auc_mean": 0.94098,
+      "roc_auc_std": 0.008187917928264801,
+      "accuracy_mean": 0.8809799999999999,
+      "balanced_acc_mean": 0.86904,
+      "f1_mean": 0.57878,
+      "brier_mean": 0.08782
+    },
+    {
+      "model": "RandomForest",
+      "pr_auc_mean": 0.71132,
+      "pr_auc_std": 0.05303071751353175,
+      "roc_auc_mean": 0.94894,
+      "roc_auc_std": 0.012105288100660791,
+      "accuracy_mean": 0.93574,
+      "balanced_acc_mean": 0.77542,
+      "f1_mean": 0.63154,
+      "brier_mean": 0.04582
+    },
+    {
+      "model": "ExtraTrees",
+      "pr_auc_mean": 0.7140799999999999,
+      "pr_auc_std": 0.048656160966520985,
+      "roc_auc_mean": 0.94736,
+      "roc_auc_std": 0.012333207206562278,
+      "accuracy_mean": 0.93442,
+      "balanced_acc_mean": 0.8077,
+      "f1_mean": 0.65508,
+      "brier_mean": 0.048
+    },
+    {
+      "model": "GradientBoosting",
+      "pr_auc_mean": 0.71594,
+      "pr_auc_std": 0.0560901328220927,
+      "roc_auc_mean": 0.94428,
+      "roc_auc_std": 0.010602216749340674,
+      "accuracy_mean": 0.93706,
+      "balanced_acc_mean": 0.77408,
+      "f1_mean": 0.6349400000000001,
+      "brier_mean": 0.05202
+    },
+    {
+      "model": "LightGBM",
+      "pr_auc_mean": 0.73776,
+      "pr_auc_std": 0.031798474806191544,
+      "roc_auc_mean": 0.9470000000000001,
+      "roc_auc_std": 0.010095543571299175,
+      "accuracy_mean": 0.93552,
+      "balanced_acc_mean": 0.83414,
+      "f1_mean": 0.6772199999999999,
+      "brier_mean": 0.049980000000000004
+    },
+    {
+      "model": "XGBoost",
+      "pr_auc_mean": 0.73132,
+      "pr_auc_std": 0.04107939872977696,
+      "roc_auc_mean": 0.94772,
+      "roc_auc_std": 0.010883565592212907,
+      "accuracy_mean": 0.9368399999999999,
+      "balanced_acc_mean": 0.8359,
+      "f1_mean": 0.68274,
+      "brier_mean": 0.04904
+    }
+  ],
+  "selection": {
+    "selected_model": "LightGBM",
+    "best_ml_model": "LightGBM",
+    "best_ml_score": 0.73776,
+    "best_rule_model": "Rule_TotalReimbursed",
+    "best_rule_score": 0.67316,
+    "one_se_cutoff": 0.7235,
+    "ml_justified": true
+  },
+  "threshold": {
+    "selected_model": "LightGBM",
+    "max_f1_threshold": 0.5364,
+    "max_f1_score": 0.6801,
+    "cost_optimal_threshold": 0.06,
+    "cost_optimal_details": {
+      "threshold": 0.06,
+      "n_investigated": 880.0,
+      "investigation_rate": 0.1943,
+      "tp": 385.0,
+      "fp": 495.0,
+      "fn": 48.0,
+      "tn": 3600.0,
+      "precision": 0.4375,
+      "recall": 0.8891,
+      "investigation_cost": 2200000.0,
+      "missed_fraud_cost": 941920.0,
+      "total_cost": 3141920.0
+    },
+    "investigate_all_cost": 11320000.0,
+    "investigate_none_cost": 49070102.2,
+    "default_half_cost": 5235655.6,
+    "cost_savings_vs_no_investigation": 45928182.2
+  },
+  "threshold_sensitivity": [
+    {
+      "recovery_fraction": 0.05,
+      "optimal_threshold": 0.35,
+      "investigation_rate": 0.1221,
+      "n_investigated": 553,
+      "recall": 0.7714,
+      "precision": 0.604,
+      "total_cost": 2044082.75
+    },
+    {
+      "recovery_fraction": 0.1,
+      "optimal_threshold": 0.12,
+      "investigation_rate": 0.165,
+      "n_investigated": 747,
+      "recall": 0.8476,
+      "precision": 0.4913,
+      "total_cost": 2611734.4
+    },
+    {
+      "recovery_fraction": 0.15,
+      "optimal_threshold": 0.06,
+      "investigation_rate": 0.1943,
+      "n_investigated": 880,
+      "recall": 0.8891,
+      "precision": 0.4375,
+      "total_cost": 2906440.0
+    },
+    {
+      "recovery_fraction": 0.2,
+      "optimal_threshold": 0.06,
+      "investigation_rate": 0.1943,
+      "n_investigated": 880,
+      "recall": 0.8891,
+      "precision": 0.4375,
+      "total_cost": 3141920.0
+    },
+    {
+      "recovery_fraction": 0.25,
+      "optimal_threshold": 0.06,
+      "investigation_rate": 0.1943,
+      "n_investigated": 880,
+      "recall": 0.8891,
+      "precision": 0.4375,
+      "total_cost": 3377400.0
+    },
+    {
+      "recovery_fraction": 0.35,
+      "optimal_threshold": 0.03,
+      "investigation_rate": 0.2323,
+      "n_investigated": 1052,
+      "recall": 0.9215,
+      "precision": 0.3793,
+      "total_cost": 3710078.3
+    },
+    {
+      "recovery_fraction": 0.5,
+      "optimal_threshold": 0.02,
+      "investigation_rate": 0.2557,
+      "n_investigated": 1158,
+      "recall": 0.9261,
+      "precision": 0.3463,
+      "total_cost": 4128354.0
+    }
+  ],
+  "test_evaluation": {
+    "threshold_free_metrics": {
+      "pr_auc": 0.7135,
+      "roc_auc": 0.9383,
+      "brier_score": 0.0531
+    },
+    "threshold_metrics": {
+      "threshold": 0.5364,
+      "precision": 0.6796,
+      "recall": 0.6481,
+      "f1": 0.6635,
+      "specificity": 0.9678,
+      "confusion_matrix": {
+        "true_negatives": 991,
+        "false_positives": 33,
+        "false_negatives": 38,
+        "true_positives": 70
+      },
+      "investigation_rate": 0.091
+    },
+    "confidence_intervals_95": {
+      "pr_auc_ci95": [
+        0.622,
+        0.7986
+      ],
+      "roc_auc_ci95": [
+        0.9105,
+        0.9623
+      ],
+      "brier_score_ci95": [
+        0.042,
+        0.0645
+      ],
+      "precision_ci95": [
+        0.5842,
+        0.7658
+      ],
+      "recall_ci95": [
+        0.5526,
+        0.7339
+      ],
+      "f1_ci95": [
+        0.5824,
+        0.7317
+      ]
+    },
+    "queue_simulation": [
+      {
+        "strategy": "Probability",
+        "k": 11,
+        "capacity_pct": 0.0097,
+        "precision_at_k": 0.9091,
+        "recall_at_k": 0.0926,
+        "fraud_caught": 10,
+        "exposure_captured": 14301100.0,
+        "pct_fraud_exposure_captured": 0.2534
+      },
+      {
+        "strategy": "Exposure",
+        "k": 11,
+        "capacity_pct": 0.0097,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.1019,
+        "fraud_caught": 11,
+        "exposure_captured": 18459510.0,
+        "pct_fraud_exposure_captured": 0.3271
+      },
+      {
+        "strategy": "Banded",
+        "k": 11,
+        "capacity_pct": 0.0097,
+        "precision_at_k": 0.3636,
+        "recall_at_k": 0.037,
+        "fraud_caught": 4,
+        "exposure_captured": 3656710.0,
+        "pct_fraud_exposure_captured": 0.0648
+      },
+      {
+        "strategy": "Rule_TotalBilledOnly",
+        "k": 11,
+        "capacity_pct": 0.0097,
+        "precision_at_k": 1.0,
+        "recall_at_k": 0.1019,
+        "fraud_caught": 11,
+        "exposure_captured": 18459510.0,
+        "pct_fraud_exposure_captured": 0.3271
+      },
+      {
+        "strategy": "Random",
+        "k": 11,
+        "capacity_pct": 0.0097,
+        "precision_at_k": 0.1127,
+        "recall_at_k": 0.0115,
+        "fraud_caught": 1,
+        "exposure_captured": 545815.96,
+        "pct_fraud_exposure_captured": 0.0097
+      },
+      {
+        "strategy": "Probability",
+        "k": 57,
+        "capacity_pct": 0.0504,
+        "precision_at_k": 0.8246,
+        "recall_at_k": 0.4352,
+        "fraud_caught": 47,
+        "exposure_captured": 40682790.0,
+        "pct_fraud_exposure_captured": 0.7208
+      },
+      {
+        "strategy": "Exposure",
+        "k": 57,
+        "capacity_pct": 0.0504,
+        "precision_at_k": 0.7719,
+        "recall_at_k": 0.4074,
+        "fraud_caught": 44,
+        "exposure_captured": 42811249.0,
+        "pct_fraud_exposure_captured": 0.7585
+      },
+      {
+        "strategy": "Banded",
+        "k": 57,
+        "capacity_pct": 0.0504,
+        "precision_at_k": 0.2807,
+        "recall_at_k": 0.1481,
+        "fraud_caught": 16,
+        "exposure_captured": 17760832.0,
+        "pct_fraud_exposure_captured": 0.3147
+      },
+      {
+        "strategy": "Rule_TotalBilledOnly",
+        "k": 57,
+        "capacity_pct": 0.0504,
+        "precision_at_k": 0.7544,
+        "recall_at_k": 0.3981,
+        "fraud_caught": 43,
+        "exposure_captured": 42989960.0,
+        "pct_fraud_exposure_captured": 0.7617
+      },
+      {
+        "strategy": "Random",
+        "k": 57,
+        "capacity_pct": 0.0504,
+        "precision_at_k": 0.0909,
+        "recall_at_k": 0.048,
+        "fraud_caught": 5,
+        "exposure_captured": 2904880.96,
+        "pct_fraud_exposure_captured": 0.0515
+      },
+      {
+        "strategy": "Probability",
+        "k": 113,
+        "capacity_pct": 0.0998,
+        "precision_at_k": 0.6549,
+        "recall_at_k": 0.6852,
+        "fraud_caught": 74,
+        "exposure_captured": 50324202.0,
+        "pct_fraud_exposure_captured": 0.8916
+      },
+      {
+        "strategy": "Exposure",
+        "k": 113,
+        "capacity_pct": 0.0998,
+        "precision_at_k": 0.646,
+        "recall_at_k": 0.6759,
+        "fraud_caught": 73,
+        "exposure_captured": 50693552.0,
+        "pct_fraud_exposure_captured": 0.8982
+      },
+      {
+        "strategy": "Banded",
+        "k": 113,
+        "capacity_pct": 0.0998,
+        "precision_at_k": 0.2655,
+        "recall_at_k": 0.2778,
+        "fraud_caught": 30,
+        "exposure_captured": 29377489.0,
+        "pct_fraud_exposure_captured": 0.5205
+      },
+      {
+        "strategy": "Rule_TotalBilledOnly",
+        "k": 113,
+        "capacity_pct": 0.0998,
+        "precision_at_k": 0.5841,
+        "recall_at_k": 0.6111,
+        "fraud_caught": 66,
+        "exposure_captured": 51031413.0,
+        "pct_fraud_exposure_captured": 0.9042
+      },
+      {
+        "strategy": "Random",
+        "k": 113,
+        "capacity_pct": 0.0998,
+        "precision_at_k": 0.0952,
+        "recall_at_k": 0.0996,
+        "fraud_caught": 11,
+        "exposure_captured": 5486478.06,
+        "pct_fraud_exposure_captured": 0.0972
+      },
+      {
+        "strategy": "Probability",
+        "k": 226,
+        "capacity_pct": 0.1996,
+        "precision_at_k": 0.4248,
+        "recall_at_k": 0.8889,
+        "fraud_caught": 96,
+        "exposure_captured": 55562502.0,
+        "pct_fraud_exposure_captured": 0.9844
+      },
+      {
+        "strategy": "Exposure",
+        "k": 226,
+        "capacity_pct": 0.1996,
+        "precision_at_k": 0.4248,
+        "recall_at_k": 0.8889,
+        "fraud_caught": 96,
+        "exposure_captured": 55562502.0,
+        "pct_fraud_exposure_captured": 0.9844
+      },
+      {
+        "strategy": "Banded",
+        "k": 226,
+        "capacity_pct": 0.1996,
+        "precision_at_k": 0.2212,
+        "recall_at_k": 0.463,
+        "fraud_caught": 50,
+        "exposure_captured": 38939229.0,
+        "pct_fraud_exposure_captured": 0.6899
+      },
+      {
+        "strategy": "Rule_TotalBilledOnly",
+        "k": 226,
+        "capacity_pct": 0.1996,
+        "precision_at_k": 0.3894,
+        "recall_at_k": 0.8148,
+        "fraud_caught": 88,
+        "exposure_captured": 54997273.0,
+        "pct_fraud_exposure_captured": 0.9744
+      },
+      {
+        "strategy": "Random",
+        "k": 226,
+        "capacity_pct": 0.1996,
+        "precision_at_k": 0.0938,
+        "recall_at_k": 0.1963,
+        "fraud_caught": 21,
+        "exposure_captured": 11309421.1,
+        "pct_fraud_exposure_captured": 0.2004
+      }
+    ]
+  },
+  "top_features": [
+    {
+      "feature": "total_reimbursed",
+      "importance": 1.296560763726746,
+      "direction": 1.0,
+      "description": "Total Medicare reimbursement received",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "claims_per_beneficiary",
+      "importance": 0.7381026258449185,
+      "direction": 1.0,
+      "description": "Average claims filed per individual patient",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "claims_per_operating_physician",
+      "importance": 0.5538773530992117,
+      "direction": 1.0,
+      "description": "Claims Per Operating Physician",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "max_admit_days",
+      "importance": 0.5364945317240655,
+      "direction": 1.0,
+      "description": "Max Admit Days",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "pct_claims_zero_duration",
+      "importance": 0.4580884774078773,
+      "direction": -1.0,
+      "description": "Share of claims with zero-day service duration",
+      "effect": "Lowers Fraud Risk"
+    },
+    {
+      "feature": "median_reimbursed",
+      "importance": 0.4214660849322149,
+      "direction": 1.0,
+      "description": "Median reimbursement received per claim",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "deductible_to_reimbursement_ratio",
+      "importance": 0.397087341200341,
+      "direction": -1.0,
+      "description": "Deductible To Reimbursement Ratio",
+      "effect": "Lowers Fraud Risk"
+    },
+    {
+      "feature": "mean_reimbursed_outpatient",
+      "importance": 0.34599894148539895,
+      "direction": 1.0,
+      "description": "Average reimbursement per outpatient encounter",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "total_deductible",
+      "importance": 0.33337721634022605,
+      "direction": 1.0,
+      "description": "Total Deductible",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "ip_cv_los",
+      "importance": 0.2861952992183045,
+      "direction": 1.0,
+      "description": "Coefficient of variation in inpatient hospital length of stay",
+      "effect": "Increases Fraud Risk"
+    },
+    {
+      "feature": "mean_op_annual_reimbursement",
+      "importance": 0.2833689306397824,
+      "direction": -1.0,
+      "description": "Average annual outpatient Medicare reimbursement across patient panel",
+      "effect": "Lowers Fraud Risk"
+    },
+    {
+      "feature": "n_counties_served",
+      "importance": 0.28055776012995387,
+      "direction": 1.0,
+      "description": "Number of geographic counties spanned by provider's patient base",
+      "effect": "Increases Fraud Risk"
+    }
+  ]
+}
