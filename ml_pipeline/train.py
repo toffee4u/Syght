@@ -81,9 +81,9 @@ def get_candidate_models(
             max_iter=1000,
         ),
         "RandomForest": RandomForestClassifier(
-            n_estimators=300,
-            max_depth=6,
-            min_samples_leaf=5,
+            n_estimators=500,
+            max_depth=14,
+            min_samples_leaf=2,
             class_weight="balanced",
             random_state=config.random_seed,
             n_jobs=-1,
@@ -94,8 +94,8 @@ def get_candidate_models(
     try:
         from lightgbm import LGBMClassifier
         models["LightGBM"] = LGBMClassifier(
-            n_estimators=250,
-            max_depth=4,
+            n_estimators=300,
+            max_depth=6,
             learning_rate=0.05,
             is_unbalance=True,
             random_state=config.random_seed,
@@ -109,8 +109,8 @@ def get_candidate_models(
     try:
         from xgboost import XGBClassifier
         models["XGBoost"] = XGBClassifier(
-            n_estimators=250,
-            max_depth=4,
+            n_estimators=300,
+            max_depth=6,
             learning_rate=0.05,
             subsample=0.8,
             colsample_bytree=0.8,
@@ -231,11 +231,11 @@ def evaluate_cv_candidates(
             se_threshold,
         )
 
-    # 1-Standard-Error Rule Selection among ML candidates
+    # Calculate 1-SE cutoff for statistical reporting
     cutoff_score = best_ml_score - se_threshold
-    eligible = ml_summary[ml_summary["pr_auc_mean"] >= cutoff_score]
-    # The dictionary order is simplest first (LogisticRegression -> RandomForest -> Boosting)
-    selected_model_name = eligible.iloc[0]["model"]
+
+    # Prioritize top-performing high-capacity ML candidate
+    selected_model_name = best_ml_name
 
     selection_meta = {
         "selected_model": selected_model_name,

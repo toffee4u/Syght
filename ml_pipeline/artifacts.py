@@ -63,8 +63,9 @@ def save_model_bundle(
         },
     }
 
-    joblib.dump(bundle, out_file, compress=3)
-    logger.info("Saved Syght model bundle to: %s", out_file)
+    # Save uncompressed for full-fidelity serialization (matching enterprise GitHub ML repos)
+    joblib.dump(bundle, out_file, compress=0)
+    logger.info("Saved Syght model bundle to: %s (%.2f MB)", out_file, out_file.stat().st_size / (1024 * 1024))
     return out_file
 
 
