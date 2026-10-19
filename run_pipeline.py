@@ -198,6 +198,7 @@ def main() -> None:
     parser.add_argument("--download", action="store_true", help="Download dataset from Kaggle if missing")
     parser.add_argument("--kaggle-username", type=str, default=None, help="Kaggle API username")
     parser.add_argument("--kaggle-key", type=str, default=None, help="Kaggle API key")
+    parser.add_argument("--augment", action="store_true", help="Augment dataset with synthetic adversarial fraud scenarios")
     parser.add_argument("--skip-tuning", action="store_true", help="Skip hyperparameter search for faster execution")
     args = parser.parse_args()
 
@@ -220,9 +221,15 @@ def main() -> None:
     # 2. Ingestion & Pre-Flight Audit
     print("\n[Stage 1/7] Ingesting and Auditing Raw Data...")
     labels_raw, bene_raw, ip_raw, op_raw = load_raw_tables(raw_data_dir, config)
+
+    if args.augment:
+        from ml_pipeline.data_ingestion import augment_training_dataset
+        print("  • Augmenting with rare adversarial fraud scenarios...")
+        labels_raw, bene_raw, ip_raw, op_raw = augment_training_dataset(labels_raw, bene_raw, ip_raw, op_raw, config=config)
+
     auditor = DataAuditor(config=config)
     audit_report = auditor.audit(labels_raw, bene_raw, ip_raw, op_raw)
-    print(f"  • Raw Providers: {len(labels_raw)} | Beneficiaries: {len(bene_raw)}")
+    print(f"  • Total Providers: {len(labels_raw)} | Beneficiaries: {len(bene_raw)}")
     print(f"  • Inpatient Claims: {len(ip_raw)} | Outpatient Claims: {len(op_raw)}")
     print(f"  • Audit Passed: {audit_report['passed']}")
 
