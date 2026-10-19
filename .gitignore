@@ -1,0 +1,91 @@
+# ==============================================================================
+# Syght — Git Ignore Configuration
+# ==============================================================================
+
+# Python Virtual Environments & Packages
+.venv/
+venv/
+ENV/
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Python Bytecode & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# Secrets, API Keys & Credentials (STRICT)
+kaggle.json
+.env
+.env.*
+*.key
+*.pem
+*.secret
+*credentials*
+*token*
+
+# Data Directories & Datasets (Raw & Processed Data Must NEVER be committed)
+data/
+data/raw/
+data/processed/
+data/interim/
+data/sample/
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.duckdb
+*.sqlite
+*.sqlite3
+*.db
+*.h5
+*.hdf5
+
+# Large Model Binaries & Artifact Bundles
+models/*.joblib
+models/*.pkl
+models/*.bin
+models/*.onnx
+models/*.pt
+models/*.pth
+models/*.tar.gz
+models/*.zip
+outputs/
+artifacts/
+*.zip
+*.tar.gz
+
+# Reference Repositories (Cloned for research inspection only)
+references/
+
+# IDE & OS Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
