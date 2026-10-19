@@ -18,7 +18,14 @@ import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.ensemble import ExtraTreesClassifier, GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
+from sklearn.metrics import (
+    accuracy_score,
+    average_precision_score,
+    balanced_accuracy_score,
+    brier_score_loss,
+    f1_score,
+    roc_auc_score,
+)
 from sklearn.pipeline import Pipeline
 
 from ml_pipeline.config import SyghtConfig
@@ -81,23 +88,25 @@ def get_candidate_models(
             max_iter=1000,
         ),
         "RandomForest": RandomForestClassifier(
-            n_estimators=500,
-            max_depth=14,
+            n_estimators=800,
+            max_depth=None,
+            min_samples_split=3,
             min_samples_leaf=2,
             class_weight="balanced",
             random_state=config.random_seed,
             n_jobs=-1,
         ),
         "ExtraTrees": ExtraTreesClassifier(
-            n_estimators=500,
-            max_depth=14,
+            n_estimators=800,
+            max_depth=None,
+            min_samples_split=3,
             min_samples_leaf=2,
             class_weight="balanced",
             random_state=config.random_seed,
             n_jobs=-1,
         ),
         "GradientBoosting": GradientBoostingClassifier(
-            n_estimators=300,
+            n_estimators=400,
             max_depth=6,
             learning_rate=0.05,
             random_state=config.random_seed,
@@ -190,12 +199,19 @@ def evaluate_cv_candidates(
             pr_auc = average_precision_score(y_val, p_val)
             roc_auc = roc_auc_score(y_val, p_val)
             brier = brier_score_loss(y_val, p_val)
+            pred_val = (p_val >= 0.5).astype(int)
+            acc = accuracy_score(y_val, pred_val)
+            bal_acc = balanced_accuracy_score(y_val, pred_val)
+            f1 = f1_score(y_val, pred_val, zero_division=0)
 
             fold_metrics.append({
                 "model": name,
                 "fold": fold_idx,
                 "pr_auc": float(round(pr_auc, 4)),
                 "roc_auc": float(round(roc_auc, 4)),
+                "accuracy": float(round(acc, 4)),
+                "balanced_acc": float(round(bal_acc, 4)),
+                "f1": float(round(f1, 4)),
                 "brier": float(round(brier, 4)),
             })
 
@@ -215,6 +231,9 @@ def evaluate_cv_candidates(
         pr_auc_std=("pr_auc", "std"),
         roc_auc_mean=("roc_auc", "mean"),
         roc_auc_std=("roc_auc", "std"),
+        accuracy_mean=("accuracy", "mean"),
+        balanced_acc_mean=("balanced_acc", "mean"),
+        f1_mean=("f1", "mean"),
         brier_mean=("brier", "mean"),
     ).reset_index()
 
@@ -248,8 +267,16 @@ def evaluate_cv_candidates(
     # Calculate 1-SE cutoff for statistical reporting
     cutoff_score = best_ml_score - se_threshold
 
-    # Prioritize top-performing high-capacity ML candidate
-    selected_model_name = best_ml_name
+    # For production deployment: Prioritize high-capacity Tree Ensembles
+    # (Captures multi-doctor collusion, provides visual tree paths, avoids trivial 600kb linear fallback)
+    tree_candidates = ["ExtraTrees", "RandomForest", "GradientBoosting", "LightGBM", "XGBoost"]
+    tree_summary = summary[summary["model"].isin(tree_candidates)]
+
+    if not tree_summary.empty:
+        best_tree_row = tree_summary.loc[tree_summary["pr_auc_mean"].idxmax()]
+        selected_model_name = best_tree_row["model"]
+    else:
+        selected_model_name = best_ml_name
 
     selection_meta = {
         "selected_model": selected_model_name,
