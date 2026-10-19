@@ -356,8 +356,25 @@ def build_provider_features(
     claim_feats = extract_claims_features(claims, cfg)
     patient_feats = extract_patient_mix_features(claims, beneficiary_df, cfg)
 
-    # Join claim and patient mix features
+    # Compute network collusion graph features
+    try:
+        from ml_pipeline.graph_collusion import HealthcareCollusionGraph
+        graph = HealthcareCollusionGraph()
+        graph.fit_from_claims(
+            claims,
+            provider_col=cfg.id_col,
+            bene_col=cfg.bene_id_col,
+            physician_col=cfg.attending_physician_col,
+        )
+        graph_feats = graph.compute_provider_collusion_metrics()
+    except Exception as e:
+        logger.warning("Graph collusion feature extraction skipped: %s", e)
+        graph_feats = pd.DataFrame(columns=[cfg.id_col] + cfg.network_collusion_features)
+
+    # Join claim, patient mix, and graph network features
     all_feats = claim_feats.join(patient_feats, how="outer").reset_index()
+    if not graph_feats.empty:
+        all_feats = all_feats.merge(graph_feats, on=cfg.id_col, how="left")
 
     # Join with provider spine
     spine_cols = [cfg.id_col]

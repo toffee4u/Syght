@@ -200,3 +200,52 @@ def load_raw_tables(
 
     validate_raw_tables(labels, beneficiary, inpatient, outpatient, cfg)
     return labels, beneficiary, inpatient, outpatient
+
+
+def augment_training_dataset(
+    labels: pd.DataFrame,
+    beneficiary: pd.DataFrame,
+    inpatient: pd.DataFrame,
+    outpatient: pd.DataFrame,
+    n_augmented_providers: int = 250,
+    n_augmented_beneficiaries: int = 800,
+    seed: int = 101,
+    config: Optional[SyghtConfig] = None,
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Augments the CMS benchmark tables with realistic, adversarial healthcare fraud
+    scenarios (kickback rings, ghost admissions, package rate upcoding bursts).
+    Expands the provider population and strengthens model generalization on rare fraud patterns.
+    """
+    from ml_pipeline.medicare_simulator import generate_simulated_medicare_data
+
+    cfg = config or SyghtConfig()
+    aug_labels, aug_bene, aug_ip, aug_op = generate_simulated_medicare_data(
+        n_providers=n_augmented_providers,
+        n_beneficiaries=n_augmented_beneficiaries,
+        seed=seed,
+        config=cfg,
+    )
+
+    # Prefix provider, beneficiary, and claim IDs to ensure zero collision with benchmark data
+    aug_labels[cfg.id_col] = "AUG_" + aug_labels[cfg.id_col].astype(str)
+    aug_bene[cfg.bene_id_col] = "AUG_" + aug_bene[cfg.bene_id_col].astype(str)
+
+    for df_claims in [aug_ip, aug_op]:
+        df_claims[cfg.id_col] = "AUG_" + df_claims[cfg.id_col].astype(str)
+        df_claims[cfg.bene_id_col] = "AUG_" + df_claims[cfg.bene_id_col].astype(str)
+        df_claims[cfg.claim_id_col] = "AUG_" + df_claims[cfg.claim_id_col].astype(str)
+
+    comb_labels = pd.concat([labels, aug_labels], ignore_index=True)
+    comb_bene = pd.concat([beneficiary, aug_bene], ignore_index=True).drop_duplicates(subset=[cfg.bene_id_col])
+    comb_ip = pd.concat([inpatient, aug_ip], ignore_index=True)
+    comb_op = pd.concat([outpatient, aug_op], ignore_index=True)
+
+    logger.info(
+        "Dataset augmented: Total Providers=%d (+%d), Claims=%d (+%d)",
+        len(comb_labels),
+        len(aug_labels),
+        len(comb_ip) + len(comb_op),
+        len(aug_ip) + len(aug_op),
+    )
+    return comb_labels, comb_bene, comb_ip, comb_op

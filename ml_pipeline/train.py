@@ -16,7 +16,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", message=".*penalty.*")
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin, clone
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier, GradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
 from sklearn.pipeline import Pipeline
@@ -87,6 +87,20 @@ def get_candidate_models(
             class_weight="balanced",
             random_state=config.random_seed,
             n_jobs=-1,
+        ),
+        "ExtraTrees": ExtraTreesClassifier(
+            n_estimators=500,
+            max_depth=14,
+            min_samples_leaf=2,
+            class_weight="balanced",
+            random_state=config.random_seed,
+            n_jobs=-1,
+        ),
+        "GradientBoosting": GradientBoostingClassifier(
+            n_estimators=300,
+            max_depth=6,
+            learning_rate=0.05,
+            random_state=config.random_seed,
         ),
     }
 

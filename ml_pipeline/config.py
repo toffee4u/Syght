@@ -157,6 +157,12 @@ class SyghtConfig:
         "mean_op_annual_deductible",
     ])
 
+    network_collusion_features: List[str] = field(default_factory=lambda: [
+        "graph_collusion_degree",
+        "graph_shared_physicians_count",
+        "graph_pct_multi_facility_physicians",
+    ])
+
     # Splitting parameters
     test_size: float = 0.20
     val_size: float = 0.15
@@ -182,6 +188,7 @@ class SyghtConfig:
             + self.money_features
             + self.behaviour_features
             + self.patient_mix_features
+            + self.network_collusion_features
         )
 
     @property
