@@ -21,6 +21,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from backend.preauth_gateway import PreAuthFraudGateway, PreAuthRequest
 from backend.schemas import (
@@ -104,7 +105,7 @@ app.add_middleware(
 )
 
 
-@app.get("/", summary="API Root & Status", tags=["General"])
+@app.get("/api", summary="API Root & Status", tags=["General"])
 async def root():
     """Root endpoint welcoming clients and directing to OpenAPI documentation."""
     return {
@@ -342,6 +343,17 @@ async def run_ten_cases():
         "decision_threshold": predictor.decision_threshold,
         "cases": results,
     }
+
+
+# Mount static figures directory for evaluation plots
+figures_dir = PROJECT_ROOT / "reports" / "figures"
+if figures_dir.exists():
+    app.mount("/reports/figures", StaticFiles(directory=str(figures_dir)), name="figures")
+
+# Mount frontend directory for SPA
+frontend_dir = PROJECT_ROOT / "frontend"
+if frontend_dir.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
 
 
 if __name__ == "__main__":
