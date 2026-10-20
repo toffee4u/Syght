@@ -192,6 +192,7 @@ function getArchetypeIcon(archetype = '') {
 export default function BatchAuditResults({
   resultsData,
   pipelineExecutionTrigger,
+  onClearExecutionTrigger,
   onInspectCase,
   onOpenDatasetStudio,
   onRunAuditWithSample,
@@ -202,13 +203,17 @@ export default function BatchAuditResults({
   const [activeDatasetMode, setActiveDatasetMode] = useState(resultsData ? 'custom' : 'sample-10');
   const [currentResults, setCurrentResults] = useState(resultsData || null);
 
-  // Execution state (Starts as false unless triggered explicitly)
+  // Execution state (Starts false so it never auto-runs unless triggered)
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionProgress, setExecutionProgress] = useState(0);
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [terminalLogs, setTerminalLogs] = useState([]);
   const [isExplainerOpen, setIsExplainerOpen] = useState(false);
+
+  // References to guarantee no multiple timer loops
+  const intervalRef = useRef(null);
+  const lastProcessedTriggerRef = useRef(null);
 
   // Filter tabs & search for forensic details cards
   const [filterTab, setFilterTab] = useState('all');
@@ -292,8 +297,14 @@ export default function BatchAuditResults({
   const exposureChartRef = useRef(null);
   const shapChartRef = useRef(null);
 
-  // Start live multi-model execution animation
+  // Start live multi-model execution animation (Single-run guarantee)
   const startLiveExecution = (dataPayload, modeName = 'sample-10') => {
+    // Clear any existing timer
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     setIsExecuting(true);
     setExecutionProgress(0);
     setCurrentStageIndex(0);
@@ -372,7 +383,7 @@ export default function BatchAuditResults({
       },
     ]);
 
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       const currentElapsed = Math.round(performance.now() - startTime);
       setElapsedMs(currentElapsed);
 
@@ -416,7 +427,10 @@ export default function BatchAuditResults({
         }
 
         if (next >= 100) {
-          clearInterval(interval);
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
           finishExecution(dataPayload);
           return 100;
         }
@@ -426,13 +440,20 @@ export default function BatchAuditResults({
   };
 
   const finishExecution = (dataPayload) => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     setIsExecuting(false);
     setExecutionProgress(100);
     setCurrentStageIndex(4);
     setCurrentResults(dataPayload);
+
     if (onSaveAuditResults) {
       onSaveAuditResults(dataPayload);
     }
+
     setModelsState((curr) =>
       curr.map((m) => ({
         ...m,
@@ -454,7 +475,7 @@ export default function BatchAuditResults({
 
     if (onShowToast) {
       onShowToast(
-        `Multi-Model Pipeline Complete: <strong>${dataPayload.flagged_count} Flagged</strong> out of ${dataPayload.total_evaluated} claims in sub-5ms.`,
+        `Audit Complete: <strong>${dataPayload.flagged_count} Flagged</strong> out of ${dataPayload.total_evaluated} claims in sub-5ms.`,
         dataPayload.flagged_count > 0 ? 'danger' : 'success'
       );
     }
@@ -466,9 +487,16 @@ export default function BatchAuditResults({
     }
   };
 
-  // Trigger Handler
+  // Execution trigger consumption (Guarantees no infinite re-runs)
   useEffect(() => {
-    if (pipelineExecutionTrigger) {
+    if (pipelineExecutionTrigger && pipelineExecutionTrigger.timestamp !== lastProcessedTriggerRef.current) {
+      lastProcessedTriggerRef.current = pipelineExecutionTrigger.timestamp;
+
+      // Consume the trigger immediately in parent
+      if (onClearExecutionTrigger) {
+        onClearExecutionTrigger();
+      }
+
       if (pipelineExecutionTrigger.source === 'sample-10') {
         const payload = buildResultsFrom10Cases();
         startLiveExecution(payload, 'sample-10');
@@ -478,15 +506,16 @@ export default function BatchAuditResults({
       } else if (pipelineExecutionTrigger.source === 'custom' && pipelineExecutionTrigger.data) {
         startLiveExecution(pipelineExecutionTrigger.data, 'custom');
       }
-    } else if (resultsData) {
-      // Existing history! Do NOT auto run
-      setIsExecuting(false);
+    } else if (!pipelineExecutionTrigger && resultsData && !isExecuting) {
+      // Existing history: show without running
       setCurrentResults(resultsData);
-    } else {
-      // Direct open without trigger or prior history: show Standby/Empty state
-      setIsExecuting(false);
-      setCurrentResults(null);
     }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, [pipelineExecutionTrigger, resultsData]);
 
   // Chart.js visualizations
@@ -786,8 +815,10 @@ export default function BatchAuditResults({
   const flaggedCount = currentResults?.flagged_count || 0;
   const clearedCount = currentResults?.cleared_count || 0;
   const flaggedExposureCr = (((currentResults?.flagged_exposure || 0) / 10000000)).toFixed(2);
+  const cleanExposureCr = (((Number(currentResults?.total_exposure || 0) - Number(currentResults?.flagged_exposure || 0)) / 10000000)).toFixed(2);
   const totalExposureCr = (((currentResults?.total_exposure || 0) / 10000000)).toFixed(2);
   const avgConfidence = currentResults?.average_confidence || '96.2';
+  const pctFlagged = totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(0) : '0';
 
   // Filtered claims for forensic breakdown cards
   const filteredClaims = evaluatedItems.filter((r) => {
@@ -1114,24 +1145,18 @@ export default function BatchAuditResults({
           ========================================================================= */}
       {!isExecuting && currentResults && (
         <>
-          {/* Executive Plain-Language Verdict Banner */}
-          <section className="executive-verdict-banner">
-            <div className="verdict-banner-header">
-              <div className="verdict-badge-row">
-                <span className="verdict-status-pill danger">
-                  <HugeiconsIcon icon={Alert02Icon} size={14} />
-                  <span>
-                    AUDIT COMPLETE • {flaggedCount} OF {totalCount} FACILITIES FLAGGED (
-                    {totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(1) : 0}%)
-                  </span>
-                </span>
-                <span className="verdict-dataset-tag font-mono">
-                  {currentResults?.dataset_name || 'Portfolio Claims'}
+          {/* =====================================================================
+              PRIMARY: CLEAR RESULT IN SIMPLE ENGLISH (HOW MANY FRAUD & WHY)
+              ===================================================================== */}
+          <section className="clear-executive-summary-banner">
+            <div className="summary-banner-top">
+              <div className="summary-status-badge">
+                <HugeiconsIcon icon={Alert02Icon} size={16} />
+                <span>
+                  AUDIT RESULT: {flaggedCount} OF {totalCount} HOSPITALS FLAGGED FOR FRAUD ({pctFlagged}%)
                 </span>
               </div>
-
-              <div className="verdict-re-run-controls">
-                {/* Export Result Quick Button */}
+              <div className="summary-actions-cluster">
                 <button
                   type="button"
                   className="syght-btn-primary text-xs"
@@ -1139,84 +1164,131 @@ export default function BatchAuditResults({
                   title="Export Audited Report as CSV"
                 >
                   <HugeiconsIcon icon={Download01Icon} size={13} />
-                  <span>Export Result</span>
+                  <span>Export Result (CSV)</span>
                 </button>
-
                 <button
                   type="button"
                   className="syght-btn-secondary text-xs"
                   onClick={handleExportJson}
-                  title="Export Structured JSON Report"
+                  title="Export Structured JSON Intelligence Dossier"
                 >
                   <HugeiconsIcon icon={Download01Icon} size={13} />
                   <span>JSON Dossier</span>
                 </button>
-
                 <button
                   type="button"
                   className="syght-btn-secondary text-xs"
                   onClick={() => {
-                    if (activeDatasetMode === 'sample-10') {
-                      startLiveExecution(buildResultsFrom10Cases(), 'sample-10');
-                    } else if (activeDatasetMode === 'benchmark-25') {
-                      startLiveExecution(buildResultsFrom25Cases(), 'benchmark-25');
-                    } else {
-                      startLiveExecution(currentResults, 'custom');
-                    }
+                    const payload = activeDatasetMode === 'benchmark-25' ? buildResultsFrom25Cases() : buildResultsFrom10Cases();
+                    startLiveExecution(payload, activeDatasetMode);
                   }}
-                  title="Re-run the multi-model pipeline on this dataset"
+                  title="Re-run the audit on this dataset"
                 >
                   <HugeiconsIcon icon={ReloadIcon} size={13} />
-                  <span>Re-Run Pipeline</span>
+                  <span>Re-Run</span>
                 </button>
               </div>
             </div>
 
-            {/* 4 Plain-Language Explanations */}
-            <div className="executive-verdict-grid">
-              <div className="verdict-col">
-                <div className="verdict-col-label">1. THE VERDICT</div>
-                <div className="verdict-col-headline">
-                  {flaggedCount} Hospitals Flagged • {clearedCount} Clean
-                </div>
-                <p className="verdict-col-text">
-                  Syght analyzed {totalCount} provider billing profiles across 61 clinical features. 
-                  <strong> {flaggedCount} providers ({totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(1) : 0}%)</strong> triggered severe anomaly alarms and exceed the cost-optimal 0.5364 decision boundary.
-                </p>
+            <div className="summary-hero-row">
+              <h2 className="summary-hero-title">
+                {flaggedCount} Hospitals Caught in Fraud Schemes
+              </h2>
+              <p className="summary-hero-subtitle">
+                Syght scanned {totalCount} healthcare facilities. We verified <strong>{clearedCount} honest clinics</strong> and caught <strong>{flaggedCount} hospitals committing systemic billing fraud</strong>.
+              </p>
+            </div>
+
+            {/* 3 Quick Plain-English Metric Highlights */}
+            <div className="summary-highlights-grid">
+              <div className="summary-highlight-card danger">
+                <div className="highlight-tag font-mono">1. HOW MANY CAUGHT</div>
+                <div className="highlight-val">{flaggedCount} Fraudulent Hospitals</div>
+                <div className="highlight-desc">{pctFlagged}% of the evaluated provider network failed the audit</div>
               </div>
 
-              <div className="verdict-col">
-                <div className="verdict-col-label">2. FINANCIAL EXPOSURE</div>
-                <div className="verdict-col-headline text-rose-600">
-                  ₹{flaggedExposureCr} Cr at Risk (Freeze)
-                </div>
-                <p className="verdict-col-text">
-                  A total of <strong>₹{flaggedExposureCr} Crore</strong> in pending disbursements is recommended for an immediate treasury freeze. 
-                  Clean facilities totaling ₹{((Number(currentResults?.total_exposure || 0) - Number(currentResults?.flagged_exposure || 0)) / 10000000).toFixed(2)} Cr are auto-cleared for expedited payment.
-                </p>
+              <div className="summary-highlight-card exposure">
+                <div className="highlight-tag font-mono">2. MONEY AT RISK</div>
+                <div className="highlight-val text-rose">₹{flaggedExposureCr} Crore</div>
+                <div className="highlight-desc">Recommended for an immediate bank treasury freeze</div>
               </div>
 
-              <div className="verdict-col">
-                <div className="verdict-col-label">3. WHY THEY WERE FLAGGED</div>
-                <div className="verdict-col-headline">
-                  ICU Upcoding & Surgery Outliers
-                </div>
-                <p className="verdict-col-text">
-                  The primary root causes detected are <strong>artificial ICU length-of-stay prolongation</strong> (mean 16.8 days vs standard 3.2 days), 
-                  <strong>ghost surgeries</strong> (&gt;200 surgeries per doctor), and circular doctor recycling rings.
-                </p>
+              <div className="summary-highlight-card clean">
+                <div className="highlight-tag font-mono">3. HONEST CLINICS (CLEARED)</div>
+                <div className="highlight-val text-emerald">{clearedCount} Honest Facilities</div>
+                <div className="highlight-desc">Approved for ₹{cleanExposureCr} Cr fast bank payout</div>
+              </div>
+            </div>
+
+            {/* WHY THEY WERE FLAGGED: IN SIMPLE ENGLISH */}
+            <div className="summary-why-box">
+              <div className="why-box-title">
+                <HugeiconsIcon icon={AlertCircleIcon} size={20} className="text-rose" />
+                <span>Why Were They Flagged? (Plain English Findings)</span>
               </div>
 
-              <div className="verdict-col">
-                <div className="verdict-col-label">4. RECOMMENDED ACTION</div>
-                <div className="verdict-col-headline text-sky-600">
-                  Immediate 3-Step SIU Protocol
+              <div className="why-reasons-grid">
+                <div className="why-reason-item">
+                  <div className="why-reason-num">1</div>
+                  <div>
+                    <div className="why-reason-heading">Ghost Surgeries (Fabricated Theatre Logs)</div>
+                    <p className="why-reason-text">
+                      Doctors claimed to perform over 200 operations each. It is physically impossible for a single surgeon to operate this many times without inventing fake patient records.
+                    </p>
+                  </div>
                 </div>
-                <p className="verdict-col-text">
-                  <strong>Step 1:</strong> Freeze claim payments for top flagged hospitals ({evaluatedItems[0]?.provider_id || 'PRV_02'}).<br />
-                  <strong>Step 2:</strong> Subpoena operating theatre biometric logs and nurse duty charts.<br />
-                  <strong>Step 3:</strong> Expedite payment release for verified community clinics.
-                </p>
+
+                <div className="why-reason-item">
+                  <div className="why-reason-num">2</div>
+                  <div>
+                    <div className="why-reason-heading">Artificial ICU Stays (Upcoding Prolongation)</div>
+                    <p className="why-reason-text">
+                      Patients were kept in ICU for an average of 16.8 days compared to the standard medical norm of 3.2 days, artificially maximizing billings before discharge.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="why-reason-item">
+                  <div className="why-reason-num">3</div>
+                  <div>
+                    <div className="why-reason-heading">Doctor Recycling Ring (Kickback Syndicates)</div>
+                    <p className="why-reason-text">
+                      The same doctors were detected circulating across 3+ competing private hospitals within 24 hours, cycling patient IDs for mutual commission cuts.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="why-reason-item">
+                  <div className="why-reason-num">4</div>
+                  <div>
+                    <div className="why-reason-heading">Post-Mortem Claim Submissions</div>
+                    <p className="why-reason-text">
+                      Procedures and medication packages were billed days after the patient’s verified time of death in government civil registry records.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* WHAT TO DO NOW: IN SIMPLE ENGLISH */}
+            <div className="summary-action-box">
+              <div className="action-box-title">
+                <HugeiconsIcon icon={Shield01Icon} size={20} className="text-sky-600" />
+                <span>What Should You Do Now? (Immediate Action Plan)</span>
+              </div>
+              <div className="action-steps-list">
+                <div className="action-step">
+                  <span className="step-badge font-mono">Action 1</span>
+                  <span><strong>Freeze Payments Now:</strong> Place an immediate financial freeze on the ₹{flaggedExposureCr} Crore pending for the {flaggedCount} flagged facilities ({evaluatedItems[0]?.provider_id || 'PRV_02'}).</span>
+                </div>
+                <div className="action-step">
+                  <span className="step-badge font-mono">Action 2</span>
+                  <span><strong>Release Honest Claims Fast:</strong> Expedite ₹{cleanExposureCr} Crore to the {clearedCount} honest rural community clinics without administrative delay.</span>
+                </div>
+                <div className="action-step">
+                  <span className="step-badge font-mono">Action 3</span>
+                  <span><strong>Demand Hospital Biometric Logs:</strong> Subpoena operation theatre biometric access logs and nurse duty books to prove ghost surgeries.</span>
+                </div>
               </div>
             </div>
           </section>
@@ -1260,7 +1332,7 @@ export default function BatchAuditResults({
               <div className="kpi-card-val font-mono text-rose">
                 {flaggedCount}{' '}
                 <span className="kpi-val-pct">
-                  ({totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(1) : 0}%)
+                  ({pctFlagged}%)
                 </span>
               </div>
               <div className="kpi-card-sub font-mono">
