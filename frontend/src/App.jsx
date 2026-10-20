@@ -8,6 +8,7 @@ import ClaimAnalyzer from './components/ClaimAnalyzer';
 import ModelPerformance from './components/ModelPerformance';
 import CollusionNetwork from './components/CollusionNetwork';
 import PreAuthGateway from './components/PreAuthGateway';
+import DatasetStudio from './components/DatasetStudio';
 import Toast from './components/Toast';
 
 import { BENCHMARK_CASES } from './data/benchmarkCases';
@@ -135,6 +136,7 @@ export default function App() {
             onInspectCase={handleInspectCase}
             onTriageAction={handleTriageAction}
             onViewAllCases={() => setActiveTab('tab-queue')}
+            onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
           />
         )}
 
@@ -143,6 +145,13 @@ export default function App() {
             cases={cases}
             onInspectCase={handleInspectCase}
             onTriageAction={handleTriageAction}
+          />
+        )}
+
+        {activeTab === 'tab-dataset' && (
+          <DatasetStudio
+            onInspectCase={handleInspectCase}
+            onShowToast={showToast}
           />
         )}
 
@@ -223,6 +232,11 @@ export default function App() {
               <li>
                 <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-queue')}>
                   Priority Review Queue
+                </button>
+              </li>
+              <li>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-dataset')}>
+                  Dataset Studio & Batch Runner
                 </button>
               </li>
               <li>

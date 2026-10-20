@@ -101,3 +101,24 @@ def test_api_ten_cases_benchmark_endpoint(client):
     assert data["status"] == "success"
     assert data["total_cases_evaluated"] == 10
     assert len(data["cases"]) == 10
+
+
+def test_api_predict_custom_dataset(client):
+    csv_payload = (
+        "provider_id,name,total_claims_count,inpatient_reimbursed_sum,total_inpatient_surgeries,unique_attending_physicians\n"
+        "PRV_TEST_A,Hospital A,100,500000,50,2\n"
+        "PRV_TEST_B,Clinic B,20,10000,0,3\n"
+    )
+    response = client.post(
+        "/api/v1/predict/dataset",
+        data=csv_payload,
+        headers={"Content-Type": "text/csv"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "success"
+    assert data["total_evaluated"] == 2
+    assert len(data["results"]) == 2
+    assert "flagged_count" in data
+    assert "total_exposure" in data
+

@@ -13,6 +13,7 @@ import {
   IconMenu,
   IconClose,
   IconPulse,
+  IconDatabase,
 } from './Icons';
 
 export default function Header({
@@ -48,6 +49,7 @@ export default function Header({
   const tabs = [
     { id: 'tab-dashboard', label: 'Command Center', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
     { id: 'tab-queue', label: 'Review Queue', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
+    { id: 'tab-dataset', label: 'Dataset Studio', icon: IconDatabase, desc: 'Upload & Batch Test' },
     { id: 'tab-analyzer', label: 'Claim Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
     { id: 'tab-performance', label: 'Model Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
     { id: 'tab-network', label: 'Collusion Graph', icon: IconNetwork, desc: 'Multi-Provider Rings' },
