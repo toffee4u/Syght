@@ -197,6 +197,17 @@ export default function App() {
 
       {/* Syght Inspired High-Tech Footer */}
       <footer className="syght-footer">
+        {/* Giant Team Pulse Typography Brand Banner (onesuperbrain.com signature aesthetic) */}
+        <div className="footer-giant-brand-section">
+          <div className="footer-giant-brand-halo" />
+          <div className="footer-giant-brand-text">
+            TEAM PULSE
+          </div>
+          <p className="footer-giant-brand-caption">
+            Autonomous Healthcare Insurance Fraud Intelligence Engine
+          </p>
+        </div>
+
         <div className="footer-inner-cluster">
           <div className="footer-brand-col">
             <div className="footer-logo-row">
