@@ -78,7 +78,7 @@ export default function Header({
             type="button" 
             className="brand-anchor" 
             onClick={() => handleSelectTab('tab-dashboard')}
-            title="Syght — Team Pulse Enterprise Fraud Detection"
+            title="Syght — Enterprise Fraud Detection Platform"
           >
             <div className="brand-gem-container">
               <IconShield size={20} className="brand-gem-icon" />
@@ -90,12 +90,6 @@ export default function Header({
               </div>
             </div>
           </button>
-
-          {/* Team Pulse Signature Badge */}
-          <div className="team-pulse-pill" title="Engineered by Team Pulse">
-            <span className="pulse-dot-beacon" />
-            <span className="team-pulse-label">Team Pulse</span>
-          </div>
         </div>
 
         {/* Center Pill Nav (Desktop: >= 1150px) */}

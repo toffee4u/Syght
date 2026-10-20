@@ -4894,3 +4894,97 @@ a {
   border-top: 1px solid #f1f5f9;
 }
 
+/* ==============================================================================
+   Results Standby / Empty State Styles
+   ============================================================================== */
+
+.results-standby-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--syght-radius-lg);
+  padding: 4.5rem 2rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04);
+}
+
+.standby-icon-aura {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.standby-title {
+  font-family: var(--syght-font-sans);
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.standby-desc {
+  font-size: 0.88rem;
+  color: #64748b;
+  max-width: 580px;
+  line-height: 1.6;
+  margin-bottom: 2.25rem;
+}
+
+.standby-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 960px;
+}
+
+.standby-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--syght-radius-lg);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.standby-action-btn:hover {
+  border-color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.12);
+}
+
+.standby-action-btn.primary {
+  border-color: #0284c7;
+  background: #f0f9ff;
+}
+
+.standby-btn-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.standby-btn-icon-wrap.amber { background: #fef3c7; color: #d97706; }
+.standby-btn-icon-wrap.sky { background: #e0f2fe; color: #0284c7; }
+.standby-btn-icon-wrap.purple { background: #f3e8ff; color: #9333ea; }
+
+

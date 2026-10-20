@@ -201,6 +201,7 @@ export default function App() {
               onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
               onRunAuditWithSample={handleRunAuditWithSample}
               onRunAuditWithPortfolio={handleRunAuditWithPortfolio}
+              onSaveAuditResults={(results) => setBatchResults(results)}
               onShowToast={showToast}
             />
           )}
