@@ -2,23 +2,24 @@ import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import {
   IconLineChart,
-  IconSparkles,
   IconLayers,
   IconCheckCircle,
-  IconArrowUpRight,
 } from './Icons';
 
-export default function ModelPerformance({
-  models,
-  figures,
-  onEnlargeFigure,
-}) {
+export default function ModelPerformance({ models }) {
   const chart1Ref = useRef(null);
   const chart2Ref = useRef(null);
   const chart3Ref = useRef(null);
   const chart4Ref = useRef(null);
 
   useEffect(() => {
+    // Common Light Theme Chart.js options
+    const commonScales = {
+      gridColor: 'rgba(0, 0, 0, 0.06)',
+      tickColor: '#64748b',
+      titleColor: '#0f172a',
+    };
+
     // 1. Multi-Model ROC vs PR Chart
     let chart1 = null;
     if (chart1Ref.current) {
@@ -30,16 +31,16 @@ export default function ModelPerformance({
             {
               label: 'ROC-AUC',
               data: [0.8724, 0.8651, 0.8590, 0.8415, 0.8350, 0.8120, 0.7810],
-              backgroundColor: 'rgba(0, 242, 254, 0.75)',
-              borderColor: '#00f2fe',
+              backgroundColor: 'rgba(2, 132, 199, 0.85)',
+              borderColor: '#0284c7',
               borderWidth: 1,
               borderRadius: 6,
             },
             {
               label: 'PR-AUC',
               data: [0.7418, 0.7290, 0.7185, 0.6850, 0.6720, 0.6350, 0.5890],
-              backgroundColor: 'rgba(168, 85, 247, 0.75)',
-              borderColor: '#a855f7',
+              backgroundColor: 'rgba(124, 58, 237, 0.85)',
+              borderColor: '#7c3aed',
               borderWidth: 1,
               borderRadius: 6,
             },
@@ -49,17 +50,37 @@ export default function ModelPerformance({
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#94a3b8', font: { family: 'Space Grotesk', size: 11 } } },
+            legend: {
+              labels: {
+                color: '#1e293b',
+                font: { family: 'Space Grotesk', size: 12, weight: '500' },
+                padding: 16,
+              },
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleFont: { family: 'Space Grotesk', weight: '600' },
+              padding: 10,
+              cornerRadius: 8,
+            },
           },
           scales: {
-            y: { min: 0.5, max: 1.0, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+            y: {
+              min: 0.5,
+              max: 1.0,
+              grid: { color: commonScales.gridColor },
+              ticks: { color: commonScales.tickColor, font: { family: 'JetBrains Mono', size: 11 } },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: commonScales.tickColor, font: { family: 'Space Grotesk', size: 11 } },
+            },
           },
         },
       });
     }
 
-    // 2. ROC Curve Live Simulation
+    // 2. ROC Curve
     let chart2 = null;
     if (chart2Ref.current) {
       chart2 = new Chart(chart2Ref.current, {
@@ -70,17 +91,18 @@ export default function ModelPerformance({
             {
               label: 'LightGBM Champion (AUC 0.872)',
               data: [0.0, 0.58, 0.74, 0.83, 0.88, 0.92, 0.95, 0.97, 0.99, 1.0, 1.0],
-              borderColor: '#00f2fe',
-              backgroundColor: 'rgba(0, 242, 254, 0.1)',
+              borderColor: '#0284c7',
+              backgroundColor: 'rgba(2, 132, 199, 0.08)',
               fill: true,
               tension: 0.35,
               borderWidth: 2.5,
               pointRadius: 3,
+              pointBackgroundColor: '#0284c7',
             },
             {
-              label: 'Random Guess (AUC 0.500)',
+              label: 'Random Baseline (AUC 0.500)',
               data: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-              borderColor: 'rgba(255, 255, 255, 0.25)',
+              borderColor: 'rgba(100, 116, 139, 0.4)',
               borderDash: [5, 5],
               borderWidth: 1.5,
               pointRadius: 0,
@@ -91,11 +113,32 @@ export default function ModelPerformance({
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#94a3b8', font: { family: 'Space Grotesk', size: 11 } } },
+            legend: {
+              labels: {
+                color: '#1e293b',
+                font: { family: 'Space Grotesk', size: 12, weight: '500' },
+                padding: 16,
+              },
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              padding: 10,
+              cornerRadius: 8,
+            },
           },
           scales: {
-            y: { min: 0, max: 1.0, title: { display: true, text: 'True Positive Rate (Sensitivity)', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            x: { title: { display: true, text: 'False Positive Rate (1 - Specificity)', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: {
+              min: 0,
+              max: 1.0,
+              title: { display: true, text: 'True Positive Rate (Sensitivity)', color: commonScales.titleColor, font: { weight: '600' } },
+              grid: { color: commonScales.gridColor },
+              ticks: { color: commonScales.tickColor, font: { family: 'JetBrains Mono', size: 11 } },
+            },
+            x: {
+              title: { display: true, text: 'False Positive Rate (1 - Specificity)', color: commonScales.titleColor, font: { weight: '600' } },
+              grid: { color: commonScales.gridColor },
+              ticks: { color: commonScales.tickColor, font: { family: 'JetBrains Mono', size: 11 } },
+            },
           },
         },
       });
@@ -112,19 +155,22 @@ export default function ModelPerformance({
             {
               label: 'Syght Production LightGBM',
               data: [34.5, 52.1, 74.8, 89.2, 94.1, 97.0, 99.2],
-              borderColor: '#10b981',
-              backgroundColor: 'rgba(16, 185, 129, 0.12)',
+              borderColor: '#059669',
+              backgroundColor: 'rgba(5, 150, 105, 0.08)',
               fill: true,
               borderWidth: 2.5,
               tension: 0.3,
+              pointRadius: 4,
+              pointBackgroundColor: '#059669',
             },
             {
               label: 'Baseline Billing Heuristic',
               data: [8.2, 16.4, 32.5, 51.0, 64.2, 72.8, 81.0],
-              borderColor: '#f59e0b',
+              borderColor: '#d97706',
               borderDash: [4, 4],
               borderWidth: 2,
               tension: 0.3,
+              pointRadius: 0,
             },
           ],
         },
@@ -132,11 +178,30 @@ export default function ModelPerformance({
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#94a3b8', font: { family: 'Space Grotesk', size: 11 } } },
+            legend: {
+              labels: {
+                color: '#1e293b',
+                font: { family: 'Space Grotesk', size: 12, weight: '500' },
+                padding: 16,
+              },
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              padding: 10,
+              cornerRadius: 8,
+            },
           },
           scales: {
-            y: { title: { display: true, text: '% Fraud Rupees Captured', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            x: { title: { display: true, text: 'Auditor Workload Bandwidth', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: {
+              title: { display: true, text: '% Fraud Exposure Captured (₹)', color: commonScales.titleColor, font: { weight: '600' } },
+              grid: { color: commonScales.gridColor },
+              ticks: { color: commonScales.tickColor, font: { family: 'JetBrains Mono', size: 11 } },
+            },
+            x: {
+              title: { display: true, text: 'Auditor Workload Bandwidth', color: commonScales.titleColor, font: { weight: '600' } },
+              grid: { color: commonScales.gridColor },
+              ticks: { color: commonScales.tickColor, font: { family: 'Space Grotesk', size: 11 } },
+            },
           },
         },
       });
@@ -153,13 +218,13 @@ export default function ModelPerformance({
             {
               label: 'Total Expected Financial Loss (₹M)',
               data: [28.4, 18.2, 12.1, 8.4, 5.2, 7.9, 14.6, 26.8, 48.0],
-              borderColor: '#ef4444',
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              borderColor: '#e11d48',
+              backgroundColor: 'rgba(225, 29, 72, 0.08)',
               fill: true,
               borderWidth: 2.5,
               tension: 0.4,
-              pointBackgroundColor: ['#ef4444', '#ef4444', '#ef4444', '#ef4444', '#00f2fe', '#ef4444', '#ef4444', '#ef4444', '#ef4444'],
-              pointRadius: [3, 3, 3, 3, 8, 3, 3, 3, 3],
+              pointBackgroundColor: ['#e11d48', '#e11d48', '#e11d48', '#e11d48', '#0284c7', '#e11d48', '#e11d48', '#e11d48', '#e11d48'],
+              pointRadius: [3, 3, 3, 3, 7, 3, 3, 3, 3],
             },
           ],
         },
@@ -167,11 +232,30 @@ export default function ModelPerformance({
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#94a3b8', font: { family: 'Space Grotesk', size: 11 } } },
+            legend: {
+              labels: {
+                color: '#1e293b',
+                font: { family: 'Space Grotesk', size: 12, weight: '500' },
+                padding: 16,
+              },
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              padding: 10,
+              cornerRadius: 8,
+            },
           },
           scales: {
-            y: { title: { display: true, text: 'Net Economic Cost (₹ Millions)', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-            x: { title: { display: true, text: 'Decision Threshold (Optimal = 0.5364)', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: {
+              title: { display: true, text: 'Net Economic Cost (₹ Millions)', color: commonScales.titleColor, font: { weight: '600' } },
+              grid: { color: commonScales.gridColor },
+              ticks: { color: commonScales.tickColor, font: { family: 'JetBrains Mono', size: 11 } },
+            },
+            x: {
+              title: { display: true, text: 'Decision Threshold (Optimal = 0.5364)', color: commonScales.titleColor, font: { weight: '600' } },
+              grid: { color: commonScales.gridColor },
+              ticks: { color: commonScales.tickColor, font: { family: 'JetBrains Mono', size: 11 } },
+            },
           },
         },
       });
@@ -187,32 +271,29 @@ export default function ModelPerformance({
 
   return (
     <div className="tab-view active syght-view">
-      {/* Header */}
       <div className="syght-page-header">
-        <div className="page-header-title-box">
+        <div>
           <div className="syght-chip">
             <span className="chip-dot" />
-            Empirical Validation Benchmark
+            Empirical Validation Suite
           </div>
-          <h1 className="syght-page-title">
-            Model Benchmarks, Evaluation Curves & Research Artifacts
-          </h1>
+          <h1 className="syght-page-title">Model Performance & Econometric Curves</h1>
           <p className="syght-page-desc">
-            Empirical comparison of 7 candidate model architectures trained with 5-fold stratified cross-validation. 
-            Selected champion via the 1-Standard-Error rule balancing accuracy and deployment simplicity.
+            Rigorous 5-fold stratified cross-validation benchmarks comparing 7 machine learning architectures 
+            evaluated strictly under class-imbalanced PR-AUC and cost-sensitive loss curves.
           </p>
         </div>
       </div>
 
-      {/* 4 Interactive Real Charts Grid */}
+      {/* 2x2 Clean Modern Analytics Grid */}
       <div className="charts-2x2-grid">
         <div className="syght-panel chart-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconLineChart size={18} className="text-cyan-400" />
-              <h4>Multi-Model ROC-AUC vs. PR-AUC</h4>
+              <IconLineChart size={18} className="text-sky-600" />
+              <h4>Architectural Benchmark Comparison</h4>
             </div>
-            <span className="syght-chip">Cross-Validated</span>
+            <span className="syght-chip">ROC vs PR AUC</span>
           </div>
           <div className="chart-canvas-wrapper" style={{ height: '260px' }}>
             <canvas ref={chart1Ref} />
@@ -222,10 +303,10 @@ export default function ModelPerformance({
         <div className="syght-panel chart-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconLineChart size={18} className="text-cyan-400" />
+              <IconLineChart size={18} className="text-violet-600" />
               <h4>Receiver Operating Characteristic (ROC)</h4>
             </div>
-            <span className="syght-chip">AUC: 0.8724</span>
+            <span className="syght-chip font-mono">AUC = 0.8724</span>
           </div>
           <div className="chart-canvas-wrapper" style={{ height: '260px' }}>
             <canvas ref={chart2Ref} />
@@ -235,8 +316,8 @@ export default function ModelPerformance({
         <div className="syght-panel chart-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconLineChart size={18} className="text-emerald-400" />
-              <h4>Operational Queue Cumulative Fraud Capture</h4>
+              <IconLineChart size={18} className="text-emerald-600" />
+              <h4>Investigator Top-K Operational Queue Lift</h4>
             </div>
             <span className="syght-chip">Top-5% Lift: 74.8%</span>
           </div>
@@ -248,10 +329,10 @@ export default function ModelPerformance({
         <div className="syght-panel chart-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconLineChart size={18} className="text-rose-400" />
-              <h4>Threshold Cost-Loss Function Minimization</h4>
+              <IconLineChart size={18} className="text-rose-600" />
+              <h4>Cost-Sensitive Loss Minimization</h4>
             </div>
-            <span className="syght-chip font-mono">T* = 0.5364</span>
+            <span className="syght-chip font-mono">Optimal T* = 0.5364</span>
           </div>
           <div className="chart-canvas-wrapper" style={{ height: '260px' }}>
             <canvas ref={chart4Ref} />
@@ -259,11 +340,11 @@ export default function ModelPerformance({
         </div>
       </div>
 
-      {/* Model Benchmark Comparison Table */}
+      {/* 7-Model Architectural Benchmark Suite Table */}
       <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
         <div className="syght-panel-header">
           <div className="panel-title-flex">
-            <IconLayers size={20} className="text-cyan-400" />
+            <IconLayers size={20} className="text-sky-600" />
             <h3>7-Model Architectural Benchmark Suite</h3>
           </div>
           <span className="syght-chip">5-Fold Stratified Provider CV</span>
@@ -293,13 +374,13 @@ export default function ModelPerformance({
                       <span className="provider-sub-tag">{m.strengths}</span>
                     </div>
                   </td>
-                  <td className="font-mono font-bold text-neutral-100">{m.rocAuc.toFixed(4)}</td>
-                  <td className="font-mono text-neutral-200">{m.prAuc.toFixed(4)}</td>
-                  <td className="font-mono text-neutral-300">{m.f1.toFixed(4)}</td>
-                  <td className="font-mono text-neutral-300">{(m.recall * 100).toFixed(1)}%</td>
-                  <td className="font-mono text-neutral-300">{(m.precision * 100).toFixed(1)}%</td>
-                  <td className="font-mono text-neutral-300">{m.latency}</td>
-                  <td className="font-mono text-neutral-300">{m.size}</td>
+                  <td className="font-mono font-bold text-slate-900">{m.rocAuc.toFixed(4)}</td>
+                  <td className="font-mono font-semibold text-sky-700">{m.prAuc.toFixed(4)}</td>
+                  <td className="font-mono text-slate-700">{m.f1.toFixed(4)}</td>
+                  <td className="font-mono text-slate-700">{(m.recall * 100).toFixed(1)}%</td>
+                  <td className="font-mono text-slate-700">{(m.precision * 100).toFixed(1)}%</td>
+                  <td className="font-mono text-slate-600">{m.latency}</td>
+                  <td className="font-mono text-slate-600">{m.size}</td>
                   <td>
                     {m.isChampion ? (
                       <span className="status-tag tag-champion font-mono">
@@ -313,44 +394,6 @@ export default function ModelPerformance({
               ))}
             </tbody>
           </table>
-        </div>
-      </section>
-
-      {/* Generated Figure Artifacts Gallery */}
-      <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
-        <div className="syght-panel-header">
-          <div className="panel-title-flex">
-            <IconSparkles size={20} className="text-cyan-400" />
-            <h3>Official Research Figure Artifacts Gallery</h3>
-          </div>
-          <span className="syght-chip">High-Resolution Reports</span>
-        </div>
-
-        <div className="figure-cards-grid">
-          {figures.map((fig) => (
-            <div
-              key={fig.id}
-              className="figure-card"
-              onClick={() => onEnlargeFigure(fig)}
-            >
-              <div className="figure-thumb-wrapper">
-                <img
-                  src={fig.src}
-                  alt={fig.title}
-                  onError={(e) => { e.target.src = fig.fallbackSrc; }}
-                  className="figure-thumb-img"
-                />
-                <div className="figure-overlay-hover">
-                  <IconArrowUpRight size={24} className="figure-zoom-icon" />
-                  <span>Click to Inspect High-Res</span>
-                </div>
-              </div>
-              <div className="figure-meta-bar">
-                <div className="figure-title-bold font-mono">{fig.title}</div>
-                <div className="figure-desc-sub">{fig.sub}</div>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
     </div>

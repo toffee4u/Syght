@@ -208,10 +208,10 @@ export default function ReviewQueue({
                   <td>
                     <span className="archetype-pill font-mono">{c.tag}</span>
                   </td>
-                  <td className="font-mono text-neutral-300">
+                  <td className="font-mono text-slate-600 font-medium">
                     {c.surgeries} Surgeries ({c.physicians} MDs)
                   </td>
-                  <td className="font-mono font-semibold text-neutral-100">
+                  <td className="font-mono font-semibold text-slate-900">
                     ₹{c.reimbursement.toLocaleString()}
                   </td>
                   <td>

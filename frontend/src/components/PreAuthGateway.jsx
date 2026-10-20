@@ -280,7 +280,7 @@ export default function PreAuthGateway({ onShowToast }) {
               </div>
               <div>
                 <span className="strip-label">Interception Latency:</span>
-                <span className="strip-val text-neutral-100">{decision.latencyMs} ms</span>
+                <span className="strip-val text-slate-900 font-semibold">{decision.latencyMs} ms</span>
               </div>
             </div>
           </div>

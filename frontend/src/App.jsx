@@ -8,11 +8,10 @@ import ClaimAnalyzer from './components/ClaimAnalyzer';
 import ModelPerformance from './components/ModelPerformance';
 import CollusionNetwork from './components/CollusionNetwork';
 import PreAuthGateway from './components/PreAuthGateway';
-import ImageModal from './components/ImageModal';
 import Toast from './components/Toast';
 
 import { BENCHMARK_CASES } from './data/benchmarkCases';
-import { BENCHMARK_MODELS, FIGURE_ARTIFACTS } from './data/benchmarkModels';
+import { BENCHMARK_MODELS } from './data/benchmarkModels';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('tab-dashboard');
@@ -20,7 +19,6 @@ export default function App() {
   const [selectedCaseId, setSelectedCaseId] = useState(BENCHMARK_CASES[0].id);
   const [healthData, setHealthData] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [enlargedFigure, setEnlargedFigure] = useState(null);
   const [toast, setToast] = useState(null);
 
   // Fetch API Health on boot
@@ -95,7 +93,7 @@ export default function App() {
         c.id === caseId ? { ...c, status: 'frozen' } : c
       ));
       showToast(
-        `<strong>Disbursements Frozen</strong> for ${targetCase.id} ($${targetCase.reimbursement.toLocaleString()})! Investigation file opened.`,
+        `<strong>Disbursements Frozen</strong> for ${targetCase.id} (₹${targetCase.reimbursement.toLocaleString()})! Investigation file opened.`,
         'danger'
       );
     } else if (action === 'CLEAR') {
@@ -160,8 +158,6 @@ export default function App() {
         {activeTab === 'tab-performance' && (
           <ModelPerformance
             models={BENCHMARK_MODELS}
-            figures={FIGURE_ARTIFACTS}
-            onEnlargeFigure={setEnlargedFigure}
           />
         )}
 
@@ -199,19 +195,19 @@ export default function App() {
             <div className="footer-telemetry-grid font-mono">
               <div className="telemetry-item">
                 <span className="telemetry-label">Champion Engine:</span>
-                <span className="telemetry-val text-cyan-400">LightGBM (1-SE Rule)</span>
+                <span className="telemetry-val text-sky-600 font-semibold">LightGBM (1-SE Rule)</span>
               </div>
               <div className="telemetry-item">
                 <span className="telemetry-label">Decision Threshold:</span>
-                <span className="telemetry-val text-cyan-400">{healthData?.decision_threshold?.toFixed(4) || '0.5364'}</span>
+                <span className="telemetry-val text-sky-600 font-semibold">{healthData?.decision_threshold?.toFixed(4) || '0.5364'}</span>
               </div>
               <div className="telemetry-item">
                 <span className="telemetry-label">Pre-Auth Latency:</span>
-                <span className="telemetry-val text-emerald-400">1.84 ms (SLA &lt; 5ms)</span>
+                <span className="telemetry-val text-emerald-600 font-semibold">1.84 ms (SLA &lt; 5ms)</span>
               </div>
               <div className="telemetry-item">
                 <span className="telemetry-label">Auditing Mode:</span>
-                <span className="telemetry-val text-emerald-400">Real-Time Inline Intercept</span>
+                <span className="telemetry-val text-emerald-600 font-semibold">Real-Time Inline Intercept</span>
               </div>
             </div>
           </div>
@@ -243,12 +239,6 @@ export default function App() {
           </div>
         </div>
       </footer>
-
-      {/* Image Zoom Modal */}
-      <ImageModal
-        figure={enlargedFigure}
-        onClose={() => setEnlargedFigure(null)}
-      />
 
       {/* Toast Alert Notifications */}
       <Toast toast={toast} />
