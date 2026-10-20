@@ -196,7 +196,7 @@ async def custom_redoc_ui():
 async def root():
     """Root endpoint welcoming clients and directing to OpenAPI documentation."""
     return {
-        "service": "Syght Healthcare Fraud Prevention API",
+        "service": "Syght Healthinsurance Fraud Detector API",
         "team": "Team Pulse",
         "version": "1.0.0",
         "status": "online",

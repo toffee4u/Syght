@@ -328,11 +328,11 @@ export default function CommandCenter({
         <div className="hero-content-cluster">
           <div className="hero-pill-badge">
             <span className="beacon-emerald" />
-            <span className="hero-pill-text">Team Pulse Engineering • Enterprise Fraud Intelligence</span>
+            <span className="hero-pill-text">Team Pulse Engineering • Healthinsurance Fraud Detector</span>
           </div>
 
           <h1 className="hero-headline">
-            <span className="hero-headline-primary">Autonomous Healthcare Fraud Intelligence</span>
+            <span className="hero-headline-primary">Healthinsurance Fraud Detector</span>
             <span className="hero-headline-sub">Engineered for High-Precision Special Investigation Units</span>
           </h1>
 
