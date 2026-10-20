@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
-  HugeSearch,
-  HugeSparkles,
-  HugeAlert,
-  HugeCheckCircle,
-  HugeShield,
-  HugePulse,
-  HugeZap,
-  HugeBrain,
-} from './HugeIcons';
+  IconSearch,
+  IconSparkles,
+  IconAlert,
+  IconCheckCircle,
+  IconShield,
+  IconPulse,
+  IconZap,
+  IconBrain,
+} from './Icons';
 
 export default function ClaimAnalyzer({
   benchmarkCases,
@@ -139,43 +139,43 @@ export default function ClaimAnalyzer({
   const isFlagged = predictionResult.decision.includes('FLAGGED');
 
   return (
-    <div className="tab-view active superbrain-view">
+    <div className="tab-view active syght-view">
       {/* Header */}
-      <div className="superbrain-page-header">
+      <div className="syght-page-header">
         <div className="page-header-title-box">
-          <div className="superbrain-chip">
+          <div className="syght-chip">
             <span className="chip-dot" />
             TreeSHAP Attribution Engine
           </div>
-          <h1 className="superbrain-page-title">
+          <h1 className="syght-page-title">
             Provider & Claim Risk Inspector
           </h1>
-          <p className="superbrain-page-desc">
+          <p className="syght-page-desc">
             Live interactive scoring with feature-level SHAP Waterfall attributions. 
             Test benchmark healthcare claims and inspect exact algorithmic decision boundaries.
           </p>
         </div>
       </div>
 
-      <div className="superbrain-split-grid analyzer-layout">
+      <div className="syght-split-grid analyzer-layout">
         {/* Left Column: Feature Form */}
-        <section className="superbrain-panel">
-          <div className="superbrain-panel-header">
+        <section className="syght-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugePulse size={20} className="text-cyan-400" />
+              <IconPulse size={20} className="text-cyan-400" />
               <h3>Claim & Operational Feature Inputs</h3>
             </div>
-            <span className="superbrain-chip">61 Features Active</span>
+            <span className="syght-chip">61 Features Active</span>
           </div>
 
           {/* Quick Preset Selector */}
-          <div className="form-group-superbrain" style={{ marginBottom: '1.25rem' }}>
-            <label className="form-label-superbrain">
-              <HugeZap size={14} className="text-cyan-400" />
+          <div className="form-group-syght" style={{ marginBottom: '1.25rem' }}>
+            <label className="form-label-syght">
+              <IconZap size={14} className="text-cyan-400" />
               <span>Select Benchmark Provider Scenario:</span>
             </label>
             <select
-              className="superbrain-select font-mono"
+              className="syght-select font-mono"
               value={selectedCaseId}
               onChange={handleSelectPreset}
             >
@@ -187,12 +187,12 @@ export default function ClaimAnalyzer({
             </select>
           </div>
 
-          <div className="form-grid-superbrain">
+          <div className="form-grid-syght">
             <div className="form-field">
               <label className="field-label">Total Claims Count</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.total_claims_count}
                 onChange={e => handleInputChange('total_claims_count', e.target.value)}
               />
@@ -202,7 +202,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Inpatient Claims</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.inpatient_claims_count}
                 onChange={e => handleInputChange('inpatient_claims_count', e.target.value)}
               />
@@ -212,7 +212,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Inpatient Reimbursed ($)</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.inpatient_reimbursed_sum}
                 onChange={e => handleInputChange('inpatient_reimbursed_sum', e.target.value)}
               />
@@ -222,7 +222,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Outpatient Reimbursed ($)</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.outpatient_reimbursed_sum}
                 onChange={e => handleInputChange('outpatient_reimbursed_sum', e.target.value)}
               />
@@ -233,7 +233,7 @@ export default function ClaimAnalyzer({
               <input
                 type="number"
                 step="0.1"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.mean_inpatient_los}
                 onChange={e => handleInputChange('mean_inpatient_los', e.target.value)}
               />
@@ -243,7 +243,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Max Inpatient LOS (Days)</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.max_inpatient_los}
                 onChange={e => handleInputChange('max_inpatient_los', e.target.value)}
               />
@@ -253,7 +253,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Inpatient Surgeries</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.total_inpatient_surgeries}
                 onChange={e => handleInputChange('total_inpatient_surgeries', e.target.value)}
               />
@@ -263,7 +263,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Attending Physicians</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.unique_attending_physicians}
                 onChange={e => handleInputChange('unique_attending_physicians', e.target.value)}
               />
@@ -273,7 +273,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Unique Beneficiaries</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.unique_beneficiaries_count}
                 onChange={e => handleInputChange('unique_beneficiaries_count', e.target.value)}
               />
@@ -284,7 +284,7 @@ export default function ClaimAnalyzer({
               <input
                 type="number"
                 step="0.01"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.same_day_duplicate_rate}
                 onChange={e => handleInputChange('same_day_duplicate_rate', e.target.value)}
               />
@@ -295,7 +295,7 @@ export default function ClaimAnalyzer({
               <input
                 type="number"
                 step="0.01"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.graph_degree_centrality}
                 onChange={e => handleInputChange('graph_degree_centrality', e.target.value)}
               />
@@ -305,7 +305,7 @@ export default function ClaimAnalyzer({
               <label className="field-label">Inpatient Deductible ($)</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.inpatient_deductible_sum}
                 onChange={e => handleInputChange('inpatient_deductible_sum', e.target.value)}
               />
@@ -314,27 +314,27 @@ export default function ClaimAnalyzer({
 
           <button
             type="button"
-            className="superbrain-btn-primary w-full mt-5"
+            className="syght-btn-primary w-full mt-5"
             onClick={runPrediction}
             disabled={isLoading}
           >
-            <HugeZap size={16} />
+            <IconZap size={16} />
             <span>{isLoading ? 'Evaluating 61 Features via LightGBM...' : 'Run Live AI Fraud Prediction'}</span>
           </button>
         </section>
 
         {/* Right Column: Scoring & SHAP Attribution Output */}
-        <section className="superbrain-panel">
-          <div className="superbrain-panel-header">
+        <section className="syght-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeShield size={20} className="text-cyan-400" />
+              <IconShield size={20} className="text-cyan-400" />
               <h3>AI Risk Scoring & Attributions</h3>
             </div>
-            <span className="superbrain-chip priority-chip">{predictionResult.priority} TIER</span>
+            <span className="syght-chip priority-chip">{predictionResult.priority} TIER</span>
           </div>
 
           {/* Radial Score Gauge Card */}
-          <div className="gauge-panel-superbrain">
+          <div className="gauge-panel-syght">
             <div className="gauge-display-flex">
               <div className="radial-score-box">
                 <span className={`gauge-percentage font-mono ${isFlagged ? 'danger' : 'clean'}`}>
@@ -344,7 +344,7 @@ export default function ClaimAnalyzer({
               </div>
               <div className="gauge-meta-details">
                 <div className={`gauge-status-title ${isFlagged ? 'text-rose-400' : 'text-emerald-400'}`}>
-                  {isFlagged ? <HugeAlert size={18} /> : <HugeCheckCircle size={18} />}
+                  {isFlagged ? <IconAlert size={18} /> : <IconCheckCircle size={18} />}
                   <span>{predictionResult.decision}</span>
                 </div>
                 <div className="gauge-meta-row font-mono">
@@ -357,9 +357,9 @@ export default function ClaimAnalyzer({
           </div>
 
           {/* SHAP Feature Waterfall */}
-          <div className="waterfall-superbrain-container">
+          <div className="waterfall-syght-container">
             <div className="waterfall-header">
-              <HugeSparkles size={16} className="text-cyan-400" />
+              <IconSparkles size={16} className="text-cyan-400" />
               <h4>Explainable AI Feature Waterfall (SHAP Attributions)</h4>
             </div>
 
@@ -388,24 +388,24 @@ export default function ClaimAnalyzer({
           </div>
 
           {/* Clinical & Legal Audit Directive Checklist */}
-          <div className="directive-superbrain-card">
+          <div className="directive-syght-card">
             <div className="directive-title">
-              <HugeBrain size={16} className="text-cyan-400" />
+              <IconBrain size={16} className="text-cyan-400" />
               <span>Recommended Special Investigation Unit Protocol:</span>
             </div>
             <p className="directive-text">{predictionResult.directive}</p>
 
             <div className="protocol-checklist">
               <div className="protocol-item">
-                <HugeCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <IconCheckCircle size={14} className="text-cyan-400 shrink-0" />
                 <span>Verify biometric attendance logs of operating physicians against surgery timestamp</span>
               </div>
               <div className="protocol-item">
-                <HugeCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <IconCheckCircle size={14} className="text-cyan-400 shrink-0" />
                 <span>Compare billed LOS against emergency triage vitals and discharge summaries</span>
               </div>
               <div className="protocol-item">
-                <HugeCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <IconCheckCircle size={14} className="text-cyan-400 shrink-0" />
                 <span>Examine cross-facility duplicate test code submissions within rolling 24 hours</span>
               </div>
             </div>

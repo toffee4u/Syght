@@ -533,14 +533,14 @@ python scripts/download_dataset.py
 
 ## 🌐 Enterprise React Frontend & FastAPI Gateway
 
-Syght features a full-stack, Cyber-Glassmorphism React SPA interface built with Vite, React, Lucide/Hugeicons stroke-rounded icons, interactive canvas graphs, and Chart.js animations:
+Syght features a full-stack, Cyber-Glassmorphism React SPA interface built with Vite, React, stroke-rounded SVG icons, interactive canvas graphs, and Chart.js animations:
 
 ```bash
 # 1. Run the unified FastAPI server (serves React frontend at http://localhost:8000)
 python backend/main.py
 
 # 2. Or run Vite React dev server independently with live hot-reload
-cd react-frontend
+cd frontend
 npm install
 npm run dev  # Accessible at http://localhost:3000 (proxied to :8000)
 ```

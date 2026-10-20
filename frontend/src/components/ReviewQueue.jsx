@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import {
-  HugeClipboardList,
-  HugeAlert,
-  HugeCheckCircle,
-  HugeSearch,
-  HugeFreeze,
-  HugeFilter,
-  HugeArrowRight,
-  HugeSparkles,
-} from './HugeIcons';
+  IconClipboardList,
+  IconAlert,
+  IconCheckCircle,
+  IconSearch,
+  IconFreeze,
+  IconFilter,
+  IconArrowRight,
+  IconSparkles,
+} from './Icons';
 
 export default function ReviewQueue({
   cases,
@@ -47,32 +47,32 @@ export default function ReviewQueue({
     .reduce((acc, c) => acc + c.reimbursement, 0);
 
   return (
-    <div className="tab-view active superbrain-view">
+    <div className="tab-view active syght-view">
       {/* Header section */}
-      <div className="superbrain-page-header">
+      <div className="syght-page-header">
         <div className="page-header-title-box">
-          <div className="superbrain-chip">
+          <div className="syght-chip">
             <span className="chip-dot" />
             Team Pulse Worklist
           </div>
-          <h1 className="superbrain-page-title">
+          <h1 className="syght-page-title">
             Priority Review Queue & Auditor Worklist
           </h1>
-          <p className="superbrain-page-desc">
+          <p className="syght-page-desc">
             Calibrated risk rankings based on LightGBM probability scores and SHAP impact. 
             Auditors can inspect feature attributions, freeze disbursements, or fast-track clean claims.
           </p>
         </div>
       </div>
 
-      {/* Summary KPI Strip (Superbrain Bento Cards) */}
+      {/* Summary KPI Strip (Syght Bento Cards) */}
       <div className="bento-kpi-grid queue-kpis">
         <div className="bento-card group">
           <div className="bento-watermark">01</div>
           <div className="bento-card-header">
             <span className="bento-card-label">TOTAL FLAGGED EXPOSURE</span>
             <span className="bento-card-icon-box text-rose-400">
-              <HugeAlert size={18} />
+              <IconAlert size={18} />
             </span>
           </div>
           <div className="bento-card-value text-rose-400 font-mono">
@@ -89,7 +89,7 @@ export default function ReviewQueue({
           <div className="bento-card-header">
             <span className="bento-card-label">PENDING AUDIT</span>
             <span className="bento-card-icon-box text-amber-400">
-              <HugeSearch size={18} />
+              <IconSearch size={18} />
             </span>
           </div>
           <div className="bento-card-value text-amber-400 font-mono">
@@ -106,7 +106,7 @@ export default function ReviewQueue({
           <div className="bento-card-header">
             <span className="bento-card-label">ACTIONED TODAY</span>
             <span className="bento-card-icon-box text-emerald-400">
-              <HugeCheckCircle size={18} />
+              <IconCheckCircle size={18} />
             </span>
           </div>
           <div className="bento-card-value text-emerald-400 font-mono">
@@ -120,18 +120,18 @@ export default function ReviewQueue({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="superbrain-controls-panel">
-        <div className="superbrain-filter-pills">
+      <div className="syght-controls-panel">
+        <div className="syght-filter-pills">
           <button
             type="button"
-            className={`superbrain-filter-pill ${filter === 'all' ? 'active' : ''}`}
+            className={`syght-filter-pill ${filter === 'all' ? 'active' : ''}`}
             onClick={() => setFilter('all')}
           >
             All Cases ({cases.length})
           </button>
           <button
             type="button"
-            className={`superbrain-filter-pill ${filter === 'critical' ? 'active' : ''}`}
+            className={`syght-filter-pill ${filter === 'critical' ? 'active' : ''}`}
             onClick={() => setFilter('critical')}
           >
             <span className="status-dot-sm text-rose-400">●</span>
@@ -139,7 +139,7 @@ export default function ReviewQueue({
           </button>
           <button
             type="button"
-            className={`superbrain-filter-pill ${filter === 'high' ? 'active' : ''}`}
+            className={`syght-filter-pill ${filter === 'high' ? 'active' : ''}`}
             onClick={() => setFilter('high')}
           >
             <span className="status-dot-sm text-amber-400">●</span>
@@ -147,7 +147,7 @@ export default function ReviewQueue({
           </button>
           <button
             type="button"
-            className={`superbrain-filter-pill ${filter === 'clean' ? 'active' : ''}`}
+            className={`syght-filter-pill ${filter === 'clean' ? 'active' : ''}`}
             onClick={() => setFilter('clean')}
           >
             <span className="status-dot-sm text-emerald-400">●</span>
@@ -155,26 +155,26 @@ export default function ReviewQueue({
           </button>
           <button
             type="button"
-            className={`superbrain-filter-pill ${filter === 'investigating' ? 'active' : ''}`}
+            className={`syght-filter-pill ${filter === 'investigating' ? 'active' : ''}`}
             onClick={() => setFilter('investigating')}
           >
             Under Review
           </button>
           <button
             type="button"
-            className={`superbrain-filter-pill ${filter === 'reviewed' ? 'active' : ''}`}
+            className={`syght-filter-pill ${filter === 'reviewed' ? 'active' : ''}`}
             onClick={() => setFilter('reviewed')}
           >
             Reviewed Today
           </button>
         </div>
 
-        <div className="superbrain-search-wrapper">
-          <HugeSearch size={16} className="superbrain-search-icon" />
+        <div className="syght-search-wrapper">
+          <IconSearch size={16} className="syght-search-icon" />
           <input
             type="text"
             placeholder="Search provider ID, name, archetype..."
-            className="superbrain-search-input font-mono"
+            className="syght-search-input font-mono"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -182,9 +182,9 @@ export default function ReviewQueue({
       </div>
 
       {/* Main Review Queue Table */}
-      <section className="superbrain-panel" style={{ marginTop: '1rem' }}>
+      <section className="syght-panel" style={{ marginTop: '1rem' }}>
         <div className="table-responsive-wrapper">
-          <table className="superbrain-table">
+          <table className="syght-table">
             <thead>
               <tr>
                 <th>Provider ID & Facility</th>
@@ -242,7 +242,7 @@ export default function ReviewQueue({
                         onClick={() => onInspectCase(c.id)}
                         title="Load into SHAP Analyzer"
                       >
-                        <HugeSearch size={13} />
+                        <IconSearch size={13} />
                         <span>Inspect</span>
                       </button>
                       {c.status !== 'frozen' && c.decision.includes('FLAGGED') && (
@@ -252,7 +252,7 @@ export default function ReviewQueue({
                           onClick={() => onTriageAction(c.id, 'FREEZE')}
                           title="Freeze Disbursements Immediately"
                         >
-                          <HugeFreeze size={13} />
+                          <IconFreeze size={13} />
                           <span>Freeze</span>
                         </button>
                       )}
@@ -263,7 +263,7 @@ export default function ReviewQueue({
                           onClick={() => onTriageAction(c.id, 'CLEAR')}
                           title="Authorize Payment"
                         >
-                          <HugeCheckCircle size={13} />
+                          <IconCheckCircle size={13} />
                           <span>Clear</span>
                         </button>
                       )}

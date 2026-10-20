@@ -1,16 +1,16 @@
 import React from 'react';
-import { HugeClose } from './HugeIcons';
+import { IconClose } from './Icons';
 
 export default function ImageModal({ figure, onClose }) {
   if (!figure) return null;
 
   return (
     <div className="modal-backdrop open" onClick={onClose}>
-      <div className="modal-card superbrain-modal" onClick={e => e.stopPropagation()}>
+      <div className="modal-card syght-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <div className="modal-title font-mono">{figure.title}</div>
           <button type="button" className="modal-close" onClick={onClose} title="Close Modal">
-            <HugeClose size={18} />
+            <IconClose size={18} />
           </button>
         </div>
         <div className="modal-body">
