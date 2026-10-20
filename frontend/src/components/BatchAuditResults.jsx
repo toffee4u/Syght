@@ -1,22 +1,26 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import confetti from 'canvas-confetti';
+import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  IconDatabase,
-  IconShield,
-  IconAlert,
-  IconCheckCircle,
-  IconDownload,
-  IconSearch,
-  IconArrowRight,
-  IconSparkles,
-  IconLineChart,
-  IconPulse,
-  IconLayers,
-  IconZap,
-  IconRefresh,
-  IconBrain,
-} from './Icons';
+  FlashIcon,
+  CheckmarkCircle01Icon,
+  Alert02Icon,
+  AlertCircleIcon,
+  Shield01Icon,
+  Hospital01Icon,
+  Scissor01Icon,
+  GitForkIcon,
+  GlobeIcon,
+  Download01Icon,
+  Search01Icon,
+  ReloadIcon,
+  Layers01Icon,
+  DatabaseIcon,
+  AiBrain01Icon,
+  SparklesIcon,
+  ArrowRight01Icon,
+} from '@hugeicons/core-free-icons';
 
 import { BENCHMARK_CASES } from '../data/benchmarkCases';
 import { SAMPLE_DATASET_ROWS } from '../data/sampleDataset';
@@ -175,16 +179,23 @@ function buildResultsFrom25Cases() {
   };
 }
 
+// Icon mapper for clinical archetypes using Hugeicons
+function getArchetypeIcon(archetype = '') {
+  const lower = archetype.toLowerCase();
+  if (lower.includes('surgery') || lower.includes('phantom') || lower.includes('bill')) return Scissor01Icon;
+  if (lower.includes('collusion') || lower.includes('syndicate') || lower.includes('doctor') || lower.includes('ring')) return GitForkIcon;
+  if (lower.includes('icu') || lower.includes('stay') || lower.includes('upcoding')) return Hospital01Icon;
+  if (lower.includes('clean') || lower.includes('rural') || lower.includes('primary') || lower.includes('kendra')) return Shield01Icon;
+  return AlertCircleIcon;
+}
+
 export default function BatchAuditResults({
   resultsData,
   pipelineExecutionTrigger,
   onInspectCase,
   onOpenDatasetStudio,
-  onRunAuditWithSample,
-  onRunAuditWithPortfolio,
   onShowToast,
 }) {
-  // Current active data source: default is 10 sample cases or passed resultsData
   const [activeDatasetMode, setActiveDatasetMode] = useState(resultsData ? 'custom' : 'sample-10');
   const [currentResults, setCurrentResults] = useState(
     resultsData || buildResultsFrom10Cases()
@@ -197,6 +208,10 @@ export default function BatchAuditResults({
   const [elapsedMs, setElapsedMs] = useState(0);
   const [terminalLogs, setTerminalLogs] = useState([]);
   const [isExplainerOpen, setIsExplainerOpen] = useState(false);
+
+  // Filter tabs & search for forensic details cards
+  const [filterTab, setFilterTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Models real-time states
   const [modelsState, setModelsState] = useState([
@@ -270,17 +285,13 @@ export default function BatchAuditResults({
     { title: '5. TreeSHAP Attribution & SIU Dossier', desc: 'Computing exact rupee and clinical contributions for every anomaly' },
   ];
 
-  // Table filter & search
-  const [filterTab, setFilterTab] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-
   // Charts references
   const riskChartRef = useRef(null);
   const modelsChartRef = useRef(null);
   const exposureChartRef = useRef(null);
   const shapChartRef = useRef(null);
 
-  // Function to kick off the multi-model execution animation
+  // Start live multi-model execution animation
   const startLiveExecution = (dataPayload, modeName = 'sample-10') => {
     setIsExecuting(true);
     setExecutionProgress(0);
@@ -297,7 +308,6 @@ export default function BatchAuditResults({
     ];
     setTerminalLogs(initialLogs);
 
-    // Initial reset of models state
     setModelsState([
       {
         id: 'lgbm',
@@ -361,13 +371,12 @@ export default function BatchAuditResults({
       },
     ]);
 
-    // Timer loop that advances progress smoothly over ~2.4 seconds
     const interval = setInterval(() => {
       const currentElapsed = Math.round(performance.now() - startTime);
       setElapsedMs(currentElapsed);
 
       setExecutionProgress((prev) => {
-        const next = prev + 12;
+        const next = prev + 14;
 
         if (next >= 25 && next < 50) {
           setCurrentStageIndex(1);
@@ -383,11 +392,11 @@ export default function BatchAuditResults({
           setCurrentStageIndex(2);
           setModelsState((curr) =>
             curr.map((m) => {
-              if (m.id === 'graph') return { ...m, status: 'COMPLETED', progress: 100, statusText: '✓ 3 Ring Syndicates Isolated (4.10ms)' };
+              if (m.id === 'graph') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: 3 Ring Syndicates Isolated (4.10ms)' };
               if (m.id === 'lgbm') return { ...m, status: 'EVALUATING', progress: 85, statusText: 'Calibrating probabilities...' };
               if (m.id === 'xgb') return { ...m, status: 'EVALUATING', progress: 80, statusText: 'Aggregating boosting rounds...' };
               if (m.id === 'rf') return { ...m, status: 'EVALUATING', progress: 65, statusText: 'Averaging 100 tree votes...' };
-              if (m.id === 'lr') return { ...m, status: 'COMPLETED', progress: 100, statusText: '✓ Sigmoid Calibration Done (0.95ms)' };
+              if (m.id === 'lr') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Sigmoid Calibration (0.95ms)' };
               return m;
             })
           );
@@ -395,9 +404,9 @@ export default function BatchAuditResults({
           setCurrentStageIndex(3);
           setModelsState((curr) =>
             curr.map((m) => {
-              if (m.id === 'lgbm') return { ...m, status: 'COMPLETED', progress: 100, statusText: '✓ Champion Inference Done (1.84ms)' };
-              if (m.id === 'xgb') return { ...m, status: 'COMPLETED', progress: 100, statusText: '✓ HistGradient Done (2.12ms)' };
-              if (m.id === 'rf') return { ...m, status: 'COMPLETED', progress: 100, statusText: '✓ Bagging Consensus Done (3.85ms)' };
+              if (m.id === 'lgbm') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Champion Inference (1.84ms)' };
+              if (m.id === 'xgb') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: HistGradient (2.12ms)' };
+              if (m.id === 'rf') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Bagging Consensus (3.85ms)' };
               return { ...m, status: 'COMPLETED', progress: 100 };
             })
           );
@@ -412,10 +421,9 @@ export default function BatchAuditResults({
         }
         return next;
       });
-    }, 190);
+    }, 180);
   };
 
-  // Immediate completion helper
   const finishExecution = (dataPayload) => {
     setIsExecuting(false);
     setExecutionProgress(100);
@@ -425,13 +433,13 @@ export default function BatchAuditResults({
         ...m,
         status: 'COMPLETED',
         progress: 100,
-        statusText: `✓ Completed (${m.latency})`,
+        statusText: `Completed (${m.latency})`,
       }))
     );
 
     try {
       confetti({
-        particleCount: 85,
+        particleCount: 80,
         spread: 70,
         origin: { y: 0.65 },
       });
@@ -447,12 +455,10 @@ export default function BatchAuditResults({
     }
   };
 
-  // Skip execution button (instant)
   const handleSkipToResults = () => {
     finishExecution(currentResults);
   };
 
-  // Handle prop changes (e.g. user clicked "Run Audit with 10 Sample Cases" in CommandCenter or uploaded a dataset)
   useEffect(() => {
     if (pipelineExecutionTrigger) {
       if (pipelineExecutionTrigger.source === 'sample-10') {
@@ -467,7 +473,6 @@ export default function BatchAuditResults({
     } else if (resultsData) {
       startLiveExecution(resultsData, 'custom');
     } else {
-      // Default on mount: Run with 10 sample cases
       const payload = buildResultsFrom10Cases();
       startLiveExecution(payload, 'sample-10');
     }
@@ -482,21 +487,21 @@ export default function BatchAuditResults({
     let exposureChart = null;
     let shapChart = null;
 
-    const items = currentResults.results || [];
+    const items = currentResults?.results || [];
 
     // 1. Risk Score Distribution & 1-SE Threshold (0.5364) Chart
     if (riskChartRef.current && items.length > 0) {
-      const labels = items.map((r) => r.provider_id.replace(/^PRV_/, '').slice(0, 11));
-      const scores = items.map((r) => Math.round(r.fraud_risk_score * 1000) / 1000);
+      const labels = items.map((r) => (r.provider_id || '').replace(/^PRV_/, '').slice(0, 11));
+      const scores = items.map((r) => Math.round((r.fraud_risk_score || 0) * 1000) / 1000);
       const colors = items.map((r) =>
-        r.fraud_risk_score >= 0.85
+        (r.fraud_risk_score || 0) >= 0.85
           ? 'rgba(225, 29, 72, 0.9)'
-          : r.fraud_risk_score >= 0.5364
+          : (r.fraud_risk_score || 0) >= 0.5364
           ? 'rgba(244, 63, 94, 0.85)'
           : 'rgba(16, 185, 129, 0.85)'
       );
       const borders = items.map((r) =>
-        r.fraud_risk_score >= 0.5364 ? '#e11d48' : '#10b981'
+        (r.fraud_risk_score || 0) >= 0.5364 ? '#e11d48' : '#10b981'
       );
 
       riskChart = new Chart(riskChartRef.current, {
@@ -535,7 +540,7 @@ export default function BatchAuditResults({
               callbacks: {
                 afterLabel: function (context) {
                   const item = items[context.dataIndex];
-                  return `Confidence: ${item.confidence_score}% (${item.confidence_tier})\nVerdict: ${item.decision}\nReason: ${item.why_flagged}`;
+                  return item ? `Confidence: ${item.confidence_score}% (${item.confidence_tier})\nVerdict: ${item.decision}\nReason: ${item.why_flagged}` : '';
                 },
               },
             },
@@ -556,7 +561,7 @@ export default function BatchAuditResults({
       });
     }
 
-    // 2. Multi-Model Benchmark Comparison (ROC-AUC & Latency)
+    // 2. Multi-Model Benchmark Comparison (ROC-AUC)
     if (modelsChartRef.current) {
       modelsChart = new Chart(modelsChartRef.current, {
         type: 'bar',
@@ -611,8 +616,8 @@ export default function BatchAuditResults({
 
     // 3. Rupee Exposure Allocation Doughnut
     if (exposureChartRef.current) {
-      const flagged = Number(currentResults.flagged_exposure || 14500000);
-      const clean = Math.max(1000000, Number(currentResults.total_exposure || 45000000) - flagged);
+      const flagged = Number(currentResults?.flagged_exposure || 14500000);
+      const clean = Math.max(1000000, Number(currentResults?.total_exposure || 45000000) - flagged);
 
       exposureChart = new Chart(exposureChartRef.current, {
         type: 'doughnut',
@@ -698,7 +703,7 @@ export default function BatchAuditResults({
 
   // Export CSV Handler
   const handleExportCsv = () => {
-    const items = currentResults.results || [];
+    const items = currentResults?.results || [];
     if (items.length === 0) return;
 
     const headers = [
@@ -744,20 +749,29 @@ export default function BatchAuditResults({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Syght_Audit_Report_${currentResults.dataset_name || 'claims'}.csv`;
+    a.download = `Syght_Audit_Report_${currentResults?.dataset_name || 'claims'}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     if (onShowToast) onShowToast('Exported audited results report (.CSV)', 'info');
   };
 
-  // Filtered claims table
-  const filteredClaims = (currentResults.results || []).filter((r) => {
+  // Guarded results array
+  const evaluatedItems = currentResults?.results || [];
+  const totalCount = currentResults?.total_evaluated || evaluatedItems.length;
+  const flaggedCount = currentResults?.flagged_count || 0;
+  const clearedCount = currentResults?.cleared_count || 0;
+  const flaggedExposureCr = (((currentResults?.flagged_exposure || 0) / 10000000)).toFixed(2);
+  const totalExposureCr = (((currentResults?.total_exposure || 0) / 10000000)).toFixed(2);
+  const avgConfidence = currentResults?.average_confidence || '96.2';
+
+  // Filtered claims for forensic breakdown cards
+  const filteredClaims = evaluatedItems.filter((r) => {
     const q = searchQuery.toLowerCase();
     const matchesSearch =
-      r.provider_id.toLowerCase().includes(q) ||
-      r.name.toLowerCase().includes(q) ||
-      r.archetype.toLowerCase().includes(q) ||
+      (r.provider_id || '').toLowerCase().includes(q) ||
+      (r.name || '').toLowerCase().includes(q) ||
+      (r.archetype || '').toLowerCase().includes(q) ||
       (r.why_flagged || '').toLowerCase().includes(q);
 
     if (!matchesSearch) return false;
@@ -766,13 +780,6 @@ export default function BatchAuditResults({
     if (filterTab === 'cleared') return r.decision === 'AUTO-CLEARED';
     return true;
   });
-
-  const totalCount = currentResults.total_evaluated || (currentResults.results || []).length;
-  const flaggedCount = currentResults.flagged_count || 0;
-  const clearedCount = currentResults.cleared_count || 0;
-  const flaggedExposureCr = ((currentResults.flagged_exposure || 0) / 10000000).toFixed(2);
-  const totalExposureCr = ((currentResults.total_exposure || 0) / 10000000).toFixed(2);
-  const avgConfidence = currentResults.average_confidence || '96.2';
 
   return (
     <div className="tab-view active syght-view">
@@ -792,7 +799,7 @@ export default function BatchAuditResults({
           </p>
         </div>
 
-        {/* Top Header Quick-Run Actions */}
+        {/* Top Header Quick-Run Actions with Hugeicons */}
         <div className="page-header-actions">
           <button
             type="button"
@@ -803,7 +810,7 @@ export default function BatchAuditResults({
             }}
             title="Run Audit with 10 Sample Cases"
           >
-            <IconZap size={14} className="text-amber-500" />
+            <HugeiconsIcon icon={FlashIcon} size={15} className="text-amber-500" />
             <span>Run 10 Sample Cases</span>
           </button>
 
@@ -816,7 +823,7 @@ export default function BatchAuditResults({
             }}
             title="Run Audit with 25 Benchmark Portfolio Cases"
           >
-            <IconDatabase size={14} className="text-sky-600" />
+            <HugeiconsIcon icon={DatabaseIcon} size={15} className="text-sky-600" />
             <span>Run 25 Portfolio Cases</span>
           </button>
 
@@ -826,7 +833,7 @@ export default function BatchAuditResults({
             onClick={onOpenDatasetStudio}
             title="Upload Custom Healthcare Dataset (.CSV / .JSON)"
           >
-            <IconLayers size={14} />
+            <HugeiconsIcon icon={Layers01Icon} size={15} />
             <span>Upload Dataset</span>
           </button>
 
@@ -837,7 +844,7 @@ export default function BatchAuditResults({
             disabled={isExecuting}
             title="Export Audited Results to CSV"
           >
-            <IconDownload size={14} />
+            <HugeiconsIcon icon={Download01Icon} size={15} />
             <span>Export CSV</span>
           </button>
         </div>
@@ -851,7 +858,7 @@ export default function BatchAuditResults({
           <div className="pipeline-runner-header">
             <div className="pipeline-header-left">
               <div className="pipeline-beacon-pulse">
-                <IconZap size={22} className="text-sky-500 animate-spin" />
+                <HugeiconsIcon icon={FlashIcon} size={22} className="text-sky-500 animate-spin" />
               </div>
               <div>
                 <div className="pipeline-title-row">
@@ -865,7 +872,7 @@ export default function BatchAuditResults({
                 <p className="pipeline-subtitle">
                   Evaluating <strong>{totalCount} claims</strong> from{' '}
                   <code className="dataset-code-badge font-mono">
-                    {currentResults.dataset_name || 'dataset'}
+                    {currentResults?.dataset_name || 'dataset'}
                   </code>{' '}
                   concurrently across 5 machine learning & graph engines.
                 </p>
@@ -879,7 +886,8 @@ export default function BatchAuditResults({
                 onClick={handleSkipToResults}
                 title="Skip real-time animation and view results immediately"
               >
-                <span>Skip to Results ⚡</span>
+                <HugeiconsIcon icon={FlashIcon} size={14} />
+                <span>Skip to Results</span>
               </button>
             </div>
           </div>
@@ -914,7 +922,7 @@ export default function BatchAuditResults({
                   >
                     <div className="stage-card-top font-mono">
                       <span className="stage-num-badge">
-                        {isPassed ? '✓' : `0${idx + 1}`}
+                        {isPassed ? <HugeiconsIcon icon={CheckmarkCircle01Icon} size={11} /> : `0${idx + 1}`}
                       </span>
                       <span className="stage-status-text">
                         {isPassed ? 'DONE' : isCurrent ? 'RUNNING' : 'QUEUED'}
@@ -929,7 +937,7 @@ export default function BatchAuditResults({
 
           {/* Real-Time Concurrently Running Models Grid */}
           <div className="models-running-section-title">
-            <IconBrain size={16} className="text-sky-600" />
+            <HugeiconsIcon icon={AiBrain01Icon} size={18} className="text-sky-600" />
             <span>Parallel Estimators & Graph Engine Real-Time Telemetry:</span>
           </div>
 
@@ -949,7 +957,7 @@ export default function BatchAuditResults({
                   <span className={`model-status-chip ${model.status === 'COMPLETED' ? 'success' : 'active'}`}>
                     {model.status === 'COMPLETED' ? (
                       <>
-                        <IconCheckCircle size={13} />
+                        <HugeiconsIcon icon={CheckmarkCircle01Icon} size={13} />
                         <span>Completed</span>
                       </>
                     ) : (
@@ -975,8 +983,9 @@ export default function BatchAuditResults({
 
                 <div className="model-runner-meta-row font-mono">
                   <span className="model-metric-val">{model.metric}</span>
-                  <span className="model-latency-val font-semibold text-emerald-600">
-                    ⚡ {model.latency}
+                  <span className="model-latency-val font-semibold text-emerald-600 flex items-center gap-1">
+                    <HugeiconsIcon icon={FlashIcon} size={12} />
+                    <span>{model.latency}</span>
                   </span>
                 </div>
                 <div className="model-subtext-note font-mono">{model.subtext}</div>
@@ -1012,19 +1021,19 @@ export default function BatchAuditResults({
           ========================================================================= */}
       {!isExecuting && (
         <>
-          {/* Executive Plain-Language Verdict Banner (Designed to be super easy to understand) */}
+          {/* Executive Plain-Language Verdict Banner */}
           <section className="executive-verdict-banner">
             <div className="verdict-banner-header">
               <div className="verdict-badge-row">
                 <span className="verdict-status-pill danger">
-                  <IconAlert size={14} />
+                  <HugeiconsIcon icon={Alert02Icon} size={14} />
                   <span>
                     AUDIT COMPLETE • {flaggedCount} OF {totalCount} FACILITIES FLAGGED (
-                    {((flaggedCount / totalCount) * 100).toFixed(1)}%)
+                    {totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(1) : 0}%)
                   </span>
                 </span>
                 <span className="verdict-dataset-tag font-mono">
-                  {currentResults.dataset_name || 'Portfolio Claims'}
+                  {currentResults?.dataset_name || 'Portfolio Claims'}
                 </span>
               </div>
 
@@ -1043,7 +1052,7 @@ export default function BatchAuditResults({
                   }}
                   title="Re-run the multi-model pipeline on this dataset"
                 >
-                  <IconRefresh size={13} />
+                  <HugeiconsIcon icon={ReloadIcon} size={13} />
                   <span>Re-Run Pipeline</span>
                 </button>
               </div>
@@ -1058,7 +1067,7 @@ export default function BatchAuditResults({
                 </div>
                 <p className="verdict-col-text">
                   Syght analyzed {totalCount} provider billing profiles across 61 clinical features. 
-                  <strong> {flaggedCount} providers ({((flaggedCount / totalCount) * 100).toFixed(1)}%)</strong> triggered severe anomaly alarms and exceed the cost-optimal 0.5364 decision boundary.
+                  <strong> {flaggedCount} providers ({totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(1) : 0}%)</strong> triggered severe anomaly alarms and exceed the cost-optimal 0.5364 decision boundary.
                 </p>
               </div>
 
@@ -1069,7 +1078,7 @@ export default function BatchAuditResults({
                 </div>
                 <p className="verdict-col-text">
                   A total of <strong>₹{flaggedExposureCr} Crore</strong> in pending disbursements is recommended for an immediate treasury freeze. 
-                  Clean facilities totaling ₹{((Number(currentResults.total_exposure || 0) - Number(currentResults.flagged_exposure || 0)) / 10000000).toFixed(2)} Cr are auto-cleared for expedited payment.
+                  Clean facilities totaling ₹{((Number(currentResults?.total_exposure || 0) - Number(currentResults?.flagged_exposure || 0)) / 10000000).toFixed(2)} Cr are auto-cleared for expedited payment.
                 </p>
               </div>
 
@@ -1090,7 +1099,7 @@ export default function BatchAuditResults({
                   Immediate 3-Step SIU Protocol
                 </div>
                 <p className="verdict-col-text">
-                  <strong>Step 1:</strong> Freeze claim payments for top flagged hospitals ({items[0]?.provider_id || 'PRV_02'}).<br />
+                  <strong>Step 1:</strong> Freeze claim payments for top flagged hospitals ({evaluatedItems[0]?.provider_id || 'PRV_02'}).<br />
                   <strong>Step 2:</strong> Subpoena operating theatre biometric logs and nurse duty charts.<br />
                   <strong>Step 3:</strong> Expedite payment release for verified community clinics.
                 </p>
@@ -1098,19 +1107,19 @@ export default function BatchAuditResults({
             </div>
           </section>
 
-          {/* 5 Sleek Bento KPI Cards */}
+          {/* 5 Sleek Bento KPI Cards with Hugeicons */}
           <div className="results-kpi-grid">
             {/* Card 1: Evaluated */}
             <div className="results-kpi-card">
               <div className="kpi-card-header">
                 <span className="kpi-card-label">EVALUATED CLAIMS</span>
                 <div className="kpi-icon-bubble">
-                  <IconDatabase size={16} />
+                  <HugeiconsIcon icon={DatabaseIcon} size={16} />
                 </div>
               </div>
               <div className="kpi-card-val font-mono">{totalCount}</div>
               <div className="kpi-card-sub font-mono">
-                {currentResults.dataset_name || 'Benchmark Dataset'}
+                {currentResults?.dataset_name || 'Benchmark Dataset'}
               </div>
             </div>
 
@@ -1119,7 +1128,7 @@ export default function BatchAuditResults({
               <div className="kpi-card-header">
                 <span className="kpi-card-label">MEAN CONFIDENCE</span>
                 <div className="kpi-icon-bubble cyan">
-                  <IconShield size={16} />
+                  <HugeiconsIcon icon={Shield01Icon} size={16} />
                 </div>
               </div>
               <div className="kpi-card-val font-mono text-cyan">{avgConfidence}%</div>
@@ -1131,18 +1140,18 @@ export default function BatchAuditResults({
               <div className="kpi-card-header">
                 <span className="kpi-card-label">FLAGGED FOR AUDIT</span>
                 <div className="kpi-icon-bubble rose">
-                  <IconAlert size={16} />
+                  <HugeiconsIcon icon={Alert02Icon} size={16} />
                 </div>
               </div>
               <div className="kpi-card-val font-mono text-rose">
                 {flaggedCount}{' '}
                 <span className="kpi-val-pct">
-                  ({((flaggedCount / totalCount) * 100).toFixed(1)}%)
+                  ({totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(1) : 0}%)
                 </span>
               </div>
               <div className="kpi-card-sub font-mono">
-                {currentResults.critical_count || 4} Critical •{' '}
-                {currentResults.high_count || 1} High Risk
+                {currentResults?.critical_count || 4} Critical •{' '}
+                {currentResults?.high_count || 1} High Risk
               </div>
             </div>
 
@@ -1151,7 +1160,7 @@ export default function BatchAuditResults({
               <div className="kpi-card-header">
                 <span className="kpi-card-label">INTERCEPTED EXPOSURE</span>
                 <div className="kpi-icon-bubble amber">
-                  <IconZap size={16} />
+                  <HugeiconsIcon icon={FlashIcon} size={16} />
                 </div>
               </div>
               <div className="kpi-card-val font-mono text-amber">
@@ -1162,12 +1171,12 @@ export default function BatchAuditResults({
               </div>
             </div>
 
-            {/* Card 5: Pre-Auth Latency */}
+            {/* Card 5: Multi-Model Consensus */}
             <div className="results-kpi-card is-latency">
               <div className="kpi-card-header">
                 <span className="kpi-card-label">MULTI-MODEL CONSENSUS</span>
                 <div className="kpi-icon-bubble emerald">
-                  <IconCheckCircle size={16} />
+                  <HugeiconsIcon icon={CheckmarkCircle01Icon} size={16} />
                 </div>
               </div>
               <div className="kpi-card-val font-mono text-emerald">96.0%</div>
@@ -1177,7 +1186,7 @@ export default function BatchAuditResults({
             </div>
           </div>
 
-          {/* Interactive Collapsible: "How to Read this Report" Explainer */}
+          {/* Interactive Explainer Guide */}
           <div className="explainer-guide-box">
             <button
               type="button"
@@ -1185,7 +1194,7 @@ export default function BatchAuditResults({
               onClick={() => setIsExplainerOpen(!isExplainerOpen)}
             >
               <div className="flex items-center gap-2">
-                <IconSparkles size={16} className="text-sky-600" />
+                <HugeiconsIcon icon={SparklesIcon} size={16} className="text-sky-600" />
                 <span className="font-semibold text-slate-900 text-sm">
                   {isExplainerOpen ? 'Hide' : 'How to Understand This Result & Confidence Scores'} (Click to {isExplainerOpen ? 'close' : 'expand'})
                 </span>
@@ -1285,15 +1294,19 @@ export default function BatchAuditResults({
             </div>
           </div>
 
-          {/* Audited Providers Table */}
+          {/* =========================================================================
+              FORENSIC DETAILS & CLINICAL DIRECTIVES CARDS
+              (Replaces the overwhelming raw data table with clean, high-precision cards)
+              ========================================================================= */}
           <div className="results-table-card">
             <div className="table-card-header">
               <div className="table-header-left">
-                <h3 className="table-card-title">
-                  Audited Facility Worklist & Directives
+                <h3 className="table-card-title flex items-center gap-2">
+                  <HugeiconsIcon icon={Shield01Icon} size={20} className="text-sky-600" />
+                  <span>Forensic Audit Findings & Clinical Directives</span>
                 </h3>
                 <p className="table-card-desc">
-                  Showing {filteredClaims.length} of {totalCount} evaluated records. Click any row to inspect deep SHAP waterfall attributions.
+                  Detailed root causes, calibrated confidence, and SIU directives for {filteredClaims.length} evaluated facilities.
                 </p>
               </div>
 
@@ -1312,14 +1325,14 @@ export default function BatchAuditResults({
                     className={`filter-pill ${filterTab === 'critical' ? 'active' : ''}`}
                     onClick={() => setFilterTab('critical')}
                   >
-                    Critical ({currentResults.critical_count || 4})
+                    Critical ({currentResults?.critical_count || 4})
                   </button>
                   <button
                     type="button"
                     className={`filter-pill ${filterTab === 'high' ? 'active' : ''}`}
                     onClick={() => setFilterTab('high')}
                   >
-                    High Risk ({currentResults.high_count || 1})
+                    High Risk ({currentResults?.high_count || 1})
                   </button>
                   <button
                     type="button"
@@ -1331,7 +1344,7 @@ export default function BatchAuditResults({
                 </div>
 
                 <div className="table-search-box">
-                  <IconSearch size={14} className="text-slate-400" />
+                  <HugeiconsIcon icon={Search01Icon} size={15} className="text-slate-400" />
                   <input
                     type="text"
                     placeholder="Search provider, city, or reason..."
@@ -1343,140 +1356,93 @@ export default function BatchAuditResults({
               </div>
             </div>
 
-            {/* Table */}
-            <div className="table-scroll-wrap">
-              <table className="results-table">
-                <thead>
-                  <tr>
-                    <th>FACILITY / PROVIDER</th>
-                    <th>CLINICAL ARCHETYPE</th>
-                    <th>PAYOUT (₹)</th>
-                    <th>FRAUD RISK</th>
-                    <th>CALIBRATED CONFIDENCE</th>
-                    <th>AUDIT DECISION</th>
-                    <th>WHY FLAGGED (ROOT CAUSE)</th>
-                    <th style={{ textAlign: 'right' }}>ACTION</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredClaims.map((item) => {
-                    const isFlagged = item.decision === 'FLAGGED FOR AUDIT';
-                    return (
-                      <tr
-                        key={item.provider_id}
-                        className={isFlagged ? 'row-flagged' : 'row-clean'}
+            {/* Detailed Forensic Findings Cards Grid */}
+            <div className="forensic-findings-grid">
+              {filteredClaims.map((item) => {
+                const isFlagged = item.decision === 'FLAGGED FOR AUDIT';
+                const ArchIcon = getArchetypeIcon(item.archetype);
+                return (
+                  <div
+                    key={item.provider_id}
+                    className={`forensic-finding-card ${isFlagged ? 'is-flagged' : 'is-cleared'}`}
+                  >
+                    <div className="finding-card-top">
+                      <div className="finding-provider-info">
+                        <div className="finding-icon-wrap">
+                          <HugeiconsIcon icon={ArchIcon} size={18} />
+                        </div>
+                        <div>
+                          <div className="finding-provider-name">{item.name}</div>
+                          <div className="finding-meta-row font-mono">
+                            <span className="finding-id-pill">{item.provider_id}</span>
+                            <span className="finding-archetype-tag">{item.archetype}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="finding-verdict-badge font-mono">
+                        {isFlagged ? (
+                          <span className="verdict-tag flagged">
+                            <HugeiconsIcon icon={Alert02Icon} size={12} />
+                            <span>FLAGGED ({item.risk_percentage})</span>
+                          </span>
+                        ) : (
+                          <span className="verdict-tag cleared">
+                            <HugeiconsIcon icon={CheckmarkCircle01Icon} size={12} />
+                            <span>CLEARED ({item.risk_percentage})</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Metrics Bar */}
+                    <div className="finding-metrics-strip font-mono">
+                      <div className="finding-metric-col">
+                        <span className="metric-lbl">BILLED PAYOUT</span>
+                        <span className="metric-val">₹{Number(item.reimbursement || 0).toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="finding-metric-col">
+                        <span className="metric-lbl">CONFIDENCE</span>
+                        <span className="metric-val text-sky-600">{item.confidence_score}% {item.confidence_tier}</span>
+                      </div>
+                      <div className="finding-metric-col">
+                        <span className="metric-lbl">TOP DRIVER</span>
+                        <span className={`metric-val ${isFlagged ? 'text-rose-600' : 'text-emerald-600'}`}>
+                          {item.top_driver?.shap_contribution > 0 ? '+' : ''}
+                          {Number(item.top_driver?.shap_contribution || 0).toFixed(3)} SHAP
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Root Cause & Directive */}
+                    <div className="finding-details-body">
+                      <div className="finding-detail-row">
+                        <span className="detail-tag font-mono">ROOT CAUSE:</span>
+                        <span className="detail-text">{item.why_flagged}</span>
+                      </div>
+                      {item.directive && (
+                        <div className="finding-detail-row directive">
+                          <span className="detail-tag font-mono">SIU DIRECTIVE:</span>
+                          <span className="detail-text font-semibold">{item.directive}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Card Footer Actions */}
+                    <div className="finding-card-footer">
+                      <button
+                        type="button"
+                        className="syght-btn-secondary text-xs px-3 py-1 font-mono flex items-center gap-1.5"
+                        onClick={() => onInspectCase(item.provider_id)}
+                        title="Inspect Deep TreeSHAP Waterfall in Analyzer"
                       >
-                        <td>
-                          <div className="provider-cell-id font-mono">
-                            {item.provider_id}
-                          </div>
-                          <div className="provider-cell-name">
-                            {item.name}
-                          </div>
-                        </td>
-
-                        <td>
-                          <span className="archetype-cell-tag">
-                            {item.archetype}
-                          </span>
-                        </td>
-
-                        <td className="font-mono font-semibold">
-                          ₹{Number(item.reimbursement || 0).toLocaleString('en-IN')}
-                        </td>
-
-                        <td>
-                          <div className="risk-score-display">
-                            <span
-                              className={`risk-score-badge font-mono ${
-                                item.fraud_risk_score >= 0.85
-                                  ? 'critical'
-                                  : isFlagged
-                                  ? 'high'
-                                  : 'clean'
-                              }`}
-                            >
-                              {item.risk_percentage}
-                            </span>
-                            <div className="risk-score-micro-bar">
-                              <div
-                                className={`risk-micro-fill ${
-                                  item.fraud_risk_score >= 0.85
-                                    ? 'bg-rose'
-                                    : isFlagged
-                                    ? 'bg-amber'
-                                    : 'bg-emerald'
-                                }`}
-                                style={{ width: `${Math.min(100, item.fraud_risk_score * 100)}%` }}
-                              />
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <span
-                            className={`confidence-pill font-mono ${
-                              item.confidence_tier === 'VERY HIGH'
-                                ? 'very-high'
-                                : item.confidence_tier === 'HIGH'
-                                ? 'high'
-                                : 'moderate'
-                            }`}
-                          >
-                            <span className="conf-dot" />
-                            {item.confidence_score}% {item.confidence_tier}
-                          </span>
-                        </td>
-
-                        <td>
-                          <span
-                            className={`decision-pill font-mono ${
-                              isFlagged ? 'flagged' : 'cleared'
-                            }`}
-                          >
-                            {isFlagged ? (
-                              <>
-                                <IconAlert size={12} />
-                                <span>FLAGGED</span>
-                              </>
-                            ) : (
-                              <>
-                                <IconCheckCircle size={12} />
-                                <span>CLEARED</span>
-                              </>
-                            )}
-                          </span>
-                        </td>
-
-                        <td>
-                          <div className="why-flagged-cell">
-                            <span className="why-flagged-text">
-                              {item.why_flagged}
-                            </span>
-                            {item.directive && (
-                              <span className="directive-micro-note font-mono">
-                                Directive: {item.directive}
-                              </span>
-                            )}
-                          </div>
-                        </td>
-
-                        <td style={{ textAlign: 'right' }}>
-                          <button
-                            type="button"
-                            className="syght-btn-secondary text-xs px-2.5 py-1 font-mono"
-                            onClick={() => onInspectCase(item.provider_id)}
-                            title="Inspect Deep TreeSHAP Waterfall in Analyzer"
-                          >
-                            <span>Inspect SHAP</span>
-                            <IconArrowRight size={12} />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                        <span>Inspect in SHAP Analyzer</span>
+                        <HugeiconsIcon icon={ArrowRight01Icon} size={13} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </>
