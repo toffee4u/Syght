@@ -76,7 +76,7 @@ export default function ReviewQueue({
             </span>
           </div>
           <div className="bento-card-value text-rose-400 font-mono">
-            ${(totalExposure / 1000000).toFixed(2)}M
+            ₹{(totalExposure / 1000000).toFixed(2)}M
           </div>
           <div className="bento-card-sub danger">
             <span>Direct Financial Clawback Target</span>
@@ -212,7 +212,7 @@ export default function ReviewQueue({
                     {c.surgeries} Surgeries ({c.physicians} MDs)
                   </td>
                   <td className="font-mono font-semibold text-neutral-100">
-                    ${c.reimbursement.toLocaleString()}
+                    ₹{c.reimbursement.toLocaleString()}
                   </td>
                   <td>
                     <div className="risk-metric-box">

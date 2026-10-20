@@ -140,9 +140,9 @@ export default function CommandCenter({
               <IconShield size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-cyan-300 font-mono">$45.9M</div>
+          <div className="bento-card-value text-cyan-300 font-mono">₹382.4 Cr</div>
           <div className="bento-card-sub positive">
-            <span>≈ ₹382.4 Crore INR Projected Clawback</span>
+            <span>≈ ₹45.9M Direct Clawback Target</span>
           </div>
           <div className="bento-hairline-indicator accent-cyan" />
         </div>
@@ -299,7 +299,7 @@ export default function CommandCenter({
                         <span className="provider-sub-tag">{c.tag}</span>
                       </div>
                     </td>
-                    <td className="font-mono text-neutral-200">${c.reimbursement.toLocaleString()}</td>
+                    <td className="font-mono text-neutral-200">₹{c.reimbursement.toLocaleString()}</td>
                     <td>
                       <div className="risk-metric-box">
                         <div

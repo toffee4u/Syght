@@ -49,7 +49,7 @@ Raw Claims (5.5L Claims) + Adversarial Fraud Augmentation (+250 Providers)
                                       │
                                       ▼
              [Stage 4] 5-Fold Stratified Cross-Validation Benchmark (9 Models)
-                       ├── Rule Baselines (Volume, Total Dollars, Unit Cost)
+                       ├── Rule Baselines (Volume, Total Rupees, Unit Cost)
                        ├── Linear Baselines (Logistic L1 & L2)
                        ├── Random Forest (500 Deep Trees Ensemble)
                        ├── ExtraTrees Classifier (500 Randomized Trees)
@@ -109,16 +109,16 @@ Model ko 10 real-world healthcare situations (5 complex fraud schemes + 5 genuin
 
 | Provider ID | Healthcare Scenario | Asli Status | Claims | Billed ($) | Risk Score | AI Faisla | Priority |
 |:---|:---|:---:|---:|:---|:---:|:---:|:---:|
-| `PRV_01_RURAL_PRIMARY_CLINIC` | Rural Primary Health Center | Clean | 120 | $38,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_02_PHANTOM_SURGERY_MILL` | Ghost Surgeries & Inpatient Upcoding | Fraud | 520 | $5,100,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_03_KICKBACK_COLLUSION_RING` | Multi-Hospital Doctor Recycling Ring | Fraud | 380 | $2,750,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_04_COMMUNITY_GENERAL_HOSPITAL` | Community General Hospital | Clean | 350 | $180,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_05_UNBUNDLING_DIAGNOSTIC_LAB` | Same-Day Split Diagnostic Billing | Fraud | 940 | $920,000 | **68.3%** | **FLAGGED FOR AUDIT** | `HIGH` |
-| `PRV_06_SOLO_DOCTOR_MONOPOLY` | Single-Doctor Billing Monopoly | Fraud | 510 | $1,200,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_07_DIAGNOSTIC_IMAGING_CENTER` | Accredited MRI/CT Diagnostic Lab | Clean | 450 | $95,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_08_ICU_LENGTH_OF_STAY_UPCODING` | Artificial ICU Stay Inflation | Fraud | 420 | $4,600,000 | **99.9%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_09_DAYCARE_DIALYSIS_CENTER` | Outpatient Hemodialysis Clinic | Clean | 280 | $72,000 | **14.9%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_10_MATERNITY_NURSING_HOME` | Mother & Child Nursing Home | Clean | 270 | $195,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_01_RURAL_PRIMARY_CLINIC` | Rural Primary Health Center | Clean | 120 | ₹38,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_02_PHANTOM_SURGERY_MILL` | Ghost Surgeries & Inpatient Upcoding | Fraud | 520 | ₹5,100,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_03_KICKBACK_COLLUSION_RING` | Multi-Hospital Doctor Recycling Ring | Fraud | 380 | ₹2,750,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_04_COMMUNITY_GENERAL_HOSPITAL` | Community General Hospital | Clean | 350 | ₹180,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_05_UNBUNDLING_DIAGNOSTIC_LAB` | Same-Day Split Diagnostic Billing | Fraud | 940 | ₹920,000 | **68.3%** | **FLAGGED FOR AUDIT** | `HIGH` |
+| `PRV_06_SOLO_DOCTOR_MONOPOLY` | Single-Doctor Billing Monopoly | Fraud | 510 | ₹1,200,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_07_DIAGNOSTIC_IMAGING_CENTER` | Accredited MRI/CT Diagnostic Lab | Clean | 450 | ₹95,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_08_ICU_LENGTH_OF_STAY_UPCODING` | Artificial ICU Stay Inflation | Fraud | 420 | ₹4,600,000 | **99.9%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_09_DAYCARE_DIALYSIS_CENTER` | Outpatient Hemodialysis Clinic | Clean | 280 | ₹72,000 | **14.9%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_10_MATERNITY_NURSING_HOME` | Mother & Child Nursing Home | Clean | 270 | ₹195,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
 
 > Detail report: [`reports/ten_cases_test_report.md`](reports/ten_cases_test_report.md).
 
@@ -253,12 +253,12 @@ Audit teams ke paas limited time hota hai, isliye Syght priority ranking deta ha
 
 | Capacity % | Providers Checked | Precision@K | Total Fraud Money Captured | Net Projected Savings |
 |---|---|---|---|---|
-| **Top 1%** | 11 providers | **90.9%** | **25.3% – 32.7%** | $14.2 Million |
-| **Top 5%** | 57 providers | **82.5%** | **72.1% – 75.8%** | **$45.9 Million** |
-| **Top 10%** | 113 providers | **65.5%** | **89.2% – 89.8%** | $56.8 Million |
-| **Top 20%** | 226 providers | **42.5%** | **98.4%** | $62.1 Million |
+| **Top 1%** | 11 providers | **90.9%** | **25.3% – 32.7%** | ₹118 Crore (₹14.2M) |
+| **Top 5%** | 57 providers | **82.5%** | **72.1% – 75.8%** | **₹380 Crore (₹45.9M)** |
+| **Top 10%** | 113 providers | **65.5%** | **89.2% – 89.8%** | ₹470 Crore (₹56.8M) |
+| **Top 20%** | 226 providers | **42.5%** | **98.4%** | ₹515 Crore (₹62.1M) |
 
-> **Jury Winning Stat**: Sirf **Top 5% suspicious providers** ko inspect karne par **~72% se 75% fraud exposure capture** ho jata hai, jisse scheme ka **$45.9 Million (~380 Crore INR)** net clawback bachta hai!
+> **Jury Winning Stat**: Sirf **Top 5% suspicious providers** ko inspect karne par **~72% se 75% fraud exposure capture** ho jata hai, jisse scheme ka **₹380 Crore (₹45.9M) (~380 Crore INR)** net clawback bachta hai!
 
 ---
 

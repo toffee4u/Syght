@@ -135,7 +135,7 @@ export default function ModelPerformance({
             legend: { labels: { color: '#94a3b8', font: { family: 'Space Grotesk', size: 11 } } },
           },
           scales: {
-            y: { title: { display: true, text: '% Fraud Dollars Captured', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: { title: { display: true, text: '% Fraud Rupees Captured', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
             x: { title: { display: true, text: 'Auditor Workload Bandwidth', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
           },
         },
@@ -151,7 +151,7 @@ export default function ModelPerformance({
           labels: ['0.1', '0.2', '0.3', '0.4', '0.536', '0.6', '0.7', '0.8', '0.9'],
           datasets: [
             {
-              label: 'Total Expected Financial Loss ($M)',
+              label: 'Total Expected Financial Loss (₹M)',
               data: [28.4, 18.2, 12.1, 8.4, 5.2, 7.9, 14.6, 26.8, 48.0],
               borderColor: '#ef4444',
               backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -170,7 +170,7 @@ export default function ModelPerformance({
             legend: { labels: { color: '#94a3b8', font: { family: 'Space Grotesk', size: 11 } } },
           },
           scales: {
-            y: { title: { display: true, text: 'Net Economic Cost ($ Millions)', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+            y: { title: { display: true, text: 'Net Economic Cost (₹ Millions)', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
             x: { title: { display: true, text: 'Decision Threshold (Optimal = 0.5364)', color: '#64748b' }, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
           },
         },

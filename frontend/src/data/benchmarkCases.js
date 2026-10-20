@@ -15,10 +15,10 @@ export const BENCHMARK_CASES = [
     los: 7.2,
     duplicateRate: 0.12,
     status: "investigating",
-    directive: "Freeze all pending claim disbursements immediately ($5.1M exposure). Subpoena surgical theatre logs, nurse duty rosters, and biometric attendance records for the 2 named attending physicians.",
+    directive: "Freeze all pending claim disbursements immediately (₹5.1M exposure). Subpoena surgical theatre logs, nurse duty rosters, and biometric attendance records for the 2 named attending physicians.",
     drivers: [
       { feature: "total_inpatient_surgeries", desc: "460 Inpatient Surgeries Billed by 2 Physicians", shap: "+0.342" },
-      { feature: "inpatient_reimbursed_sum", desc: "Surgical Payouts Sum ($5,100,000)", shap: "+0.285" },
+      { feature: "inpatient_reimbursed_sum", desc: "Surgical Payouts Sum (₹5,100,000)", shap: "+0.285" },
       { feature: "claims_per_attending_ratio", desc: "Extreme Claim Volume per Doctor (230 claims/doc)", shap: "+0.198" },
       { feature: "graph_degree_centrality", desc: "Isolated Closed Loop Doctor Network", shap: "+0.115" }
     ],
@@ -59,7 +59,7 @@ export const BENCHMARK_CASES = [
     drivers: [
       { feature: "graph_degree_centrality", desc: "High Cross-Hospital Physician Sharing (95% Shared)", shap: "+0.320" },
       { feature: "unique_attending_physicians", desc: "Network of 34 Roving Shared Doctors", shap: "+0.265" },
-      { feature: "inpatient_reimbursed_sum", desc: "Aggregated Network Payout ($8,900,000)", shap: "+0.210" },
+      { feature: "inpatient_reimbursed_sum", desc: "Aggregated Network Payout (₹8,900,000)", shap: "+0.210" },
       { feature: "shared_doctor_syndicate_score", desc: "Bipartite Centrality Above 99th Percentile", shap: "+0.145" }
     ],
     features: {
@@ -99,7 +99,7 @@ export const BENCHMARK_CASES = [
     drivers: [
       { feature: "mean_inpatient_los", desc: "Extreme Mean Length of Stay (16.8 Days)", shap: "+0.380" },
       { feature: "max_inpatient_los", desc: "Prolonged Inpatient Outlier (Max 48 Days)", shap: "+0.245" },
-      { feature: "inpatient_reimbursed_sum", desc: "High Per-Admission Cost Profile ($4,200,000)", shap: "+0.190" },
+      { feature: "inpatient_reimbursed_sum", desc: "High Per-Admission Cost Profile (₹4,200,000)", shap: "+0.190" },
       { feature: "icu_stay_ratio", desc: "Disproportionate ICU Admission Proportion", shap: "+0.125" }
     ],
     features: {
@@ -139,7 +139,7 @@ export const BENCHMARK_CASES = [
     drivers: [
       { feature: "post_mortem_claim_count", desc: "Active Claims Billed After Beneficiary DOD", shap: "+0.410" },
       { feature: "same_day_duplicate_rate", desc: "High Duplicate Submission Velocity", shap: "+0.230" },
-      { feature: "inpatient_reimbursed_sum", desc: "Post-Mortem Payout Extraction ($1,850,000)", shap: "+0.175" },
+      { feature: "inpatient_reimbursed_sum", desc: "Post-Mortem Payout Extraction (₹1,850,000)", shap: "+0.175" },
       { feature: "claims_per_attending_ratio", desc: "Unchecked Batch Invoicing Spike", shap: "+0.110" }
     ],
     features: {
@@ -179,7 +179,7 @@ export const BENCHMARK_CASES = [
     drivers: [
       { feature: "same_day_duplicate_rate", desc: "44% Duplicate Same-Day Beneficiary Tests", shap: "+0.360" },
       { feature: "outpatient_claims_count", desc: "High Outpatient Claim Volume (1,850 claims)", shap: "+0.215" },
-      { feature: "outpatient_reimbursed_sum", desc: "Outpatient Billing Extraction ($1,450,000)", shap: "+0.170" },
+      { feature: "outpatient_reimbursed_sum", desc: "Outpatient Billing Extraction (₹1,450,000)", shap: "+0.170" },
       { feature: "unique_beneficiaries_count", desc: "Excessive Repeat Tests on Same Patients", shap: "+0.095" }
     ],
     features: {
@@ -260,7 +260,7 @@ export const BENCHMARK_CASES = [
       { feature: "same_day_duplicate_rate", desc: "Near-Zero Duplicate Tests (1%)", shap: "-0.260" },
       { feature: "inpatient_claims_count", desc: "Zero Inpatient Hospitalization Surges", shap: "-0.210" },
       { feature: "claims_per_attending_ratio", desc: "Balanced Patient-to-Doctor Ratio (70 pts/doc)", shap: "-0.165" },
-      { feature: "reimbursed_per_claim_mean", desc: "Modest Average Cost ($517/claim)", shap: "-0.120" }
+      { feature: "reimbursed_per_claim_mean", desc: "Modest Average Cost (₹517/claim)", shap: "-0.120" }
     ],
     features: {
       total_claims_count: 280,
@@ -377,7 +377,7 @@ export const BENCHMARK_CASES = [
     status: "cleared",
     directive: "Clean billing baseline across all operational indicators. Green-channel reimbursement guaranteed.",
     drivers: [
-      { feature: "reimbursed_per_claim_mean", desc: "Low Pediatric Visit Payout ($306/claim)", shap: "-0.280" },
+      { feature: "reimbursed_per_claim_mean", desc: "Low Pediatric Visit Payout (₹306/claim)", shap: "-0.280" },
       { feature: "inpatient_claims_count", desc: "Zero Unnecessary Inpatient Bed Utilization", shap: "-0.220" },
       { feature: "same_day_duplicate_rate", desc: "Clean Single-Service Invoicing (1%)", shap: "-0.170" },
       { feature: "claims_per_attending_ratio", desc: "Optimal Physician Workload Distribution", shap: "-0.130" }

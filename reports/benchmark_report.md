@@ -66,9 +66,9 @@ Evaluated on held-out test data touched strictly once after freezing all models 
 
 ## 4. Cost-Aware Threshold & Workload Analysis
 
-- **Investigation Cost per Case**: $2,200,000
-- **Expected Total Operational Cost**: $3,141,920
-- **Net Savings vs. Zero Investigation**: $45,928,182
+- **Investigation Cost per Case**: ₹2,200,000
+- **Expected Total Operational Cost**: ₹3,141,920
+- **Net Savings vs. Zero Investigation**: ₹45,928,182
 
 ---
 
