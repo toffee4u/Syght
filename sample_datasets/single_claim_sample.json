@@ -1,0 +1,54 @@
+{
+  "claim_id": "CLM-2026-90412",
+  "pre_auth_reference": "PA-MH-99201",
+  "policy_number": "PMJAY-MH-2026-7782190",
+  "provider_id": "PRV_02_PHANTOM_SURGERY_MILL",
+  "provider_name": "Apex Life Surgical Specialty Care",
+  "hospital_accreditation": "NABH-PROVISIONAL",
+  "patient": {
+    "id": "BENEFICIARY-78901",
+    "name": "Rameshwar K. Shinde",
+    "age": 49,
+    "gender": "MALE",
+    "location": "Thane, Maharashtra",
+    "aadhaar_verified": true
+  },
+  "clinical_episode": {
+    "admission_date": "2026-10-12T09:30:00Z",
+    "discharge_date": "2026-10-17T14:00:00Z",
+    "length_of_stay": 5,
+    "department": "Surgical Gastroenterology",
+    "primary_diagnosis": {
+      "code": "K80.2",
+      "description": "Calculus of gallbladder without cholecystitis"
+    },
+    "secondary_diagnoses": [
+      {
+        "code": "E11.9",
+        "description": "Type 2 diabetes mellitus without complications"
+      }
+    ],
+    "surgical_procedures": [
+      {
+        "code": "51.23",
+        "name": "Laparoscopic cholecystectomy",
+        "operating_theatre_id": "OT-01",
+        "surgeon_reg_number": "MCI-MH-44912",
+        "start_time": "2026-10-13T10:15:00Z",
+        "end_time": "2026-10-13T11:45:00Z"
+      }
+    ]
+  },
+  "financials": {
+    "total_billed_inr": 128500,
+    "pre_auth_approved_inr": 115000,
+    "patient_co_pay_inr": 0,
+    "package_code": "SG001A_LAP_CHOLE",
+    "claimed_reimbursement_inr": 115000
+  },
+  "telemetry": {
+    "submission_latency_ms": 3.8,
+    "same_day_duplicate_submission": false,
+    "historical_provider_claims_today": 42
+  }
+}

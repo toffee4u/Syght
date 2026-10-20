@@ -1,0 +1,13 @@
+provider_id,name,city,total_claims_count,inpatient_claims_count,inpatient_reimbursed_sum,outpatient_reimbursed_sum,mean_inpatient_los,max_inpatient_los,total_inpatient_surgeries,unique_attending_physicians,unique_beneficiaries_count,same_day_duplicate_rate,graph_degree_centrality,archetype,baseline_risk,status
+DAYCARE_CHURN_01,Vrikka Sanjeevani Renal Dialysis Clinic,"Chennai, TN",1540,231,924000,3276000,1.2,2,0,3,492,0.42,0.89,Dialysis & Chemo Repeat Session Churn,0.994,CRITICAL RISK
+DAYCARE_CHURN_02,KidneyCare Daycare Hemodialysis Hub,"Bengaluru, KA",1420,213,858000,3042000,1.2,2,0,4,454,0.38,0.85,Dialysis & Chemo Repeat Session Churn,0.988,CRITICAL RISK
+DAYCARE_CHURN_03,OncoCare Chemotherapy Day Infusion Center,"Mumbai, MH",890,133,1188000,4212000,1.2,2,0,3,284,0.36,0.82,Dialysis & Chemo Repeat Session Churn,0.992,CRITICAL RISK
+DAYCARE_CHURN_04,NephroLife Duplicate Cycle Dialysis Clinic,"Hyderabad, TS",1380,207,825000,2925000,1.2,2,0,4,441,0.4,0.87,Dialysis & Chemo Repeat Session Churn,0.99,CRITICAL RISK
+DAYCARE_CHURN_05,Sanjeevani Day Oncology Infusion Suite,Delhi NCR,820,123,1078000,3822000,1.2,2,0,2,262,0.34,0.8,Dialysis & Chemo Repeat Session Churn,0.986,CRITICAL RISK
+DAYCARE_CHURN_06,RenalPlus High-Flux Hemodialysis Center,"Kolkata, WB",1260,189,759000,2691000,1.2,2,0,3,403,0.39,0.84,Dialysis & Chemo Repeat Session Churn,0.987,CRITICAL RISK
+DAYCARE_CHURN_07,Hope Oncology Day Infusion Clinic,"Pune, MH",760,114,1012000,3588000,1.2,2,0,2,243,0.35,0.79,Dialysis & Chemo Repeat Session Churn,0.984,CRITICAL RISK
+DAYCARE_CHURN_08,DialysisExpress 24/7 Daycare Hub,"Ahmedabad, GJ",1190,178,721600,2558400,1.2,2,0,3,380,0.44,0.86,Dialysis & Chemo Repeat Session Churn,0.991,CRITICAL RISK
+DAYCARE_CHURN_09,CancerCare Day Chemotherapy Pavilion,"Lucknow, UP",710,106,946000,3354000,1.2,2,0,2,227,0.37,0.81,Dialysis & Chemo Repeat Session Churn,0.985,CRITICAL RISK
+DAYCARE_CHURN_10,Metro Dialysis & Renal Wellness,"Jaipur, RJ",1080,162,655600,2324400,1.2,2,0,3,345,0.41,0.83,Dialysis & Chemo Repeat Session Churn,0.989,CRITICAL RISK
+DAYCARE_CHURN_11,Precision Chemo Infusion Lounge,"Chandigarh, PB",680,102,902000,3198000,1.2,2,0,2,217,0.33,0.78,Dialysis & Chemo Repeat Session Churn,0.982,CRITICAL RISK
+DAYCARE_CHURN_12,LifeLine Daycare Dialysis Syndicate,"Surat, GJ",1120,168,682000,2418000,1.2,2,0,3,358,0.43,0.85,Dialysis & Chemo Repeat Session Churn,0.99,CRITICAL RISK

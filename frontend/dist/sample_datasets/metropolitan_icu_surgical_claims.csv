@@ -1,0 +1,16 @@
+provider_id,name,city,total_claims_count,inpatient_claims_count,inpatient_reimbursed_sum,outpatient_reimbursed_sum,mean_inpatient_los,max_inpatient_los,total_inpatient_surgeries,unique_attending_physicians,unique_beneficiaries_count,same_day_duplicate_rate,graph_degree_centrality,archetype,baseline_risk,status
+ICU_TERTIARY_01,Metro Apex Multi-Specialty & Trauma,"Mumbai, MH",620,620,12400000,0,18.4,52,480,5,540,0.16,0.84,ICU Stay Prolongation & Ventilator Farming,0.999,CRITICAL RISK
+ICU_TERTIARY_02,Capital City Critical Care & Neuro,"New Delhi, DL",540,510,9800000,120000,15.2,44,360,4,480,0.22,0.79,Neuro-ICU Package Upcoding,0.996,CRITICAL RISK
+ICU_TERTIARY_03,Sovereign Cardiac & Vascular Hospital,"Bengaluru, KA",480,460,8600000,90000,6.8,18,420,3,410,0.28,0.82,Stent Stacking & Multi-Vessel Upcoding,0.991,CRITICAL RISK
+ICU_TERTIARY_04,Highland Joint Reconstruction Institute,"Hyderabad, TS",390,380,7400000,60000,7.9,19,380,2,350,0.25,0.77,Bilateral Knee Replacement Phantom Stacking,0.994,CRITICAL RISK
+ICU_TERTIARY_05,Pinnacle Gastro & Hepatic Critical Care,"Chennai, TN",420,400,6800000,80000,12.6,36,240,4,370,0.18,0.73,Hepatic Encephalopathy ICU Extension,0.985,CRITICAL RISK
+ICU_TERTIARY_06,NorthStar Spine Surgery Syndicate,"Chandigarh, PB",310,300,5900000,50000,8.4,22,290,2,280,0.31,0.81,Multi-Level Spinal Fusion Unbundling,0.988,CRITICAL RISK
+ICU_TERTIARY_07,Sterling Acute Pulmonary & Sleep Center,"Ahmedabad, GJ",350,340,6100000,40000,14.1,39,120,3,310,0.14,0.69,COPD Ventilator Retention Syndicate,0.979,CRITICAL RISK
+ICU_TERTIARY_08,Beacon Interventional Oncology Center,"Kolkata, WB",490,450,8200000,210000,9.8,27,190,4,410,0.27,0.78,Targeted Chemo & Radio-Ablation Unbundling,0.984,CRITICAL RISK
+ICU_TERTIARY_09,Everest Advanced Polytrauma Institute,"Jaipur, RJ",410,390,6900000,70000,13.9,41,260,3,370,0.2,0.74,Trauma Severity Index Inflation,0.987,CRITICAL RISK
+ICU_TERTIARY_10,Royal Palms Surgical & Bariatric Care,"Surat, GJ",330,320,5200000,60000,5.4,12,320,2,300,0.23,0.71,Bariatric Gastric Bypass Coding Substitution,0.974,HIGH RISK
+ICU_TERTIARY_11,Silverline Emergency Thoracic Clinic,"Lucknow, UP",290,280,4900000,40000,10.8,32,170,3,260,0.17,0.68,Thoracic Drainage Artificial Upcoding,0.966,HIGH RISK
+ICU_TERTIARY_12,Prism Advanced Nephro-Critical Hospital,"Indore, MP",360,340,5600000,80000,11.7,35,90,3,310,0.19,0.72,Continuous CRRT Dialysis Surcharge Upcoding,0.972,HIGH RISK
+ICU_TERTIARY_13,Grace Life Surgical Oncology Unit,"Nagpur, MH",320,310,5400000,50000,9.2,24,220,2,290,0.26,0.75,Surgical Margin Re-Excision Stacking,0.981,CRITICAL RISK
+ICU_TERTIARY_14,CityCare Multi-Organ Transplant Hub,"Patna, BR",280,270,8900000,90000,16.5,45,180,4,250,0.21,0.83,Immunosuppressant Phantom Invoicing,0.993,CRITICAL RISK
+ICU_TERTIARY_15,Zenith Neuro & Cranial Surgical Wing,"Bhopal, MP",290,280,5800000,40000,12.1,38,190,3,260,0.22,0.76,Craniotomy Flap Storage Billing Outlier,0.986,CRITICAL RISK

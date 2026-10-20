@@ -27,6 +27,7 @@ import {
   generateCsvFromRows,
   getDatasetPreset,
 } from '../data/sampleDataset';
+import { AVAILABLE_SAMPLE_DATASETS, convertRowsToCsv } from '../data/sampleDatasetsCatalog';
 
 export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplete }) {
   const fileInputRef = useRef(null);
@@ -44,43 +45,52 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
   const [filterTab, setFilterTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Preset Scenarios
+  // Preset Scenarios (Unified 5 Multi-Dataset Cohorts)
   const PRESETS = [
     {
-      key: 'collusion',
-      title: 'Doctor Recycling Syndicate',
-      badge: 'High Collusion',
+      key: 'pmjay-25',
+      title: 'PM-JAY 25 Hospital Benchmark',
+      badge: '25 Facilities',
+      badgeVariant: 'badge-secondary',
+      desc: 'Gold standard portfolio benchmark across phantom surgery mills, kickback rings, and clean primary hospitals.',
+      count: '25 Facilities',
+      icon: Database,
+    },
+    {
+      key: 'icu-surgical-15',
+      title: 'Metropolitan ICU & Surgical Fraud',
+      badge: '15 Tertiary Centers',
       badgeVariant: 'badge-destructive',
-      desc: 'Bipartite kickback rings, shared physician networks, and phantom surgeries.',
-      count: '10 Cases',
+      desc: 'Severe ventilator prolongation up to 52 days, stent stacking, and unbundled joint replacements.',
+      count: '15 Centers',
       icon: Activity,
     },
     {
-      key: 'upcoding',
-      title: 'ICU & Package Upcoding',
-      badge: 'Critical LOS',
-      badgeVariant: 'badge-warning',
-      desc: 'Artificial length-of-stay prolongation, unbundled lab panels, post-mortem claims.',
-      count: '8 Cases',
-      icon: Zap,
-    },
-    {
-      key: 'clean',
-      title: 'Accredited Rural Health',
-      badge: 'Auto-Cleared',
+      key: 'rural-phc-20',
+      title: 'Rural PHC & CHC Primary Care',
+      badge: '20 Clean PHCs',
       badgeVariant: 'badge-success',
-      desc: 'Compliant community healthcare kendras, diabetic clinics, accredited maternity centers.',
-      count: '7 Cases',
+      desc: '100% compliant community health kendras adhering strictly to package norms (zero false positives).',
+      count: '20 Clinics',
       icon: ShieldCheck,
     },
     {
-      key: 'all',
-      title: 'Full SIU Benchmark',
-      badge: 'Balanced 25 Cases',
-      badgeVariant: 'badge-secondary',
-      desc: 'Heterogeneous mix across phantom mills, kickback rings, and clean primary hospitals.',
-      count: '25 Cases',
-      icon: Database,
+      key: 'diagnostic-lab-14',
+      title: 'Diagnostic & Pathology Labs',
+      badge: '14 Laboratories',
+      badgeVariant: 'badge-warning',
+      desc: 'Extreme same-day duplicate testing rates (>40%) and unbundled blood panels on single visits.',
+      count: '14 Labs',
+      icon: Zap,
+    },
+    {
+      key: 'daycare-churn-12',
+      title: 'Dialysis & Chemo Daycare Churn',
+      badge: '12 Daycare Units',
+      badgeVariant: 'badge-destructive',
+      desc: 'Duplicate hemodialysis sessions and high-cost oncology infusions billed without pharmacy logs.',
+      count: '12 Hubs',
+      icon: Activity,
     },
   ];
 
@@ -108,7 +118,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
     }
   };
 
-  // 2. Parse Custom Uploaded File (.CSV / .JSON)
+  // 2. Parse Custom Uploaded File (.CSV / .JSON / .TXT)
   const processSelectedFile = (file) => {
     const fileName = file.name;
     const fileSize = (file.size / 1024).toFixed(1) + ' KB';
@@ -120,7 +130,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
         let parsedRows = [];
         if (fileName.endsWith('.json')) {
           const json = JSON.parse(content);
-          parsedRows = Array.isArray(json) ? json : json.records || [json];
+          parsedRows = Array.isArray(json) ? json : json.records || json.claims || [json];
         } else {
           parsedRows = parseCsvText(content);
         }
@@ -131,7 +141,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
 
         setActiveDataset({
           name: fileName,
-          type: fileName.endsWith('.json') ? 'JSON' : 'CSV',
+          type: fileName.endsWith('.json') ? 'JSON' : fileName.endsWith('.txt') ? 'TXT (Delimited)' : 'CSV',
           size: fileSize,
           rows: parsedRows,
           rawContent: content,
@@ -149,16 +159,25 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
     reader.readAsText(file);
   };
 
-  // Helper CSV text parser
+  // Helper CSV / TSV text parser (supports commas, tabs, and semicolons)
   const parseCsvText = (text) => {
     const lines = text.trim().split(/\r\n|\n/).filter(Boolean);
     if (lines.length < 2) return [];
 
-    const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, ''));
+    const firstLine = lines[0];
+    const isTab = firstLine.includes('\t');
+    const isSemicolon = !isTab && firstLine.includes(';') && !firstLine.includes(',');
+    const splitRegex = isTab
+      ? /\t/
+      : isSemicolon
+        ? /;(?=(?:(?:[^"]*"){2})*[^"]*$)/
+        : /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+    const headers = firstLine.split(splitRegex).map((h) => h.trim().replace(/^"|"$/g, ''));
     const rows = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map((v) => v.trim().replace(/^"|"$/g, ''));
+      const values = lines[i].split(splitRegex).map((v) => v.trim().replace(/^"|"$/g, ''));
       if (values.length >= headers.length) {
         const row = {};
         headers.forEach((h, idx) => {
@@ -174,21 +193,27 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
 
   // 3. Load Preset Scenarios
   const handleSelectPreset = (presetKey) => {
-    const rows = getDatasetPreset(presetKey);
-    const preset = PRESETS.find((p) => p.key === presetKey);
+    let dataset = AVAILABLE_SAMPLE_DATASETS.find((d) => d.id === presetKey);
+    if (!dataset && presetKey === 'collusion') dataset = AVAILABLE_SAMPLE_DATASETS[0];
+    if (!dataset && presetKey === 'upcoding') dataset = AVAILABLE_SAMPLE_DATASETS[1];
+    if (!dataset && presetKey === 'clean') dataset = AVAILABLE_SAMPLE_DATASETS[2];
+    if (!dataset && presetKey === 'all') dataset = AVAILABLE_SAMPLE_DATASETS[0];
+    if (!dataset) dataset = AVAILABLE_SAMPLE_DATASETS[0];
+
+    const rows = dataset.rows;
 
     setActiveDataset({
-      name: `${preset.title.replace(/\s+/g, '_')}_${rows.length}_Cases.csv`,
+      name: dataset.filename,
       type: 'Curated Benchmark',
       size: `${(rows.length * 0.58).toFixed(1)} KB`,
       rows: rows,
-      rawContent: generateCsvFromRows(rows),
+      rawContent: convertRowsToCsv(rows),
     });
 
     setSelectedPresetKey(presetKey);
     setTestResults(null);
     setShowDataPreview(true);
-    onShowToast(`Loaded preset scenario: <strong>${preset.title}</strong> (${rows.length} cases)`, 'info');
+    onShowToast(`Loaded preset scenario: <strong>${dataset.name}</strong> (${rows.length} cases)`, 'info');
   };
 
   // 4. Download Sample CSV Template
@@ -217,24 +242,28 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
     let flaggedExposure = 0;
 
     const results = activeDataset.rows.map((row, idx) => {
-      const pid = row.provider_id || `PRV_CUSTOM_${idx + 1}`;
-      const pname = row.name || `Facility ${pid}`;
-      const archetype = row.archetype || 'Custom Clinical Claim Profile';
-      const ipReimb = Number(row.inpatient_reimbursed_sum || 0);
+      const pid = row.provider_id || row.claim_id || `PRV_CUSTOM_${idx + 1}`;
+      const pname = row.name || row.provider_name || `Facility ${pid}`;
+      const archetype = row.archetype || row.anomaly_indicators || row.primary_icd10_description || 'Custom Clinical Claim Profile';
+      const ipReimb = Number(row.inpatient_reimbursed_sum || row.claimed_reimbursement_inr || row.billed_amount_inr || 0);
       const opReimb = Number(row.outpatient_reimbursed_sum || 0);
       const totalReimb = ipReimb + opReimb || 280000;
       totalExposure += totalReimb;
 
       const surgeries = Number(row.total_inpatient_surgeries || 0);
       const physicians = Math.max(1, Number(row.unique_attending_physicians || 1));
-      const los = Number(row.mean_inpatient_los || 3.0);
-      const duplicates = Number(row.same_day_duplicate_rate || 0);
+      const los = Number(row.mean_inpatient_los || row.length_of_stay_days || 3.0);
+      const duplicates = Number(row.same_day_duplicate_rate || (row.same_day_duplicate_submission ? 0.35 : 0));
       const centrality = Number(row.graph_degree_centrality || 0.2);
 
       let riskScore = 0.08;
 
       if (row.baseline_risk !== undefined) {
-        riskScore = row.baseline_risk;
+        riskScore = Number(row.baseline_risk);
+      } else if (row.status === 'FLAGGED_FOR_AUDIT' || row.status === 'CRITICAL RISK') {
+        riskScore = 0.965;
+      } else if (row.status === 'AUTO_CLEARED' || row.status === 'CLEARED BASELINE') {
+        riskScore = 0.038;
       } else {
         if (surgeries / physicians > 70) riskScore += 0.55;
         if (los > 9.0) riskScore += 0.40;
@@ -436,7 +465,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
               </p>
             </div>
           </div>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <button
               type="button"
               className="syght-btn-secondary text-xs"
@@ -446,6 +475,26 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
               <Download size={13} />
               <span>CSV Template</span>
             </button>
+            <a
+              href="/sample_datasets/claims_batch_payload.json"
+              download="claims_batch_payload.json"
+              className="syght-btn-secondary text-xs"
+              style={{ textDecoration: 'none' }}
+              title="Download JSON Array of Claims"
+            >
+              <Download size={13} />
+              <span>JSON Claims</span>
+            </a>
+            <a
+              href="/sample_datasets/claims_data_export.txt"
+              download="claims_data_export.txt"
+              className="syght-btn-secondary text-xs"
+              style={{ textDecoration: 'none' }}
+              title="Download TXT Tab-Separated Export"
+            >
+              <Download size={13} />
+              <span>TXT Export</span>
+            </a>
           </div>
         </div>
 

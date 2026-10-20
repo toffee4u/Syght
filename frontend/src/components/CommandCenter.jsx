@@ -22,7 +22,10 @@ import {
   IconFreeze,
   IconCheckCircle,
   IconDatabase,
+  IconDownload,
+  IconUploadCloud,
 } from './Icons';
+import { AVAILABLE_SAMPLE_DATASETS } from '../data/sampleDatasetsCatalog';
 
 const SHAP_DATASETS = {
   global: {
@@ -170,6 +173,8 @@ export default function CommandCenter({
   onViewAllCases,
   onOpenDatasetStudio,
   onRunAuditWithSample,
+  onRunAuditWithPortfolio,
+  onRunAuditWithDataset,
 }) {
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditProgress, setAuditProgress] = useState(0);
@@ -315,6 +320,10 @@ export default function CommandCenter({
       : `₹${(totalAudited / 100000).toFixed(2)} Lakhs`;
 
   const handleRunAudit = () => {
+    if (onRunAuditWithPortfolio) {
+      onRunAuditWithPortfolio();
+      return;
+    }
     if (onRunAuditWithSample) {
       onRunAuditWithSample();
       return;
@@ -376,9 +385,10 @@ export default function CommandCenter({
               className="syght-btn-primary"
               onClick={handleRunAudit}
               disabled={isAuditing}
+              id="hero-btn-run-25-audit"
             >
               <IconZap size={16} className={isAuditing ? 'animate-spin' : ''} />
-              <span>{isAuditing ? `Auditing ${cases.length} Facilities (${auditProgress}%)...` : `Run Audit on ${cases.length} Portfolio Facilities`}</span>
+              <span>{isAuditing ? `Auditing 25 Facilities (${auditProgress}%)...` : 'Run Audit on 25 Sample Data'}</span>
             </button>
             <button
               type="button"
@@ -536,6 +546,168 @@ export default function CommandCenter({
             <span>Sub-5ms Real-Time Inline Intercept</span>
           </div>
           <div className="bento-hairline-indicator" />
+        </div>
+      </section>
+
+      {/* Multi-Dataset Benchmark & Custom Data Testing Hub */}
+      <section className="syght-panel dataset-launcher-section" style={{ marginTop: '1.5rem' }}>
+        <div className="syght-panel-header">
+          <div className="panel-title-flex">
+            <IconDatabase size={20} className="text-sky-600" />
+            <div>
+              <h3>Multi-Dataset Model Benchmark & Custom Testing Hub</h3>
+              <p className="panel-subtitle-text">
+                Test Syght's Multi-Model Detection Engine across diverse clinical archetypes or download sample files for custom validation
+              </p>
+            </div>
+          </div>
+          <div className="panel-actions-row">
+            <button
+              type="button"
+              className="syght-btn-primary text-xs py-1.5 px-3"
+              onClick={handleRunAudit}
+              title="Execute full 5-model audit on 25 PM-JAY facilities"
+            >
+              <IconZap size={13} />
+              <span>Run Audit on 25 Sample Data</span>
+            </button>
+            <button
+              type="button"
+              className="syght-btn-secondary text-xs py-1.5 px-3"
+              onClick={onOpenDatasetStudio}
+              title="Open Dataset Studio to upload custom files"
+            >
+              <IconUploadCloud size={13} />
+              <span>Dataset Studio &amp; Custom Upload</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="syght-panel-body" style={{ padding: '1.25rem 1.5rem' }}>
+          {/* Quick Explanation / Summary Bar */}
+          <div className="dataset-launcher-lead-box">
+            <div className="dataset-launcher-lead-left">
+              <span className="dataset-launcher-lead-badge">5 Curated Cohorts</span>
+              <p className="dataset-launcher-lead-desc">
+                Select any cohort below to instantly trigger real-time feature synthesis, bipartite collusion graph mapping, and TreeSHAP attribution scoring.
+              </p>
+            </div>
+            <div className="dataset-launcher-lead-right">
+              <a
+                href="/sample_datasets/pmjay_25_hospital_portfolio.csv"
+                download="pmjay_25_hospital_portfolio.csv"
+                className="dataset-quick-file-link"
+                title="Download 25 Hospital CSV"
+              >
+                <IconDownload size={12} />
+                <span>25_Portfolio.CSV</span>
+              </a>
+              <a
+                href="/sample_datasets/claims_batch_payload.json"
+                download="claims_batch_payload.json"
+                className="dataset-quick-file-link"
+                title="Download Claims Batch JSON Array"
+              >
+                <IconDownload size={12} />
+                <span>Claims_Batch.JSON</span>
+              </a>
+              <a
+                href="/sample_datasets/claims_data_export.txt"
+                download="claims_data_export.txt"
+                className="dataset-quick-file-link"
+                title="Download Claims Plain Text TSV Export"
+              >
+                <IconDownload size={12} />
+                <span>Claims_Export.TXT</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Grid of the 5 Datasets */}
+          <div className="dataset-cohorts-grid">
+            {AVAILABLE_SAMPLE_DATASETS.map((ds) => {
+              const is25 = ds.id === 'pmjay-25';
+              return (
+                <div key={ds.id} className={`dataset-cohort-card ${is25 ? 'is-featured' : ''}`}>
+                  <div className="dataset-cohort-header">
+                    <div className="dataset-cohort-title-row">
+                      <span className="dataset-cohort-title">{ds.name}</span>
+                      <span className={`preset-badge ${ds.badgeVariant}`}>
+                        {ds.count}
+                      </span>
+                    </div>
+                    <div className="dataset-cohort-meta-row">
+                      <span className="dataset-cohort-exposure">
+                        Exposure: <strong>{ds.exposure}</strong>
+                      </span>
+                      <span className="dataset-cohort-tier">
+                        Risk Tier: <strong>{ds.riskTier}</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="dataset-cohort-desc">{ds.description}</p>
+
+                  <div className="dataset-cohort-tags">
+                    {ds.tags.map((t, i) => (
+                      <span key={i} className="dataset-cohort-tag">{t}</span>
+                    ))}
+                  </div>
+
+                  <div className="dataset-cohort-actions">
+                    <button
+                      type="button"
+                      className="syght-btn-primary dataset-run-btn"
+                      onClick={() => {
+                        if (is25 && onRunAuditWithPortfolio) {
+                          onRunAuditWithPortfolio();
+                        } else if (onRunAuditWithDataset) {
+                          onRunAuditWithDataset(ds);
+                        } else {
+                          handleRunAudit();
+                        }
+                      }}
+                      title={`Run 5-Model Engine on ${ds.name}`}
+                    >
+                      <IconZap size={14} />
+                      <span>{is25 ? 'Run 25 Sample Audit' : 'Run Model on Dataset'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="syght-btn-secondary dataset-dl-btn"
+                      onClick={() => ds.downloadCsv()}
+                      title={`Download ${ds.filename}`}
+                    >
+                      <IconDownload size={13} />
+                      <span>CSV</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Quick Custom File Upload & Drag-and-Drop Hint Box */}
+          <div className="dataset-custom-hint-box" onClick={onOpenDatasetStudio}>
+            <div className="dataset-custom-hint-left">
+              <div className="dataset-custom-hint-icon">
+                <IconUploadCloud size={20} className="text-sky-600" />
+              </div>
+              <div>
+                <div className="dataset-custom-hint-title">
+                  Want to test your own hospital claims file?
+                </div>
+                <div className="dataset-custom-hint-sub">
+                  Drag and drop any custom <strong>.csv</strong>, <strong>.json</strong> array of claims, or <strong>.txt</strong> export in Dataset Studio to test model accuracy.
+                </div>
+              </div>
+            </div>
+            <button type="button" className="syght-btn-secondary text-xs">
+              <span>Open Studio &amp; Upload</span>
+              <IconArrowRight size={13} />
+            </button>
+          </div>
         </div>
       </section>
 
