@@ -29,7 +29,7 @@ export default function Header({
   // Close mobile menu on resize to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 1100) {
         setMobileMenuOpen(false);
       }
     };
@@ -47,13 +47,13 @@ export default function Header({
   }, [mobileMenuOpen]);
 
   const tabs = [
-    { id: 'tab-dashboard', label: 'Command Center', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
-    { id: 'tab-queue', label: 'Review Queue', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
-    { id: 'tab-dataset', label: 'Dataset Studio', icon: IconDatabase, desc: 'Upload & Batch Test' },
-    { id: 'tab-analyzer', label: 'Claim Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
-    { id: 'tab-performance', label: 'Model Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
-    { id: 'tab-network', label: 'Collusion Graph', icon: IconNetwork, desc: 'Multi-Provider Rings' },
-    { id: 'tab-preauth', label: 'Pre-Auth Gateway', icon: IconClock, desc: 'Sub-5ms Real-Time API' },
+    { id: 'tab-dashboard', label: 'Command Center', shortLabel: 'Command', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
+    { id: 'tab-queue', label: 'Review Queue', shortLabel: 'Review', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
+    { id: 'tab-dataset', label: 'Dataset Studio', shortLabel: 'Dataset', icon: IconDatabase, desc: 'Upload & Batch Test' },
+    { id: 'tab-analyzer', label: 'Claim Analyzer', shortLabel: 'Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
+    { id: 'tab-performance', label: 'Benchmarks', shortLabel: 'Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
+    { id: 'tab-network', label: 'Collusion Graph', shortLabel: 'Network', icon: IconNetwork, desc: 'Multi-Provider Rings' },
+    { id: 'tab-preauth', label: 'Pre-Auth', shortLabel: 'Pre-Auth', icon: IconClock, desc: 'Sub-5ms Real-Time API' },
   ];
 
   const isHealthy = healthData?.model_loaded;
@@ -78,7 +78,7 @@ export default function Header({
             title="Syght — Team Pulse Enterprise Fraud Detection"
           >
             <div className="brand-gem-container">
-              <IconShield size={22} className="brand-gem-icon" />
+              <IconShield size={20} className="brand-gem-icon" />
               <span className="brand-gem-aura" />
             </div>
             <div className="brand-identity">
@@ -95,7 +95,7 @@ export default function Header({
           </div>
         </div>
 
-        {/* Center Pill Nav (Desktop: >= 1024px) */}
+        {/* Center Pill Nav (Desktop: >= 1100px) */}
         <div className="navbar-nav-pills">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -106,9 +106,11 @@ export default function Header({
                 type="button"
                 className={`nav-pill-btn ${isActive ? 'is-active' : ''}`}
                 onClick={() => handleSelectTab(tab.id)}
+                title={tab.desc}
               >
-                <Icon size={16} className="pill-icon" />
-                <span className="pill-label">{tab.label}</span>
+                <Icon size={15} className="pill-icon shrink-0" />
+                <span className="pill-label pill-label-full">{tab.label}</span>
+                <span className="pill-label pill-label-short">{tab.shortLabel}</span>
                 {tab.badge !== undefined && tab.badge > 0 && (
                   <span className="pill-counter-badge">{tab.badge}</span>
                 )}
