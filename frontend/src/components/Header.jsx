@@ -49,14 +49,14 @@ export default function Header({
   }, [mobileMenuOpen]);
 
   const tabs = [
-    { id: 'tab-dashboard', route: '#/command', label: 'Command', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
-    { id: 'tab-queue', route: '#/queue', label: 'Review', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
-    { id: 'tab-dataset', route: '#/dataset', label: 'Dataset', icon: IconDatabase, desc: 'Upload Claims Dataset' },
-    { id: 'tab-results', route: '#/results', label: 'Results', icon: IconBarChart, badge: resultsCount, desc: 'Confidence & Graph Report' },
-    { id: 'tab-analyzer', route: '#/analyzer', label: 'Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
-    { id: 'tab-performance', route: '#/benchmarks', label: 'Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
-    { id: 'tab-network', route: '#/network', label: 'Network', icon: IconNetwork, desc: 'Multi-Provider Rings' },
-    { id: 'tab-preauth', route: '#/preauth', label: 'Pre-Auth', icon: IconClock, desc: 'Sub-5ms Real-Time API' },
+    { id: 'tab-dashboard', path: '/command', label: 'Command', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
+    { id: 'tab-queue', path: '/queue', label: 'Review', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
+    { id: 'tab-dataset', path: '/dataset', label: 'Dataset', icon: IconDatabase, desc: 'Upload Claims Dataset' },
+    { id: 'tab-results', path: '/results', label: 'Results', icon: IconBarChart, badge: resultsCount, desc: 'Confidence & Graph Report' },
+    { id: 'tab-analyzer', path: '/analyzer', label: 'Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
+    { id: 'tab-performance', path: '/benchmarks', label: 'Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
+    { id: 'tab-network', path: '/network', label: 'Network', icon: IconNetwork, desc: 'Multi-Provider Rings' },
+    { id: 'tab-preauth', path: '/preauth', label: 'Pre-Auth', icon: IconClock, desc: 'Sub-5ms Real-Time API' },
   ];
 
   const isHealthy = healthData?.model_loaded;
@@ -64,8 +64,8 @@ export default function Header({
     ? `${healthData.selected_model || 'LightGBM'} Ready`
     : 'Initializing...';
 
-  const handleSelectTab = (tabId) => {
-    setActiveTab(tabId);
+  const handleSelectTab = (tabId, targetPath) => {
+    setActiveTab(tabId, targetPath);
     setMobileMenuOpen(false);
   };
 
@@ -75,11 +75,11 @@ export default function Header({
         {/* Brand & Team Pulse Tag */}
         <div className="navbar-brand-cluster">
           <a 
-            href="#/command"
+            href="/command"
             className="brand-anchor" 
             onClick={(e) => {
               e.preventDefault();
-              handleSelectTab('tab-dashboard');
+              handleSelectTab('tab-dashboard', '/command');
             }}
             title="Syght — Enterprise Fraud Detection Platform"
           >
@@ -103,11 +103,11 @@ export default function Header({
             return (
               <a
                 key={tab.id}
-                href={tab.route}
+                href={tab.path}
                 className={`nav-pill-btn ${isActive ? 'is-active' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSelectTab(tab.id);
+                  handleSelectTab(tab.id, tab.path);
                 }}
                 title={tab.desc}
               >
@@ -207,7 +207,7 @@ export default function Header({
                     key={tab.id}
                     type="button"
                     className={`mobile-nav-item ${isActive ? 'active' : ''}`}
-                    onClick={() => handleSelectTab(tab.id)}
+                    onClick={() => handleSelectTab(tab.id, tab.path)}
                   >
                     <div className="mobile-nav-icon-box">
                       <Icon size={18} />
