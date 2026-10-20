@@ -214,6 +214,7 @@ export default function BatchAuditResults({
   // References to guarantee no multiple timer loops
   const intervalRef = useRef(null);
   const lastProcessedTriggerRef = useRef(null);
+  const pendingPayloadRef = useRef(null);
 
   // Filter tabs & search for forensic details cards
   const [filterTab, setFilterTab] = useState('all');
@@ -305,12 +306,14 @@ export default function BatchAuditResults({
       intervalRef.current = null;
     }
 
+    // Auto reset old results immediately so stale data is never displayed
+    setCurrentResults(null);
+    pendingPayloadRef.current = dataPayload;
     setIsExecuting(true);
     setExecutionProgress(0);
     setCurrentStageIndex(0);
     setElapsedMs(0);
     setActiveDatasetMode(modeName);
-    setCurrentResults(dataPayload);
 
     const startTime = performance.now();
     const count = dataPayload.total_evaluated || 10;
@@ -510,8 +513,9 @@ export default function BatchAuditResults({
   };
 
   const handleSkipToResults = () => {
-    if (currentResults) {
-      finishExecution(currentResults);
+    const payload = pendingPayloadRef.current || currentResults;
+    if (payload) {
+      finishExecution(payload);
     }
   };
 
@@ -529,6 +533,8 @@ export default function BatchAuditResults({
   useEffect(() => {
     if (pipelineExecutionTrigger && pipelineExecutionTrigger.timestamp !== lastProcessedTriggerRef.current) {
       lastProcessedTriggerRef.current = pipelineExecutionTrigger.timestamp;
+      // Auto reset old results immediately so nothing stale is shown
+      setCurrentResults(null);
 
       if (pipelineExecutionTrigger.source === 'sample-10') {
         const payload = buildResultsFrom10Cases();
@@ -683,8 +689,13 @@ export default function BatchAuditResults({
 
     // 3. Rupee Exposure Allocation Doughnut
     if (exposureChartRef.current) {
-      const flagged = Number(currentResults?.flagged_exposure || 14500000);
-      const clean = Math.max(1000000, Number(currentResults?.total_exposure || 45000000) - flagged);
+      const flagged = Number(currentResults?.flagged_exposure !== undefined 
+        ? currentResults.flagged_exposure 
+        : items.filter(r => r.decision === 'FLAGGED FOR AUDIT' || (r.fraud_risk_score || 0) >= 0.5364).reduce((s, r) => s + Number(r.reimbursement || 0), 0));
+      const total = Number(currentResults?.total_exposure !== undefined 
+        ? currentResults.total_exposure 
+        : items.reduce((s, r) => s + Number(r.reimbursement || 0), 0));
+      const clean = Math.max(0, total - flagged);
 
       exposureChart = new Chart(exposureChartRef.current, {
         type: 'doughnut',
@@ -712,22 +723,34 @@ export default function BatchAuditResults({
       });
     }
 
-    // 4. Leading TreeSHAP Risk Drivers
+    // 4. Leading TreeSHAP Risk Drivers (Dynamically aggregated from evaluated items)
     if (shapChartRef.current) {
+      const featureImpacts = {};
+      items.forEach((item) => {
+        const feat = item.top_driver?.feature || item.archetype || 'Clinical Volume Variance';
+        const shap = Math.abs(Number(item.top_driver?.shap_contribution || 0.15));
+        featureImpacts[feat] = (featureImpacts[feat] || 0) + shap;
+      });
+
+      const sortedFeatures = Object.entries(featureImpacts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      const shapLabels = sortedFeatures.length > 0 
+        ? sortedFeatures.map(([f]) => f)
+        : ['Surgeries/MD Outlier', 'ICU Stay Upcoding', 'Collusion Centrality', 'Duplicate Procedures', 'Unbundled Lab Panels'];
+      const shapValues = sortedFeatures.length > 0
+        ? sortedFeatures.map(([, v]) => Math.round((v / Math.max(1, items.length)) * 1000) / 1000)
+        : [0.384, 0.342, 0.285, 0.218, 0.165];
+
       shapChart = new Chart(shapChartRef.current, {
         type: 'bar',
         data: {
-          labels: [
-            'ICU Stay Upcoding',
-            'Surgeries/MD Outlier',
-            'Collusion Centrality',
-            'Duplicate Procedures',
-            'Unbundled Lab Panels',
-          ],
+          labels: shapLabels,
           datasets: [
             {
               label: 'TreeSHAP Additive Impact (+SHAP)',
-              data: [0.384, 0.342, 0.285, 0.218, 0.165],
+              data: shapValues,
               backgroundColor: [
                 'rgba(225, 29, 72, 0.85)',
                 'rgba(244, 63, 94, 0.85)',
@@ -839,13 +862,28 @@ export default function BatchAuditResults({
   // Guarded results array
   const evaluatedItems = currentResults?.results || [];
   const totalCount = currentResults?.total_evaluated || evaluatedItems.length;
-  const flaggedCount = currentResults?.flagged_count || 0;
-  const clearedCount = currentResults?.cleared_count || 0;
-  const flaggedExposureCr = (((currentResults?.flagged_exposure || 0) / 10000000)).toFixed(2);
-  const cleanExposureCr = (((Number(currentResults?.total_exposure || 0) - Number(currentResults?.flagged_exposure || 0)) / 10000000)).toFixed(2);
-  const totalExposureCr = (((currentResults?.total_exposure || 0) / 10000000)).toFixed(2);
-  const avgConfidence = currentResults?.average_confidence || '96.2';
+  const flaggedItems = evaluatedItems.filter((r) => r.decision === 'FLAGGED FOR AUDIT' || (r.fraud_risk_score || 0) >= 0.5364);
+  const flaggedCount = currentResults?.flagged_count !== undefined ? currentResults.flagged_count : flaggedItems.length;
+  const clearedCount = currentResults?.cleared_count !== undefined ? currentResults.cleared_count : Math.max(0, totalCount - flaggedCount);
+  const criticalCount = currentResults?.critical_count !== undefined ? currentResults.critical_count : evaluatedItems.filter((r) => r.priority === 'CRITICAL').length;
+  const highCount = currentResults?.high_count !== undefined ? currentResults.high_count : evaluatedItems.filter((r) => r.priority === 'HIGH').length;
+
+  const flaggedExposure = currentResults?.flagged_exposure !== undefined 
+    ? currentResults.flagged_exposure 
+    : flaggedItems.reduce((acc, r) => acc + Number(r.reimbursement || 0), 0);
+  const totalExposure = currentResults?.total_exposure !== undefined 
+    ? currentResults.total_exposure 
+    : evaluatedItems.reduce((acc, r) => acc + Number(r.reimbursement || 0), 0);
+
+  const flaggedExposureCr = (flaggedExposure / 10000000).toFixed(2);
+  const cleanExposureCr = (Math.max(0, totalExposure - flaggedExposure) / 10000000).toFixed(2);
+  const totalExposureCr = (totalExposure / 10000000).toFixed(2);
+  const avgConfidence = currentResults?.average_confidence || (evaluatedItems.length > 0 ? (evaluatedItems.reduce((acc, r) => acc + Number(r.confidence_score || 90), 0) / evaluatedItems.length).toFixed(1) : '95.0');
   const pctFlagged = totalCount > 0 ? ((flaggedCount / totalCount) * 100).toFixed(0) : '0';
+
+  // Dynamic top driver for badges and directives
+  const topDriverItem = flaggedItems.sort((a, b) => (b.top_driver?.shap_contribution || 0) - (a.top_driver?.shap_contribution || 0))[0] || evaluatedItems[0];
+  const topDriverName = topDriverItem?.top_driver?.feature || 'Statistical Outlier';
 
   // Filtered claims for forensic breakdown cards
   const filteredClaims = evaluatedItems.filter((r) => {
@@ -888,6 +926,7 @@ export default function BatchAuditResults({
             type="button"
             className="syght-btn-secondary"
             onClick={() => {
+              setCurrentResults(null);
               const payload = buildResultsFrom10Cases();
               startLiveExecution(payload, 'sample-10');
             }}
@@ -901,6 +940,7 @@ export default function BatchAuditResults({
             type="button"
             className="syght-btn-secondary"
             onClick={() => {
+              setCurrentResults(null);
               const payload = buildResultsFrom25Cases();
               startLiveExecution(payload, 'benchmark-25');
             }}
@@ -954,6 +994,7 @@ export default function BatchAuditResults({
               type="button"
               className="standby-action-btn primary"
               onClick={() => {
+                setCurrentResults(null);
                 const payload = buildResultsFrom10Cases();
                 startLiveExecution(payload, 'sample-10');
               }}
@@ -971,6 +1012,7 @@ export default function BatchAuditResults({
               type="button"
               className="standby-action-btn"
               onClick={() => {
+                setCurrentResults(null);
                 const payload = buildResultsFrom25Cases();
                 startLiveExecution(payload, 'benchmark-25');
               }}
@@ -1206,7 +1248,12 @@ export default function BatchAuditResults({
                   type="button"
                   className="syght-btn-secondary text-xs"
                   onClick={() => {
-                    const payload = activeDatasetMode === 'benchmark-25' ? buildResultsFrom25Cases() : buildResultsFrom10Cases();
+                    const payload = activeDatasetMode === 'benchmark-25' 
+                      ? buildResultsFrom25Cases() 
+                      : activeDatasetMode === 'custom' && currentResults
+                      ? currentResults
+                      : buildResultsFrom10Cases();
+                    setCurrentResults(null);
                     startLiveExecution(payload, activeDatasetMode);
                   }}
                   title="Re-run the audit on this dataset"
@@ -1219,10 +1266,20 @@ export default function BatchAuditResults({
 
             <div className="summary-hero-row">
               <h2 className="summary-hero-title">
-                {flaggedCount} Hospitals Caught in Fraud Schemes
+                {flaggedCount > 0
+                  ? `${flaggedCount} Hospitals Caught in Fraud Schemes`
+                  : `All ${totalCount} Evaluated Facilities Verified Clean`}
               </h2>
               <p className="summary-hero-subtitle">
-                Syght scanned {totalCount} healthcare facilities. We verified <strong>{clearedCount} honest clinics</strong> and caught <strong>{flaggedCount} hospitals committing systemic billing fraud</strong>.
+                {flaggedCount > 0 ? (
+                  <>
+                    Syght scanned {totalCount} healthcare facilities. We verified <strong>{clearedCount} honest clinics</strong> and caught <strong>{flaggedCount} hospitals committing systemic billing fraud</strong>.
+                  </>
+                ) : (
+                  <>
+                    Syght scanned {totalCount} healthcare facilities. All clinical records, surgeries-per-physician ratios, and stay durations conform to normal expected distributions.
+                  </>
+                )}
               </p>
             </div>
 
@@ -1247,57 +1304,51 @@ export default function BatchAuditResults({
               </div>
             </div>
 
-            {/* WHY THEY WERE FLAGGED: IN SIMPLE ENGLISH */}
+            {/* WHY THEY WERE FLAGGED: REAL DYNAMIC FINDINGS FROM EVALUATED DATA */}
             <div className="summary-why-box">
               <div className="why-box-title">
                 <HugeiconsIcon icon={AlertCircleIcon} size={20} className="text-rose" />
-                <span>Why Were They Flagged? (Plain English Findings)</span>
+                <span>
+                  Why Were They Flagged? ({flaggedItems.length > 0 ? `${flaggedItems.length} Suspicious Facilities Detected` : 'All Claims Passed Audit'})
+                </span>
               </div>
 
-              <div className="why-reasons-grid">
-                <div className="why-reason-item">
-                  <div className="why-reason-num">1</div>
-                  <div>
-                    <div className="why-reason-heading">Ghost Surgeries (Fabricated Theatre Logs)</div>
-                    <p className="why-reason-text">
-                      Doctors claimed to perform over 200 operations each. It is physically impossible for a single surgeon to operate this many times without inventing fake patient records.
-                    </p>
-                  </div>
+              {flaggedItems.length === 0 ? (
+                <div className="p-4 bg-emerald-50 text-emerald-800 rounded-lg text-sm font-medium flex items-center gap-2">
+                  <HugeiconsIcon icon={CheckmarkCircle01Icon} size={18} className="text-emerald-600 shrink-0" />
+                  <span>All evaluated healthcare providers conform to normal clinical and billing distributions. No fraud patterns detected.</span>
                 </div>
-
-                <div className="why-reason-item">
-                  <div className="why-reason-num">2</div>
-                  <div>
-                    <div className="why-reason-heading">Artificial ICU Stays (Upcoding Prolongation)</div>
-                    <p className="why-reason-text">
-                      Patients were kept in ICU for an average of 16.8 days compared to the standard medical norm of 3.2 days, artificially maximizing billings before discharge.
-                    </p>
-                  </div>
+              ) : (
+                <div className="why-reasons-grid">
+                  {flaggedItems.slice(0, 4).map((claim, idx) => (
+                    <div key={claim.provider_id || idx} className="why-reason-item">
+                      <div className="why-reason-num">{idx + 1}</div>
+                      <div>
+                        <div className="why-reason-heading">
+                          {claim.name} ({claim.provider_id}) — {claim.top_driver?.feature || claim.archetype}
+                        </div>
+                        <p className="why-reason-text">
+                          {claim.why_flagged || claim.top_driver?.description || 'Statistical outlier exceeding 1-SE cost-optimal decision threshold.'}
+                        </p>
+                        <div className="mt-1 flex items-center gap-2 text-xs font-mono text-slate-500">
+                          <span className="text-rose-600 font-semibold">{claim.risk_percentage} Risk</span>
+                          <span>•</span>
+                          <span>₹{Number(claim.reimbursement || 0).toLocaleString('en-IN')} Billed</span>
+                          {claim.confidence_score && (
+                            <>
+                              <span>•</span>
+                              <span className="text-sky-600">{claim.confidence_score}% Confidence</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-
-                <div className="why-reason-item">
-                  <div className="why-reason-num">3</div>
-                  <div>
-                    <div className="why-reason-heading">Doctor Recycling Ring (Kickback Syndicates)</div>
-                    <p className="why-reason-text">
-                      The same doctors were detected circulating across 3+ competing private hospitals within 24 hours, cycling patient IDs for mutual commission cuts.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="why-reason-item">
-                  <div className="why-reason-num">4</div>
-                  <div>
-                    <div className="why-reason-heading">Post-Mortem Claim Submissions</div>
-                    <p className="why-reason-text">
-                      Procedures and medication packages were billed days after the patient’s verified time of death in government civil registry records.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
 
-            {/* WHAT TO DO NOW: IN SIMPLE ENGLISH */}
+            {/* WHAT TO DO NOW: DYNAMIC ACTION PLAN */}
             <div className="summary-action-box">
               <div className="action-box-title">
                 <HugeiconsIcon icon={Shield01Icon} size={20} className="text-sky-600" />
@@ -1306,15 +1357,22 @@ export default function BatchAuditResults({
               <div className="action-steps-list">
                 <div className="action-step">
                   <span className="step-badge font-mono">Action 1</span>
-                  <span><strong>Freeze Payments Now:</strong> Place an immediate financial freeze on the ₹{flaggedExposureCr} Crore pending for the {flaggedCount} flagged facilities ({evaluatedItems[0]?.provider_id || 'PRV_02'}).</span>
+                  <span>
+                    <strong>Freeze Payments Now:</strong> Place an immediate financial freeze on the ₹{flaggedExposureCr} Crore pending for the {flaggedCount} flagged facilities
+                    {flaggedItems.length > 0 ? ` (${flaggedItems.map(c => c.provider_id).slice(0, 3).join(', ')}${flaggedItems.length > 3 ? ` +${flaggedItems.length - 3} more` : ''})` : ''}.
+                  </span>
                 </div>
                 <div className="action-step">
                   <span className="step-badge font-mono">Action 2</span>
-                  <span><strong>Release Honest Claims Fast:</strong> Expedite ₹{cleanExposureCr} Crore to the {clearedCount} honest rural community clinics without administrative delay.</span>
+                  <span>
+                    <strong>Release Honest Claims Fast:</strong> Expedite ₹{cleanExposureCr} Crore to the {clearedCount} honest rural community clinics without administrative delay.
+                  </span>
                 </div>
                 <div className="action-step">
                   <span className="step-badge font-mono">Action 3</span>
-                  <span><strong>Demand Hospital Biometric Logs:</strong> Subpoena operation theatre biometric access logs and nurse duty books to prove ghost surgeries.</span>
+                  <span>
+                    <strong>Audit Root Cause ({topDriverName}):</strong> Subpoena hospital operation logs, biometric attendance, and nurse charts to verify {topDriverName.toLowerCase()}.
+                  </span>
                 </div>
               </div>
             </div>
@@ -1363,8 +1421,8 @@ export default function BatchAuditResults({
                 </span>
               </div>
               <div className="kpi-card-sub font-mono">
-                {currentResults?.critical_count || 4} Critical •{' '}
-                {currentResults?.high_count || 1} High Risk
+                {criticalCount} Critical •{' '}
+                {highCount} High Risk
               </div>
             </div>
 
@@ -1499,7 +1557,7 @@ export default function BatchAuditResults({
                     Aggregated feature importance indicating the strongest statistical drivers of fraud flags across the portfolio.
                   </p>
                 </div>
-                <span className="chart-badge rose font-mono">Top: ICU Prolongation</span>
+                <span className="chart-badge rose font-mono">Top: {topDriverName}</span>
               </div>
               <div className="chart-canvas-wrap">
                 <canvas ref={shapChartRef} />
@@ -1537,14 +1595,14 @@ export default function BatchAuditResults({
                     className={`filter-pill ${filterTab === 'critical' ? 'active' : ''}`}
                     onClick={() => setFilterTab('critical')}
                   >
-                    Critical ({currentResults?.critical_count || 4})
+                    Critical ({criticalCount})
                   </button>
                   <button
                     type="button"
                     className={`filter-pill ${filterTab === 'high' ? 'active' : ''}`}
                     onClick={() => setFilterTab('high')}
                   >
-                    High Risk ({currentResults?.high_count || 1})
+                    High Risk ({highCount})
                   </button>
                   <button
                     type="button"

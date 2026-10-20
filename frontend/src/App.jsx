@@ -217,7 +217,81 @@ export default function App() {
 
   const [pipelineExecutionTrigger, setPipelineExecutionTrigger] = useState(null);
 
+  const handleSaveAuditResults = (resultsPayload) => {
+    setBatchResults(resultsPayload);
+
+    // Synchronize app-wide cases with real evaluated dataset items
+    if (resultsPayload?.results && Array.isArray(resultsPayload.results) && resultsPayload.results.length > 0) {
+      const dynamicCases = resultsPayload.results.map((r, idx) => {
+        const isFlagged = r.decision === 'FLAGGED FOR AUDIT' || (r.fraud_risk_score || 0) >= 0.5364;
+        const priority = r.priority || (r.fraud_risk_score >= 0.85 ? 'CRITICAL' : isFlagged ? 'HIGH' : 'LOW');
+        const reimb = Number(r.reimbursement || 0);
+        const surg = Number(r.surgeries || 0);
+        const phys = Math.max(1, Number(r.physicians || 1));
+        const topDriverFeat = r.top_driver?.feature || 'Statistical Outlier';
+        const topDriverDesc = r.why_flagged || r.top_driver?.description || 'Variance from expected distribution';
+        const topShap = r.top_driver?.shap_contribution !== undefined
+          ? `${r.top_driver.shap_contribution > 0 ? '+' : ''}${Number(r.top_driver.shap_contribution).toFixed(3)}`
+          : (isFlagged ? '+0.342' : '-0.142');
+
+        return {
+          id: r.provider_id || `PRV_${idx + 1}`,
+          name: r.name || `Facility ${r.provider_id || idx + 1}`,
+          category: priority.toLowerCase(),
+          tag: r.archetype || topDriverFeat,
+          reimbursement: reimb,
+          risk: Number((r.fraud_risk_score || 0).toFixed(3)),
+          decision: isFlagged ? 'FLAGGED FOR AUDIT' : 'AUTO-CLEARED',
+          priority: priority,
+          physicians: phys,
+          surgeries: surg,
+          claims: Math.max(surg, 20),
+          los: 5.2,
+          duplicateRate: 0.05,
+          status: isFlagged ? 'investigating' : 'cleared',
+          directive: r.directive || (isFlagged ? `Hold pending reimbursements (₹${reimb.toLocaleString('en-IN')}) and subpoena clinical logs` : 'Expedited payment approved'),
+          drivers: [
+            {
+              feature: topDriverFeat,
+              desc: topDriverDesc,
+              shap: topShap,
+            },
+            {
+              feature: 'inpatient_reimbursed_sum',
+              desc: `Claim Payout (₹${reimb.toLocaleString('en-IN')})`,
+              shap: isFlagged ? '+0.210' : '-0.095',
+            },
+          ],
+          features: {
+            total_claims_count: Math.max(surg, 20),
+            inpatient_claims_count: surg,
+            outpatient_claims_count: 5,
+            inpatient_reimbursed_sum: reimb,
+            outpatient_reimbursed_sum: 25000,
+            inpatient_deductible_sum: Math.round(reimb * 0.1),
+            mean_inpatient_los: 5.2,
+            max_inpatient_los: 12,
+            total_inpatient_surgeries: surg,
+            unique_beneficiaries_count: Math.max(10, surg - 10),
+            unique_attending_physicians: phys,
+            unique_operating_physicians: phys,
+            claims_per_attending_ratio: Math.round(Math.max(surg, 20) / phys),
+            graph_degree_centrality: isFlagged ? 4 : 1,
+            same_day_duplicate_rate: 0.04,
+          },
+        };
+      });
+
+      setCases(dynamicCases);
+      if (dynamicCases.length > 0) {
+        setSelectedCaseId(dynamicCases[0].id);
+      }
+    }
+  };
+
   const handleRunAuditWithSample = () => {
+    // Auto reset old results when new dataset runs
+    setBatchResults(null);
     setPipelineExecutionTrigger({
       source: 'sample-10',
       datasetName: '10_Verified_Benchmark_Claims.csv',
@@ -228,6 +302,8 @@ export default function App() {
   };
 
   const handleRunAuditWithPortfolio = () => {
+    // Auto reset old results when new dataset runs
+    setBatchResults(null);
     setPipelineExecutionTrigger({
       source: 'benchmark-25',
       datasetName: 'PMJAY_Benchmark_Portfolio_25_Providers.csv',
@@ -238,7 +314,8 @@ export default function App() {
   };
 
   const handleRunCustomDataset = (datasetData) => {
-    setBatchResults(datasetData);
+    // Auto reset old results when new dataset runs
+    setBatchResults(null);
     setPipelineExecutionTrigger({
       source: 'custom',
       datasetName: datasetData?.dataset_name || 'Custom_Healthcare_Claims.csv',
@@ -302,7 +379,7 @@ export default function App() {
               onOpenDatasetStudio={() => setActiveTab('tab-dataset', '/dataset')}
               onRunAuditWithSample={handleRunAuditWithSample}
               onRunAuditWithPortfolio={handleRunAuditWithPortfolio}
-              onSaveAuditResults={(results) => setBatchResults(results)}
+              onSaveAuditResults={handleSaveAuditResults}
               onShowToast={showToast}
             />
           )}

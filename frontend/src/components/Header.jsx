@@ -156,7 +156,7 @@ export default function Header({
             title="FastAPI Interactive Swagger Documentation"
           >
             <span>API Docs</span>
-            <IconArrowUpRight size={14} className="cta-icon" />
+            <IconArrowUpRight size={12} className="cta-icon" />
           </a>
 
           {/* Mobile Menu Hamburger Button */}
@@ -183,10 +183,6 @@ export default function Header({
               <div className="mobile-drawer-brand">
                 <IconShield size={20} className="text-cyan-400" />
                 <span className="mobile-brand-title">SYGHT</span>
-                <span className="team-pulse-pill compact">
-                  <span className="pulse-dot-beacon" />
-                  Team Pulse
-                </span>
               </div>
               <button 
                 type="button" 
