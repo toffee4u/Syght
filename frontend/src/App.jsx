@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import Header from './components/Header';
-import AlertTicker from './components/AlertTicker';
 import CommandCenter from './components/CommandCenter';
 import ReviewQueue from './components/ReviewQueue';
 import ClaimAnalyzer from './components/ClaimAnalyzer';
@@ -128,8 +127,6 @@ export default function App() {
         resultsCount={batchResults ? batchResults.results?.length : undefined}
       />
 
-      {/* Live Alert Ticker */}
-      <AlertTicker />
 
       {/* Main Container */}
       <main className="main-layout">

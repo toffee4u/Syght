@@ -8,6 +8,7 @@ import {
   IconPulse,
   IconZap,
   IconBrain,
+  IconClock,
 } from './Icons';
 
 export default function ClaimAnalyzer({
@@ -140,12 +141,12 @@ export default function ClaimAnalyzer({
 
   return (
     <div className="tab-view active syght-view">
-      {/* Header */}
+      {/* Page Header */}
       <div className="syght-page-header">
         <div className="page-header-title-box">
           <div className="syght-chip">
             <span className="chip-dot" />
-            TreeSHAP Attribution Engine
+            TreeSHAP Attribution Engine • Provider & Claim Risk Inspector
           </div>
           <h1 className="syght-page-title">
             Provider & Claim Risk Inspector
@@ -162,29 +163,63 @@ export default function ClaimAnalyzer({
         <section className="syght-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconPulse size={20} className="text-cyan-400" />
+              <IconPulse size={18} className="text-cyan" />
               <h3>Claim & Operational Feature Inputs</h3>
             </div>
-            <span className="syght-chip">61 Features Active</span>
+            <span className="syght-chip font-mono">61 Features Active</span>
           </div>
 
-          {/* Quick Preset Selector */}
-          <div className="form-group-syght" style={{ marginBottom: '1.25rem' }}>
-            <label className="form-label-syght">
-              <IconZap size={14} className="text-cyan-400" />
-              <span>Select Benchmark Provider Scenario:</span>
-            </label>
-            <select
-              className="syght-select font-mono"
-              value={selectedCaseId}
-              onChange={handleSelectPreset}
-            >
-              {benchmarkCases.map(c => (
-                <option key={c.id} value={c.id}>
-                  {c.id} — {c.tag} ({c.decision})
-                </option>
-              ))}
-            </select>
+          {/* Quick Scenario Selector */}
+          <div className="analyzer-preset-cluster">
+            <div className="preset-cluster-header">
+              <label className="form-label-syght">
+                <IconZap size={14} className="text-cyan" />
+                <span>Quick Scenario Presets:</span>
+              </label>
+            </div>
+            
+            <div className="analyzer-scenario-pills">
+              {benchmarkCases.slice(0, 4).map((c) => {
+                const isSelected = selectedCaseId === c.id;
+                const isFlg = c.decision.includes('FLAGGED');
+                const label = c.id
+                  .replace('PRV_02_PHANTOM_SURGERY_MILL', 'Phantom Surgery')
+                  .replace('PRV_08_ICU_LENGTH_OF_STAY_UPCODING', 'ICU Upcoding')
+                  .replace('PRV_01_RURAL_PRIMARY_CLINIC', 'Rural Clinic Clean')
+                  .replace('PRV_04_LAB_UNBUNDLING_NETWORK', 'Lab Unbundling')
+                  .replace(/^PRV_\d+_/, '');
+
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className={`analyzer-scenario-pill ${isSelected ? 'active' : ''}`}
+                    onClick={() => onCaseSelected(c.id)}
+                    title={c.tag}
+                  >
+                    <span className={`pill-beacon ${isFlg ? 'rose' : 'emerald'}`} />
+                    <span className="scenario-pill-name">{label}</span>
+                    <span className={`scenario-pill-risk font-mono ${isFlg ? 'text-rose' : 'text-emerald'}`}>
+                      {(c.risk * 100).toFixed(0)}%
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="form-group-syght" style={{ marginTop: '0.75rem', marginBottom: '1.25rem' }}>
+              <select
+                className="syght-select font-mono"
+                value={selectedCaseId}
+                onChange={handleSelectPreset}
+              >
+                {benchmarkCases.map(c => (
+                  <option key={c.id} value={c.id}>
+                    {c.id} — {c.tag} ({c.decision})
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="form-grid-syght">
@@ -314,7 +349,8 @@ export default function ClaimAnalyzer({
 
           <button
             type="button"
-            className="syght-btn-primary w-full mt-5"
+            className="syght-btn-primary"
+            style={{ width: '100%', marginTop: '1.25rem', justifyContent: 'center' }}
             onClick={runPrediction}
             disabled={isLoading}
           >
@@ -327,24 +363,24 @@ export default function ClaimAnalyzer({
         <section className="syght-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconShield size={20} className="text-cyan-400" />
+              <IconShield size={18} className="text-cyan" />
               <h3>AI Risk Scoring & Attributions</h3>
             </div>
-            <span className="syght-chip priority-chip">{predictionResult.priority} TIER</span>
+            <span className="syght-chip priority-chip font-mono">{predictionResult.priority} TIER</span>
           </div>
 
           {/* Radial Score Gauge Card */}
           <div className="gauge-panel-syght">
             <div className="gauge-display-flex">
-              <div className="radial-score-box">
+              <div className={`radial-score-box ${isFlagged ? 'danger' : 'clean'}`}>
                 <span className={`gauge-percentage font-mono ${isFlagged ? 'danger' : 'clean'}`}>
                   {predictionResult.percentage}
                 </span>
-                <span className="gauge-sub">Fraud Probability</span>
+                <span className="gauge-sub">Fraud Risk</span>
               </div>
               <div className="gauge-meta-details">
-                <div className={`gauge-status-title ${isFlagged ? 'text-rose-400' : 'text-emerald-400'}`}>
-                  {isFlagged ? <IconAlert size={18} /> : <IconCheckCircle size={18} />}
+                <div className={`gauge-status-title ${isFlagged ? 'text-rose' : 'text-emerald'}`}>
+                  {isFlagged ? <IconAlert size={20} /> : <IconCheckCircle size={20} />}
                   <span>{predictionResult.decision}</span>
                 </div>
                 <div className="gauge-meta-row font-mono">
@@ -359,7 +395,7 @@ export default function ClaimAnalyzer({
           {/* SHAP Feature Waterfall */}
           <div className="waterfall-syght-container">
             <div className="waterfall-header">
-              <IconSparkles size={16} className="text-cyan-400" />
+              <IconSparkles size={16} className="text-cyan" />
               <h4>Explainable AI Feature Waterfall (SHAP Attributions)</h4>
             </div>
 
@@ -390,22 +426,22 @@ export default function ClaimAnalyzer({
           {/* Clinical & Legal Audit Directive Checklist */}
           <div className="directive-syght-card">
             <div className="directive-title">
-              <IconBrain size={16} className="text-cyan-400" />
+              <IconBrain size={16} className="text-cyan" />
               <span>Recommended Special Investigation Unit Protocol:</span>
             </div>
             <p className="directive-text">{predictionResult.directive}</p>
 
             <div className="protocol-checklist">
               <div className="protocol-item">
-                <IconCheckCircle size={14} className="text-cyan-400 shrink-0" />
-                <span>Verify biometric attendance logs of operating physicians against surgery timestamp</span>
+                <IconCheckCircle size={14} className="text-cyan" />
+                <span>Verify biometric attendance logs of operating physicians against surgery timestamps</span>
               </div>
               <div className="protocol-item">
-                <IconCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <IconCheckCircle size={14} className="text-cyan" />
                 <span>Compare billed LOS against emergency triage vitals and discharge summaries</span>
               </div>
               <div className="protocol-item">
-                <IconCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <IconCheckCircle size={14} className="text-cyan" />
                 <span>Examine cross-facility duplicate test code submissions within rolling 24 hours</span>
               </div>
             </div>

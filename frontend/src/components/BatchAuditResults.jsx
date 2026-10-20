@@ -1,35 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Chart from 'chart.js/auto';
 import {
-  BarChart3,
-  Download,
-  AlertTriangle,
-  CheckCircle2,
-  Database,
-  ArrowRight,
-  Search,
-  Sparkles,
-  ShieldCheck,
-  TrendingUp,
-  Activity,
-  Layers,
-  UploadCloud,
-  FileSpreadsheet,
-  Check,
-} from 'lucide-react';
-
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-} from './ui/table';
+  IconDatabase,
+  IconShield,
+  IconAlert,
+  IconCheckCircle,
+  IconDownload,
+  IconSearch,
+  IconArrowRight,
+  IconSparkles,
+  IconLineChart,
+  IconPulse,
+  IconLayers,
+  IconZap,
+} from './Icons';
 
 import { SAMPLE_DATASET_ROWS } from '../data/sampleDataset';
 
@@ -40,7 +24,7 @@ export default function BatchAuditResults({
   onShowToast,
 }) {
   // If no results loaded yet, provide pre-evaluated benchmark fallback
-  const fallbackResults = React.useMemo(() => {
+  const fallbackResults = useMemo(() => {
     let flaggedCount = 0;
     let clearedCount = 0;
     let criticalCount = 0;
@@ -106,7 +90,6 @@ export default function BatchAuditResults({
           description: topDriverDesc,
           shap_contribution: topShap,
         },
-        latency_ms: (1.52 + Math.random() * 0.4).toFixed(2),
       };
     });
 
@@ -120,11 +103,7 @@ export default function BatchAuditResults({
       high_count: highCount,
       total_exposure: totalExposure,
       flagged_exposure: flaggedExposure,
-      average_fraud_score: results.reduce((acc, r) => acc + r.fraud_risk_score, 0) / results.length,
       average_confidence: (results.reduce((acc, r) => acc + Number(r.confidence_score), 0) / results.length).toFixed(1),
-      decision_threshold: 0.5364,
-      champion_model: 'LightGBM (1-SE Rule)',
-      total_batch_latency_ms: '41.8',
       results: results,
     };
   }, []);
@@ -132,7 +111,7 @@ export default function BatchAuditResults({
   const data = resultsData || fallbackResults;
 
   // Augment items with confidence scores if missing from backend
-  const enrichedResults = React.useMemo(() => {
+  const enrichedResults = useMemo(() => {
     return (data.results || []).map((r) => {
       const risk = Number(r.fraud_risk_score || 0);
       const margin = Math.abs(risk - 0.5364);
@@ -162,7 +141,7 @@ export default function BatchAuditResults({
 
     // 1. Risk Score Distribution & Threshold Chart
     if (riskChartRef.current && enrichedResults.length > 0) {
-      const labels = enrichedResults.map((r) => r.provider_id.replace(/^PRV_/, '').slice(0, 12));
+      const labels = enrichedResults.map((r) => r.provider_id.replace(/^PRV_/, '').slice(0, 11));
       const scores = enrichedResults.map((r) => Math.round(r.fraud_risk_score * 1000) / 1000);
       const colors = enrichedResults.map((r) => (r.fraud_risk_score >= 0.5364 ? 'rgba(225, 29, 72, 0.85)' : 'rgba(16, 185, 129, 0.85)'));
       const borders = enrichedResults.map((r) => (r.fraud_risk_score >= 0.5364 ? '#e11d48' : '#10b981'));
@@ -178,11 +157,11 @@ export default function BatchAuditResults({
               backgroundColor: colors,
               borderColor: borders,
               borderWidth: 1,
-              borderRadius: 5,
+              borderRadius: 6,
             },
             {
               type: 'line',
-              label: 'Decision Cutoff (0.5364)',
+              label: '1-SE Cutoff (0.5364)',
               data: Array(labels.length).fill(0.5364),
               borderColor: '#0284c7',
               borderWidth: 2,
@@ -225,7 +204,38 @@ export default function BatchAuditResults({
       });
     }
 
-    // 2. Leading TreeSHAP Risk Drivers Chart
+    // 2. Financial Allocation Doughnut
+    if (exposureChartRef.current) {
+      const flagged = Number(data.flagged_exposure || 18500000);
+      const clean = Math.max(1000000, Number(data.total_exposure || 38000000) - flagged);
+
+      exposureChart = new Chart(exposureChartRef.current, {
+        type: 'doughnut',
+        data: {
+          labels: ['Flagged for Clawback (₹)', 'Authorized Clean Payout (₹)'],
+          datasets: [
+            {
+              data: [flagged, clean],
+              backgroundColor: ['rgba(225, 29, 72, 0.88)', 'rgba(16, 185, 129, 0.88)'],
+              borderColor: ['#ffffff', '#ffffff'],
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { font: { family: 'Space Grotesk', size: 11 }, padding: 12 },
+            },
+          },
+        },
+      });
+    }
+
+    // 3. Leading TreeSHAP Risk Drivers Chart
     if (shapChartRef.current) {
       shapChart = new Chart(shapChartRef.current, {
         type: 'bar',
@@ -273,37 +283,6 @@ export default function BatchAuditResults({
       });
     }
 
-    // 3. Rupee Exposure Breakdown Doughnut
-    if (exposureChartRef.current) {
-      const flagged = Number(data.flagged_exposure || 18500000);
-      const clean = Math.max(1000000, Number(data.total_exposure || 38000000) - flagged);
-
-      exposureChart = new Chart(exposureChartRef.current, {
-        type: 'doughnut',
-        data: {
-          labels: ['Flagged for Clawback (₹)', 'Authorized Clean Payout (₹)'],
-          datasets: [
-            {
-              data: [flagged, clean],
-              backgroundColor: ['rgba(225, 29, 72, 0.88)', 'rgba(16, 185, 129, 0.88)'],
-              borderColor: ['#ffffff', '#ffffff'],
-              borderWidth: 2,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { font: { family: 'Space Grotesk', size: 11 }, padding: 12 },
-            },
-          },
-        },
-      });
-    }
-
     return () => {
       if (riskChart) riskChart.destroy();
       if (shapChart) shapChart.destroy();
@@ -325,7 +304,7 @@ export default function BatchAuditResults({
     if (filterTab === 'all') return true;
     if (filterTab === 'critical') return r.priority === 'CRITICAL';
     if (filterTab === 'high') return r.priority === 'HIGH';
-    if (filterTab === 'cleared') return r.decision === 'AUTO-CLEARED';
+    if (filterTab === 'cleared') return r.decision.includes('CLEARED');
     return true;
   });
 
@@ -379,6 +358,11 @@ export default function BatchAuditResults({
     (enrichedResults.length || 1)
   ).toFixed(1);
 
+  const flaggedExposureCr = ((data.flagged_exposure || 28400000) / 10000000).toFixed(2);
+  const totalCount = data.total_evaluated || enrichedResults.length;
+  const flaggedCount = data.flagged_count || 11;
+  const clearedCount = data.cleared_count || 14;
+
   return (
     <div className="tab-view active syght-view">
       {/* Page Header */}
@@ -392,378 +376,348 @@ export default function BatchAuditResults({
             Batch Audit Results & Confidence Intelligence
           </h1>
           <p className="syght-page-desc">
-            Autonomous fraud evaluation report across {data.total_evaluated || enrichedResults.length} healthcare claims portfolios.
+            Autonomous fraud evaluation report across {totalCount} healthcare claims portfolios.
             Inspect calibrated confidence scores, TreeSHAP feature attributions, and financial exposure targets.
           </p>
         </div>
 
         {/* Top Header Actions */}
         <div className="page-header-actions">
-          <Button
-            variant="outline"
+          <button
+            type="button"
+            className="syght-btn-secondary"
             onClick={onOpenDatasetStudio}
             title="Upload and Evaluate Another Dataset"
           >
-            <UploadCloud size={15} />
+            <IconDatabase size={15} />
             <span>Upload New Dataset</span>
-          </Button>
+          </button>
 
-          <Button
-            variant="default"
+          <button
+            type="button"
+            className="syght-btn-primary"
             onClick={handleExportCsv}
             title="Export Audited Results to CSV"
           >
-            <Download size={15} />
+            <IconDownload size={15} />
             <span>Export CSV Report</span>
-          </Button>
+          </button>
         </div>
       </div>
 
-      {/* Bento Metric Cards with Confidence */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+      {/* 5 Sleek Bento KPI Cards */}
+      <div className="results-kpi-grid">
         {/* Card 1: Evaluated */}
-        <Card className="p-4 border-slate-200">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wider">
-            <span>EVALUATED CLAIMS</span>
-            <Database className="w-4 h-4 text-slate-400" />
+        <div className="results-kpi-card">
+          <div className="kpi-card-header">
+            <span className="kpi-card-label">EVALUATED CLAIMS</span>
+            <div className="kpi-icon-bubble">
+              <IconDatabase size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 mt-2">
-            {data.total_evaluated || enrichedResults.length}
-          </div>
-          <div className="text-xs text-slate-500 mt-1 font-mono">
-            {data.dataset_name || 'Custom Batch Upload'}
-          </div>
-        </Card>
+          <div className="kpi-card-val font-mono">{totalCount}</div>
+          <div className="kpi-card-sub font-mono">{data.dataset_name || 'Benchmark Dataset'}</div>
+        </div>
 
         {/* Card 2: Model Confidence */}
-        <Card className="p-4 border-sky-200 bg-sky-50/20">
-          <div className="flex items-center justify-between text-sky-700 text-xs font-semibold uppercase tracking-wider">
-            <span>MEAN CONFIDENCE</span>
-            <ShieldCheck className="w-4 h-4 text-sky-600" />
+        <div className="results-kpi-card is-confidence">
+          <div className="kpi-card-header">
+            <span className="kpi-card-label">MEAN CONFIDENCE</span>
+            <div className="kpi-icon-bubble cyan">
+              <IconShield size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-sky-700 mt-2">
-            {avgConfidence}%
-          </div>
-          <div className="text-xs text-sky-600/90 mt-1 font-mono font-medium">
-            Calibrated Probability Margin
-          </div>
-        </Card>
+          <div className="kpi-card-val font-mono text-cyan">{avgConfidence}%</div>
+          <div className="kpi-card-sub font-mono">Calibrated Probability Margin</div>
+        </div>
 
         {/* Card 3: Flagged for Audit */}
-        <Card className="p-4 border-rose-200 bg-rose-50/20">
-          <div className="flex items-center justify-between text-rose-600 text-xs font-semibold uppercase tracking-wider">
-            <span>FLAGGED FOR AUDIT</span>
-            <AlertTriangle className="w-4 h-4 text-rose-500" />
+        <div className="results-kpi-card is-flagged">
+          <div className="kpi-card-header">
+            <span className="kpi-card-label">FLAGGED FOR AUDIT</span>
+            <div className="kpi-icon-bubble rose">
+              <IconAlert size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-rose-600 mt-2">
-            {data.flagged_count || 14}{' '}
-            <span className="text-sm font-normal text-rose-500">
-              ({(((data.flagged_count || 14) / (data.total_evaluated || enrichedResults.length)) * 100).toFixed(1)}%)
-            </span>
+          <div className="kpi-card-val font-mono text-rose">
+            {flaggedCount}{' '}
+            <span className="kpi-val-pct">({((flaggedCount / totalCount) * 100).toFixed(1)}%)</span>
           </div>
-          <div className="text-xs text-rose-600/80 mt-1 font-mono">
-            {data.critical_count || 5} Critical • {data.high_count || 9} High Risk
+          <div className="kpi-card-sub font-mono">
+            {data.critical_count || 5} Critical • {data.high_count || 6} High Risk
           </div>
-        </Card>
+        </div>
 
-        {/* Card 4: Suspicious Rupee Exposure */}
-        <Card className="p-4 border-rose-200 bg-rose-50/20">
-          <div className="flex items-center justify-between text-rose-600 text-xs font-semibold uppercase tracking-wider">
-            <span>FLAGGED EXPOSURE</span>
-            <span className="font-mono text-rose-600 font-bold">₹</span>
+        {/* Card 4: Flagged Rupee Exposure */}
+        <div className="results-kpi-card is-flagged">
+          <div className="kpi-card-header">
+            <span className="kpi-card-label">FLAGGED EXPOSURE</span>
+            <div className="kpi-icon-bubble rose">
+              <span className="kpi-rupee-symbol font-mono font-bold">₹</span>
+            </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-rose-600 mt-2">
-            ₹{((data.flagged_exposure || 28400000) / 10000000).toFixed(2)} Cr
-          </div>
-          <div className="text-xs text-rose-600/80 mt-1 font-mono">
-            Direct Financial Clawback Target
-          </div>
-        </Card>
+          <div className="kpi-card-val font-mono text-rose">₹{flaggedExposureCr} Cr</div>
+          <div className="kpi-card-sub font-mono">Direct Financial Clawback Target</div>
+        </div>
 
         {/* Card 5: Auto-Cleared */}
-        <Card className="p-4 border-emerald-200 bg-emerald-50/20">
-          <div className="flex items-center justify-between text-emerald-600 text-xs font-semibold uppercase tracking-wider">
-            <span>AUTO-CLEARED</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+        <div className="results-kpi-card is-cleared">
+          <div className="kpi-card-header">
+            <span className="kpi-card-label">AUTO-CLEARED</span>
+            <div className="kpi-icon-bubble emerald">
+              <IconCheckCircle size={16} />
+            </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-600 mt-2">
-            {data.cleared_count || 11}{' '}
-            <span className="text-sm font-normal text-emerald-500">
-              ({(((data.cleared_count || 11) / (data.total_evaluated || enrichedResults.length)) * 100).toFixed(1)}%)
-            </span>
+          <div className="kpi-card-val font-mono text-emerald">
+            {clearedCount}{' '}
+            <span className="kpi-val-pct">({((clearedCount / totalCount) * 100).toFixed(1)}%)</span>
           </div>
-          <div className="text-xs text-emerald-600/80 mt-1 font-mono">
-            Fast-Track Green Channel Payout
-          </div>
-        </Card>
+          <div className="kpi-card-sub font-mono">Fast-Track Green Channel Payout</div>
+        </div>
       </div>
 
-      {/* Visual Charts & Analytics Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-        {/* Chart 1: Risk Probability & Decision Boundary (Col 8) */}
-        <div className="lg:col-span-8">
-          <Card className="p-5 h-full flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-2">
+      {/* Visual Analytics Charts Section (2 Columns) */}
+      <div className="results-charts-grid">
+        {/* Chart 1: Risk Probability & Decision Boundary */}
+        <div className="syght-panel results-chart-box">
+          <div className="syght-panel-header">
+            <div className="panel-title-flex">
+              <IconLineChart size={18} className="text-cyan" />
               <div>
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-sky-600" />
-                  <h3 className="font-bold text-slate-900 text-sm">
-                    Calibrated Fraud Risk Distribution & Decision Boundary
-                  </h3>
-                </div>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Dashed line marks the 1-SE calibrated operational threshold (0.5364). Claims above are flagged for SIU audit.
+                <h3>Calibrated Fraud Risk Distribution & Decision Boundary</h3>
+                <p className="panel-subtitle-text">
+                  Dashed blue line marks the 1-SE calibrated operational threshold (0.5364). Claims above are flagged for SIU audit.
                 </p>
               </div>
-              <Badge variant="outline" className="font-mono text-xs">
-                LightGBM 1-SE
-              </Badge>
             </div>
+            <span className="syght-chip font-mono">LightGBM 1-SE</span>
+          </div>
 
-            <div className="w-full h-[260px] relative mt-2">
-              <canvas ref={riskChartRef} />
-            </div>
-          </Card>
+          <div className="chart-canvas-container" style={{ height: '270px' }}>
+            <canvas ref={riskChartRef} />
+          </div>
         </div>
 
-        {/* Chart 2: Rupee Exposure Breakdown (Col 4) */}
-        <div className="lg:col-span-4">
-          <Card className="p-5 h-full flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Activity className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-bold text-slate-900 text-sm">Financial Allocation Breakdown</h3>
+        {/* Chart 2: Rupee Exposure Breakdown */}
+        <div className="syght-panel results-chart-box">
+          <div className="syght-panel-header">
+            <div className="panel-title-flex">
+              <IconPulse size={18} className="text-emerald" />
+              <div>
+                <h3>Financial Allocation Breakdown</h3>
+                <p className="panel-subtitle-text">
+                  Audited exposure ratio: High-risk clawbacks vs clean approved disbursements.
+                </p>
               </div>
-              <p className="text-xs text-slate-500">
-                Audited exposure ratio: High-risk clawbacks vs clean approved disbursements.
-              </p>
             </div>
+          </div>
 
-            <div className="w-full h-[230px] relative mt-3">
-              <canvas ref={exposureChartRef} />
-            </div>
-          </Card>
+          <div className="chart-canvas-container" style={{ height: '240px' }}>
+            <canvas ref={exposureChartRef} />
+          </div>
         </div>
       </div>
 
-      {/* Chart 3: Leading TreeSHAP Risk Drivers Banner */}
-      <Card className="p-5 mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
-              <h3 className="font-bold text-slate-900 text-sm">
-                Primary TreeSHAP Risk Drivers Across Portfolio
-              </h3>
+      {/* Chart 3: Global TreeSHAP Risk Drivers */}
+      <div className="syght-panel results-shap-panel">
+        <div className="syght-panel-header">
+          <div className="panel-title-flex">
+            <IconSparkles size={18} className="text-purple" />
+            <div>
+              <h3>Primary TreeSHAP Risk Drivers Across Portfolio</h3>
+              <p className="panel-subtitle-text">
+                Additive SHAP contribution values push baseline probabilities toward the audit trigger.
+              </p>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Additive SHAP contribution values push baseline probabilities toward the audit trigger.
-            </p>
           </div>
-          <span className="font-mono text-xs font-semibold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md border border-purple-200">
-            Global Explainability
-          </span>
+          <span className="syght-chip font-mono text-purple">Global Explainability</span>
         </div>
 
-        <div className="w-full h-[200px] relative">
+        <div className="chart-canvas-container" style={{ height: '200px' }}>
           <canvas ref={shapChartRef} />
         </div>
-      </Card>
+      </div>
 
       {/* Interactive Results Table with Filters & Search */}
-      <Card>
-        <CardHeader className="pb-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            {/* Filter Tabs */}
-            <Tabs value={filterTab} onValueChange={setFilterTab}>
-              <TabsList>
-                <TabsTrigger value="all">
-                  All Records ({enrichedResults.length})
-                </TabsTrigger>
-                <TabsTrigger value="critical">
-                  Critical ({enrichedResults.filter((r) => r.priority === 'CRITICAL').length})
-                </TabsTrigger>
-                <TabsTrigger value="high">
-                  High Risk ({enrichedResults.filter((r) => r.priority === 'HIGH').length})
-                </TabsTrigger>
-                <TabsTrigger value="cleared">
-                  Auto-Cleared ({enrichedResults.filter((r) => r.decision.includes('CLEARED')).length})
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            {/* Search Input */}
-            <div className="relative min-w-[260px]">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search provider ID, hospital, driver..."
-                className="w-full pl-9 pr-4 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
-              />
-            </div>
+      <div className="syght-panel results-table-panel">
+        <div className="results-table-header-row">
+          {/* Filter Pills */}
+          <div className="syght-filter-pills">
+            <button
+              type="button"
+              className={`syght-filter-pill ${filterTab === 'all' ? 'active' : ''}`}
+              onClick={() => setFilterTab('all')}
+            >
+              All Records ({enrichedResults.length})
+            </button>
+            <button
+              type="button"
+              className={`syght-filter-pill ${filterTab === 'critical' ? 'active' : ''}`}
+              onClick={() => setFilterTab('critical')}
+            >
+              Critical ({enrichedResults.filter((r) => r.priority === 'CRITICAL').length})
+            </button>
+            <button
+              type="button"
+              className={`syght-filter-pill ${filterTab === 'high' ? 'active' : ''}`}
+              onClick={() => setFilterTab('high')}
+            >
+              High Risk ({enrichedResults.filter((r) => r.priority === 'HIGH').length})
+            </button>
+            <button
+              type="button"
+              className={`syght-filter-pill ${filterTab === 'cleared' ? 'active' : ''}`}
+              onClick={() => setFilterTab('cleared')}
+            >
+              Auto-Cleared ({enrichedResults.filter((r) => r.decision.includes('CLEARED')).length})
+            </button>
           </div>
-        </CardHeader>
 
-        <CardContent>
-          <div className="rounded-xl border border-slate-200/80 overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50/75">
-                  <TableHead>Provider ID & Facility</TableHead>
-                  <TableHead>Clinical Archetype</TableHead>
-                  <TableHead>Surgeries / MDs</TableHead>
-                  <TableHead>Exposure (₹)</TableHead>
-                  <TableHead>Risk Score</TableHead>
-                  <TableHead>Confidence Score</TableHead>
-                  <TableHead>Audit Verdict</TableHead>
-                  <TableHead>Primary TreeSHAP Driver</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredResults.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-slate-500 font-mono text-xs">
-                      No records matching "{searchQuery}".
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredResults.map((item) => {
-                    const isFlagged = item.decision.includes('FLAGGED');
-                    const isPositiveShap = item.top_driver.shap_contribution > 0;
-                    const confNum = Number(item.confidence_score);
+          {/* Search Box */}
+          <div className="syght-search-wrapper">
+            <IconSearch size={14} className="syght-search-icon" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search provider ID, facility, driver..."
+              className="syght-search-input font-mono"
+            />
+          </div>
+        </div>
 
-                    return (
-                      <TableRow key={item.provider_id}>
-                        {/* Provider ID & Name */}
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <span className="font-mono font-bold text-slate-900 text-xs">
-                              {item.provider_id}
-                            </span>
-                            <span className="text-slate-500 text-[11px] truncate max-w-[170px]">
-                              {item.name}
-                            </span>
-                          </div>
-                        </TableCell>
+        {/* Data Table */}
+        <div className="table-responsive-wrapper">
+          <table className="syght-table">
+            <thead>
+              <tr>
+                <th>Provider ID & Facility</th>
+                <th>Clinical Archetype</th>
+                <th>Surgeries / MDs</th>
+                <th>Exposure (₹)</th>
+                <th>Fraud Risk Score</th>
+                <th>Confidence Score</th>
+                <th>Audit Verdict</th>
+                <th>Primary TreeSHAP Driver</th>
+                <th style={{ textAlign: 'right' }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredResults.length === 0 ? (
+                <tr>
+                  <td colSpan={9} style={{ textAlign: 'center', padding: '2.5rem' }} className="font-mono text-muted">
+                    No evaluated claim records matching "{searchQuery}".
+                  </td>
+                </tr>
+              ) : (
+                filteredResults.map((item) => {
+                  const isFlagged = item.decision.includes('FLAGGED');
+                  const isPositiveShap = item.top_driver.shap_contribution > 0;
+                  const confNum = Number(item.confidence_score);
 
-                        {/* Archetype */}
-                        <TableCell>
-                          <span className="font-mono text-xs text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
-                            {item.archetype}
-                          </span>
-                        </TableCell>
+                  return (
+                    <tr key={item.provider_id}>
+                      {/* Provider ID & Name */}
+                      <td>
+                        <div className="provider-cell">
+                          <span className="provider-id-tag font-mono">{item.provider_id}</span>
+                          <span className="provider-sub-tag">{item.name}</span>
+                        </div>
+                      </td>
 
-                        {/* Surgeries & MDs */}
-                        <TableCell className="font-mono text-xs text-slate-600">
-                          {item.surgeries} ({item.physicians} MDs)
-                        </TableCell>
+                      {/* Archetype */}
+                      <td>
+                        <span className="archetype-pill font-mono">{item.archetype}</span>
+                      </td>
 
-                        {/* Payout */}
-                        <TableCell className="font-mono font-semibold text-slate-900 text-xs">
-                          ₹{Number(item.reimbursement).toLocaleString()}
-                        </TableCell>
+                      {/* Surgeries & MDs */}
+                      <td className="font-mono" style={{ fontSize: '0.78rem' }}>
+                        {item.surgeries} ({item.physicians} MDs)
+                      </td>
 
-                        {/* Risk Gauge Bar */}
-                        <TableCell>
-                          <div className="flex items-center gap-2 min-w-[100px]">
-                            <div className="w-14 h-2 bg-slate-100 rounded-full overflow-hidden">
-                              <div
-                                className={`h-full ${
-                                  item.fraud_risk_score >= 0.8
-                                    ? 'bg-rose-500'
-                                    : item.fraud_risk_score >= 0.5
-                                    ? 'bg-amber-500'
-                                    : 'bg-emerald-500'
-                                }`}
-                                style={{ width: `${Math.round(item.fraud_risk_score * 100)}%` }}
-                              />
-                            </div>
-                            <span className="font-mono text-xs font-bold text-slate-800">
-                              {item.risk_percentage}
-                            </span>
-                          </div>
-                        </TableCell>
+                      {/* Rupee Payout */}
+                      <td className="font-mono" style={{ fontWeight: 700, fontSize: '0.82rem' }}>
+                        ₹{Number(item.reimbursement).toLocaleString()}
+                      </td>
 
-                        {/* Confidence Score & Tier */}
-                        <TableCell>
-                          <div className="flex items-center gap-1.5 font-mono">
-                            <span className="text-xs font-bold text-slate-900">
-                              {item.confidence_score}%
-                            </span>
-                            <span
-                              className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${
-                                confNum >= 95
-                                  ? 'bg-sky-100 text-sky-800'
-                                  : confNum >= 85
-                                  ? 'bg-slate-100 text-slate-700'
-                                  : 'bg-amber-100 text-amber-800'
+                      {/* Risk Score Progress Bar */}
+                      <td>
+                        <div className="risk-metric-box">
+                          <div className="risk-progress-track">
+                            <div
+                              className={`risk-progress-fill ${
+                                item.fraud_risk_score >= 0.8
+                                  ? 'bg-rose'
+                                  : item.fraud_risk_score >= 0.5364
+                                  ? 'bg-amber'
+                                  : 'bg-emerald'
                               }`}
-                            >
-                              {item.confidence_tier}
-                            </span>
+                              style={{ width: `${Math.round(item.fraud_risk_score * 100)}%` }}
+                            />
                           </div>
-                        </TableCell>
+                          <span className={`risk-number-badge font-mono ${isFlagged ? 'is-danger' : 'is-clean'}`}>
+                            {item.risk_percentage}
+                          </span>
+                        </div>
+                      </td>
 
-                        {/* Decision Badge */}
-                        <TableCell>
-                          {isFlagged ? (
-                            <Badge variant="destructive" className="font-mono text-[10px]">
-                              FLAGGED FOR AUDIT
-                            </Badge>
-                          ) : (
-                            <Badge variant="success" className="font-mono text-[10px]">
-                              AUTO-CLEARED
-                            </Badge>
-                          )}
-                        </TableCell>
-
-                        {/* Top SHAP Driver */}
-                        <TableCell className="max-w-[210px]">
-                          <div className="flex flex-col text-xs">
-                            <div className="flex items-center gap-1 font-semibold text-slate-800">
-                              <span
-                                className={`text-[10px] font-mono px-1 rounded ${
-                                  isPositiveShap
-                                    ? 'bg-rose-100 text-rose-700'
-                                    : 'bg-emerald-100 text-emerald-700'
-                                }`}
-                              >
-                                {isPositiveShap ? '+' : ''}
-                                {item.top_driver.shap_contribution}
-                              </span>
-                              <span className="truncate">{item.top_driver.feature}</span>
-                            </div>
-                            <span className="text-[11px] text-slate-500 truncate mt-0.5">
-                              {item.top_driver.description}
-                            </span>
-                          </div>
-                        </TableCell>
-
-                        {/* Action Button */}
-                        <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onInspectCase(item.provider_id)}
-                            className="text-sky-600 hover:text-sky-700 hover:bg-sky-50 h-8 px-2.5 text-xs font-mono"
-                            title="Inspect in SHAP Waterfall Analyzer"
+                      {/* Confidence Score & Tier */}
+                      <td>
+                        <div className="confidence-cell font-mono">
+                          <span className="conf-value">{item.confidence_score}%</span>
+                          <span
+                            className={`conf-tier-tag ${
+                              confNum >= 95 ? 'tier-very-high' : confNum >= 85 ? 'tier-high' : 'tier-moderate'
+                            }`}
                           >
-                            <span>Inspect</span>
-                            <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                            {item.confidence_tier}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Verdict Badge */}
+                      <td>
+                        <span className={`status-tag ${isFlagged ? 'tag-flagged' : 'tag-cleared'}`}>
+                          {item.decision}
+                        </span>
+                      </td>
+
+                      {/* Top SHAP Driver */}
+                      <td style={{ maxWidth: '240px' }}>
+                        <div className="table-shap-driver-box">
+                          <div className="shap-driver-title">
+                            <span
+                              className={`shap-val-micro font-mono ${isPositiveShap ? 'text-rose' : 'text-emerald'}`}
+                            >
+                              {isPositiveShap ? '+' : ''}
+                              {item.top_driver.shap_contribution}
+                            </span>
+                            <span className="driver-name-text truncate">{item.top_driver.feature}</span>
+                          </div>
+                          <span className="driver-desc-micro truncate">{item.top_driver.description}</span>
+                        </div>
+                      </td>
+
+                      {/* Inspect Action Button */}
+                      <td style={{ textAlign: 'right' }}>
+                        <button
+                          type="button"
+                          className="action-btn-inspect"
+                          onClick={() => onInspectCase(item.provider_id)}
+                          title="Inspect case in SHAP Waterfall Analyzer"
+                        >
+                          <span>Inspect</span>
+                          <IconArrowRight size={13} />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
