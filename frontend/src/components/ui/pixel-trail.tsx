@@ -19,11 +19,10 @@ interface Pixel {
   y: number
   opacity: number
   age: number
-  color: string
   size: number
 }
 
-const COLORS = ["#863bff", "#0284c7", "#38bdf8", "#a855f7", "#64748b"]
+const PIXEL_COLOR = "#000000"
 const PIXEL_SIZE = 10
 const TRAIL_LENGTH = 40
 const FADE_SPEED = 0.025
@@ -62,8 +61,7 @@ export function PixelCursorTrail() {
       const dx = x - lastPosRef.current.x
       const dy = y - lastPosRef.current.y
       if (Math.sqrt(dx * dx + dy * dy) >= MIN_DISTANCE) {
-        const color = COLORS[Math.floor(Math.random() * COLORS.length)]
-        pixelsRef.current.push({ x, y, opacity: 1, age: 0, color, size: PIXEL_SIZE })
+        pixelsRef.current.push({ x, y, opacity: 1, age: 0, size: PIXEL_SIZE })
         if (pixelsRef.current.length > TRAIL_LENGTH) {
           pixelsRef.current = pixelsRef.current.slice(-TRAIL_LENGTH)
         }
@@ -105,13 +103,10 @@ export function PixelCursorTrail() {
         const half = sz / 2
 
         ctx.globalAlpha = p.opacity
-        ctx.fillStyle = p.color
-        ctx.shadowColor = p.color
-        ctx.shadowBlur = 8
+        ctx.fillStyle = PIXEL_COLOR
         ctx.fillRect(p.x - half, p.y - half, sz, sz)
       }
       ctx.globalAlpha = 1
-      ctx.shadowBlur = 0
 
       animFrameRef.current = requestAnimationFrame(draw)
     }
