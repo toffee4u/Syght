@@ -908,14 +908,14 @@ export default function BatchAuditResults({
         <div className="page-header-title-box">
           <div className="syght-chip">
             <span className="chip-dot" />
-            SIU Healthinsurance Fraud Detector • Multi-Model Inference Report
+            SIU Health Insurance Fraud Detector • Multi-Model Inference Report
           </div>
           <h1 className="syght-page-title">
-            Model Audit Run & Healthinsurance Fraud Detector Results
+            Model Audit Run & Health Insurance Fraud Detector Results
           </h1>
           <p className="syght-page-desc">
             {currentResults
-              ? `Healthinsurance fraud detector evaluation across ${totalCount} healthcare claims records.`
+              ? `Health insurance fraud detector evaluation across ${totalCount} healthcare claims records.`
               : 'Launch parallel gradient boosting and graph ensembles to audit provider billing patterns in sub-5ms.'}
           </p>
         </div>

@@ -67,10 +67,10 @@ const TAB_TO_PATH = {
 };
 
 const TAB_PAGE_TITLES = {
-  'tab-dashboard': 'Executive Command Center — Syght Healthinsurance Fraud Detector',
+  'tab-dashboard': 'Executive Command Center — Syght Health Insurance Fraud Detector',
   'tab-queue': 'SIU Priority Review Queue — Syght',
   'tab-dataset': 'Dataset Studio & Batch Pipeline — Syght',
-  'tab-results': 'Model Run & Healthinsurance Fraud Detector Results — Syght',
+  'tab-results': 'Model Run & Health Insurance Fraud Detector Results — Syght',
   'tab-analyzer': 'TreeSHAP Waterfall Claim Analyzer — Syght',
   'tab-performance': 'Benchmarks & Candidate ROC-AUC — Syght',
   'tab-network': 'Collusion Graph Network Engine — Syght',
@@ -457,7 +457,7 @@ export default function App() {
             TEAM PULSE
           </div>
           <p className="footer-giant-brand-caption">
-            Healthinsurance Fraud Detector Engine
+            Health Insurance Fraud Detector Engine
           </p>
         </div>
 
@@ -471,7 +471,7 @@ export default function App() {
               </span>
             </div>
             <p className="footer-brand-desc">
-              Next-generation healthinsurance fraud detector engine. 
+              Next-generation health insurance fraud detector engine. 
               Designed for SIU audit teams to intercept fraudulent claims in sub-5ms with full SHAP transparency.
             </p>
             <div className="footer-copyright font-mono">
