@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import Header from './components/Header';
 import ErrorBoundary from './components/ErrorBoundary';
 import Toast from './components/Toast';
+import { PixelCursorTrail } from './components/ui/pixel-trail';
 
 // Separate Page Components for all Navigation Tabs
 import {
@@ -328,6 +329,9 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {/* Pixel Cursor Trail Animation */}
+      <PixelCursorTrail />
+
       {/* Top Header */}
       <Header
         activeTab={activeTab}
