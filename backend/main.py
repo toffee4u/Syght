@@ -23,8 +23,10 @@ if str(PROJECT_ROOT) not in sys.path:
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
+
+from backend.docs_ui import get_custom_docs_html, get_custom_redoc_html
 
 from backend.preauth_gateway import PreAuthFraudGateway, PreAuthRequest
 from backend.schemas import (
@@ -131,6 +133,8 @@ app = FastAPI(
         "Provides provider risk scoring with SHAP explainability and sub-5ms real-time pre-authorization."
     ),
     version="1.0.0",
+    docs_url=None,
+    redoc_url=None,
     lifespan=lifespan,
 )
 
@@ -142,6 +146,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui():
+    """Serves the custom-styled, ultra-premium Syght Swagger UI developer portal."""
+    return HTMLResponse(get_custom_docs_html(openapi_url=app.openapi_url or "/openapi.json"))
+
+
+@app.get("/redoc", include_in_schema=False)
+async def custom_redoc_ui():
+    """Serves the ReDoc documentation console."""
+    return HTMLResponse(get_custom_redoc_html(openapi_url=app.openapi_url or "/openapi.json"))
 
 
 @app.get("/api", summary="API Root & Status", tags=["General"])
