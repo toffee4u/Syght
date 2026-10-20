@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import Header from './components/Header';
-import CommandCenter from './components/CommandCenter';
-import ReviewQueue from './components/ReviewQueue';
-import ClaimAnalyzer from './components/ClaimAnalyzer';
-import ModelPerformance from './components/ModelPerformance';
-import CollusionNetwork from './components/CollusionNetwork';
-import PreAuthGateway from './components/PreAuthGateway';
-import DatasetStudio from './components/DatasetStudio';
-import BatchAuditResults from './components/BatchAuditResults';
 import ErrorBoundary from './components/ErrorBoundary';
 import Toast from './components/Toast';
+
+// Separate Page Components for all Navigation Tabs
+import {
+  CommandCenterPage,
+  ReviewQueuePage,
+  DatasetStudioPage,
+  BatchAuditResultsPage,
+  ClaimAnalyzerPage,
+  ModelPerformancePage,
+  CollusionNetworkPage,
+  PreAuthGatewayPage,
+} from './pages';
 
 import { BENCHMARK_CASES } from './data/benchmarkCases';
 import { BENCHMARK_MODELS } from './data/benchmarkModels';
@@ -49,15 +53,15 @@ const ROUTE_TO_TAB = {
   '#/preauth': 'tab-preauth',
 };
 
-const TAB_TO_ROUTE = {
-  'tab-dashboard': '#/command',
-  'tab-queue': '#/queue',
-  'tab-dataset': '#/dataset',
-  'tab-results': '#/results',
-  'tab-analyzer': '#/analyzer',
-  'tab-performance': '#/benchmarks',
-  'tab-network': '#/network',
-  'tab-preauth': '#/preauth',
+const TAB_TO_PATH = {
+  'tab-dashboard': '/command',
+  'tab-queue': '/queue',
+  'tab-dataset': '/dataset',
+  'tab-results': '/results',
+  'tab-analyzer': '/analyzer',
+  'tab-performance': '/benchmarks',
+  'tab-network': '/network',
+  'tab-preauth': '/preauth',
 };
 
 const TAB_PAGE_TITLES = {
@@ -73,13 +77,13 @@ const TAB_PAGE_TITLES = {
 
 export default function App() {
   const getTabFromLocation = () => {
-    const hash = window.location.hash || '';
-    if (hash && ROUTE_TO_TAB[hash]) {
-      return ROUTE_TO_TAB[hash];
-    }
     const path = window.location.pathname || '';
     if (path && ROUTE_TO_TAB[path]) {
       return ROUTE_TO_TAB[path];
+    }
+    const hash = window.location.hash || '';
+    if (hash && ROUTE_TO_TAB[hash]) {
+      return ROUTE_TO_TAB[hash];
     }
     return 'tab-dashboard';
   };
@@ -92,11 +96,11 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [toast, setToast] = useState(null);
 
-  const setActiveTab = (tabId) => {
+  const setActiveTab = (tabId, targetPath) => {
     setActiveTabState(tabId);
-    const targetRoute = TAB_TO_ROUTE[tabId] || '#/command';
-    if (window.location.hash !== targetRoute) {
-      window.location.hash = targetRoute;
+    const path = targetPath || TAB_TO_PATH[tabId] || '/command';
+    if (window.location.pathname !== path) {
+      window.history.pushState({ tabId }, '', path);
     }
     document.title = TAB_PAGE_TITLES[tabId] || 'Syght — Healthcare Fraud Prevention';
   };
@@ -263,18 +267,18 @@ export default function App() {
       <main className="main-layout">
         <ErrorBoundary>
           {activeTab === 'tab-dashboard' && (
-            <CommandCenter
+            <CommandCenterPage
               cases={cases}
               onInspectCase={handleInspectCase}
               onTriageAction={handleTriageAction}
-              onViewAllCases={() => setActiveTab('tab-queue')}
-              onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
+              onViewAllCases={() => setActiveTab('tab-queue', '/queue')}
+              onOpenDatasetStudio={() => setActiveTab('tab-dataset', '/dataset')}
               onRunAuditWithSample={handleRunAuditWithSample}
             />
           )}
 
           {activeTab === 'tab-queue' && (
-            <ReviewQueue
+            <ReviewQueuePage
               cases={cases}
               onInspectCase={handleInspectCase}
               onTriageAction={handleTriageAction}
@@ -282,7 +286,7 @@ export default function App() {
           )}
 
           {activeTab === 'tab-dataset' && (
-            <DatasetStudio
+            <DatasetStudioPage
               onInspectCase={handleInspectCase}
               onShowToast={showToast}
               onRunComplete={handleRunCustomDataset}
@@ -290,12 +294,12 @@ export default function App() {
           )}
 
           {activeTab === 'tab-results' && (
-            <BatchAuditResults
+            <BatchAuditResultsPage
               resultsData={batchResults}
               pipelineExecutionTrigger={pipelineExecutionTrigger}
               onClearExecutionTrigger={() => setPipelineExecutionTrigger(null)}
               onInspectCase={handleInspectCase}
-              onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
+              onOpenDatasetStudio={() => setActiveTab('tab-dataset', '/dataset')}
               onRunAuditWithSample={handleRunAuditWithSample}
               onRunAuditWithPortfolio={handleRunAuditWithPortfolio}
               onSaveAuditResults={(results) => setBatchResults(results)}
@@ -304,7 +308,7 @@ export default function App() {
           )}
 
           {activeTab === 'tab-analyzer' && (
-            <ClaimAnalyzer
+            <ClaimAnalyzerPage
               benchmarkCases={cases}
               selectedCaseId={selectedCaseId}
               onCaseSelected={setSelectedCaseId}
@@ -313,17 +317,19 @@ export default function App() {
           )}
 
           {activeTab === 'tab-performance' && (
-            <ModelPerformance
+            <ModelPerformancePage
               models={BENCHMARK_MODELS}
             />
           )}
 
           {activeTab === 'tab-network' && (
-            <CollusionNetwork />
+            <CollusionNetworkPage
+              onInspectCase={handleInspectCase}
+            />
           )}
 
           {activeTab === 'tab-preauth' && (
-            <PreAuthGateway onShowToast={showToast} />
+            <PreAuthGatewayPage onShowToast={showToast} />
           )}
         </ErrorBoundary>
       </main>
@@ -385,27 +391,27 @@ export default function App() {
             <div className="footer-col-heading">Quick Actions</div>
             <ul className="footer-links-list">
               <li>
-                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-dashboard')}>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-dashboard', '/command')}>
                   Command Center Radar
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-queue')}>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-queue', '/queue')}>
                   Priority Review Queue
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-dataset')}>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-dataset', '/dataset')}>
                   Dataset Studio & Batch Runner
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-results')}>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-results', '/results')}>
                   Audit Results & Confidence Report
                 </button>
               </li>
               <li>
-                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-performance')}>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-performance', '/benchmarks')}>
                   ROC-AUC & PR-AUC Benchmarks
                 </button>
               </li>
