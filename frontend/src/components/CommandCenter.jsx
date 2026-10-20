@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto';
 import {
   IconZap,
   IconAlert,
@@ -13,6 +14,145 @@ import {
   IconDatabase,
 } from './Icons';
 
+const SHAP_DATASETS = {
+  global: {
+    key: 'global',
+    title: 'Global Portfolio Baseline (25 Facilities)',
+    subtitle: 'Cross-validated TreeSHAP feature attributions across full PM-JAY provider network',
+    topPositive: { name: 'Inpatient Payout Share (>80%)', val: '+0.342' },
+    topNegative: { name: 'Community Outpatient Volume', val: '-0.195' },
+    labels: [
+      'Inpatient Payout Share (>80%)',
+      'Surgeries / MD Outlier Ratio',
+      'Attending Doctor Monopoly',
+      'Bipartite Graph Centrality',
+      'Same-Day Procedure Splitting',
+      'ICU Stay Duration Drift',
+      'Post-Mortem Claim Submissions',
+      'Standard Clinical Protocol LOS',
+      'Attending Physician Diversity',
+      'Community Outpatient Volume',
+    ],
+    values: [0.342, 0.315, 0.285, 0.264, 0.218, 0.198, 0.182, -0.140, -0.162, -0.195],
+    descriptions: [
+      'Facilities with >80% inpatient billing face +3.8x higher odds of systemic phantom hospitalization.',
+      'Surgical volume exceeding 200 operations per doctor indicates fabricated theatre logs.',
+      'Single physician billing >65% of all hospital claims indicates kickback recycling.',
+      'Doctor appearing across 3+ distinct hospitals within 24 hours in bipartite collusion ring.',
+      'Artificial splitting of single diagnostic procedures into multiple distinct codes.',
+      'ICU stays >8.5 days exceeding standard protocol for admitted ICD diagnosis.',
+      'Claims submitted with dates of service timestamped after beneficiary DOD.',
+      'Mean length of stay conforming strictly to ICD protocol and package norms.',
+      'Broad roster of credentialed attending and operating specialists.',
+      'High proportion of verified outpatient visits indicating genuine community healthcare.',
+    ],
+  },
+  prv02: {
+    key: 'prv02',
+    title: 'Ghost Surgery Mill (PRV_02 — Apex Life Surgical)',
+    subtitle: '460 surgeries billed by 2 doctors in 30 days (impossible surgical capacity)',
+    topPositive: { name: 'Surgeries per MD Ratio (230x)', val: '+0.412' },
+    topNegative: { name: 'Community Outpatient Share', val: '-0.042' },
+    labels: [
+      'Surgeries per Doctor (230/MD)',
+      'Inpatient Reimbursed Sum (₹5.1M)',
+      'Claims per Physician (240x)',
+      'Isolated Loop Doctor Network',
+      'Inpatient Deductible Volume',
+      'Same-Day Duplicate Submissions',
+      'Community Outpatient Share',
+    ],
+    values: [0.412, 0.324, 0.288, 0.195, 0.142, 0.085, -0.042],
+    descriptions: [
+      '460 inpatient surgeries billed by only 2 doctors in 30 days (impossible surgical capacity).',
+      '₹5,100,000 surgical payouts concentrated in ghost abdominal procedures.',
+      'Claim volume per attending MD exceeds 99.8th percentile.',
+      'Physicians do not admit patients at any other recognized hospital.',
+      'High deductible sum billed directly without supporting laboratory panels.',
+      'Repeated claims submitted for same beneficiary on identical day.',
+      'Negligible outpatient presence (<4% of total claims).',
+    ],
+  },
+  prv03: {
+    key: 'prv03',
+    title: 'Doctor Recycling Syndicate (PRV_03 — Metro Health Syndicate)',
+    subtitle: '34 syndicated doctors rotating across 11 hospital branches in kickback network',
+    topPositive: { name: 'Bipartite Graph Centrality (95%)', val: '+0.388' },
+    topNegative: { name: 'Outpatient Payout Offsets', val: '-0.065' },
+    labels: [
+      'Bipartite Graph Centrality (95%)',
+      'Roving Doctor Network (34 MDs)',
+      'Cross-Admit Referral Kickbacks',
+      'High Inpatient Sum (₹8.9M)',
+      'High Deductible Accumulation',
+      'Unique Beneficiary Overlap',
+      'Outpatient Payout Offsets',
+    ],
+    values: [0.388, 0.325, 0.294, 0.235, 0.148, 0.112, -0.065],
+    descriptions: [
+      '34 doctors shared across 11 syndicated hospital branches in coordinated collusion loop.',
+      'High eigenvector centrality indicating hospital acts as central clearing hub for kickbacks.',
+      'Systematic cross-referrals between affiliated diagnostic clinics and surgical centres.',
+      '₹8,900,000 in aggregated payouts across syndicated facilities.',
+      'Inflated patient co-pay and deductible invoices.',
+      'Beneficiaries cycled through multiple sister clinics within 14 days.',
+      'Limited legitimate primary care checkups.',
+    ],
+  },
+  prv08: {
+    key: 'prv08',
+    title: 'ICU Stay Upcoding Network (PRV_08 — St. Jude Critical Care)',
+    subtitle: 'Mean ICU duration of 16.8 days with artificial ventilator prolongation up to 48 days',
+    topPositive: { name: 'ICU Mean Stay (16.8 Days)', val: '+0.445' },
+    topNegative: { name: 'Attending Doctor Credentialing', val: '-0.088' },
+    labels: [
+      'ICU Mean Stay (16.8 Days)',
+      'Prolonged Stay Outlier (Max 48D)',
+      'ICU Admission Ratio (100% IP)',
+      'High Per-Admission Cost (₹4.2M)',
+      'Ventilator Billing Duration',
+      'Surgical Ratio Concordance',
+      'Attending Doctor Credentialing',
+    ],
+    values: [0.445, 0.312, 0.245, 0.210, 0.165, -0.052, -0.088],
+    descriptions: [
+      'Mean ICU stay of 16.8 days conflicts with admitted diagnostic package (standard 3.2 days).',
+      'Extreme outlier patients retained up to 48 days in intensive care without medical justification.',
+      '100% of admitted patients routed to intensive care beds.',
+      'Average cost per admission exceeds regional benchmark by 340%.',
+      'Extended mechanical ventilation billed without arterial blood gas records.',
+      'Surgeries per physician remain within normal institutional bounds.',
+      'Doctors have valid state medical registrations.',
+    ],
+  },
+  prv04: {
+    key: 'prv04',
+    title: 'Accredited Rural Kendra (PRV_04 — Clean Baseline)',
+    subtitle: 'Compliant primary healthcare facility with balanced community volume and zero anomalies',
+    topPositive: { name: 'Inpatient Payouts Proportion', val: '+0.048' },
+    topNegative: { name: 'Outpatient Consultation Volume', val: '-0.310' },
+    labels: [
+      'Outpatient Consultation Volume',
+      'Physician Roster Diversity (18 MDs)',
+      'Protocol Concordant LOS (2.8D)',
+      'Low Claim-to-MD Ratio (14.2x)',
+      'Negligible Duplicate Rate (0.2%)',
+      'Low Inpatient Surgical Volume',
+      'Inpatient Payouts Proportion',
+    ],
+    values: [-0.310, -0.265, -0.220, -0.185, -0.142, -0.095, 0.048],
+    descriptions: [
+      'Broad volume of community primary care visits conforms to rural health center norms.',
+      '18 independent local doctors with diverse specialties and balanced caseloads.',
+      'Average inpatient stay of 2.8 days aligns strictly with PM-JAY package protocols.',
+      'Low claims per doctor indicates healthy physician workload and no phantom billing.',
+      'Minimal duplicate submissions within normal administrative error margins.',
+      'Surgery count proportional to minor community procedures.',
+      'Inpatient reimbursement represents small, appropriate fraction of total budget.',
+    ],
+  },
+};
+
 export default function CommandCenter({
   cases,
   onInspectCase,
@@ -24,6 +164,114 @@ export default function CommandCenter({
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditProgress, setAuditProgress] = useState(0);
   const [auditSummary, setAuditSummary] = useState(null);
+
+  // TreeSHAP Interactive Graph State
+  const [activeShapKey, setActiveShapKey] = useState('global');
+  const shapChartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
+
+  const activeShapData = SHAP_DATASETS[activeShapKey] || SHAP_DATASETS.global;
+
+  useEffect(() => {
+    if (!shapChartRef.current) return;
+
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
+
+    const labels = activeShapData.labels;
+    const values = activeShapData.values;
+    const descriptions = activeShapData.descriptions;
+
+    const backgroundColors = values.map((val) =>
+      val >= 0 ? 'rgba(225, 29, 72, 0.88)' : 'rgba(16, 185, 129, 0.88)'
+    );
+    const borderColors = values.map((val) =>
+      val >= 0 ? '#e11d48' : '#10b981'
+    );
+
+    chartInstanceRef.current = new Chart(shapChartRef.current, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'TreeSHAP Additive Contribution',
+            data: values,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1.5,
+            borderRadius: 6,
+          },
+        ],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 600,
+          easing: 'easeOutQuart',
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(15, 23, 42, 0.96)',
+            titleFont: { family: 'Space Grotesk', size: 12, weight: '700' },
+            bodyFont: { family: 'Space Grotesk', size: 11 },
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true,
+            callbacks: {
+              label: function (context) {
+                const val = context.raw;
+                const sign = val >= 0 ? '+' : '';
+                return `SHAP Value: ${sign}${val.toFixed(3)} (${val >= 0 ? 'Pushes toward Fraud' : 'Pulls toward Clean'})`;
+              },
+              afterLabel: function (context) {
+                const desc = descriptions[context.dataIndex] || '';
+                return `Clinical Insight: ${desc}`;
+              },
+            },
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              color: function (context) {
+                if (context.tick && context.tick.value === 0) return 'rgba(15, 23, 42, 0.5)';
+                return 'rgba(0, 0, 0, 0.05)';
+              },
+              lineWidth: function (context) {
+                if (context.tick && context.tick.value === 0) return 2;
+                return 1;
+              },
+            },
+            ticks: {
+              font: { family: 'JetBrains Mono', size: 10, weight: '600' },
+              color: '#64748b',
+              callback: function (val) {
+                return (val >= 0 ? '+' : '') + Number(val).toFixed(2);
+              },
+            },
+          },
+          y: {
+            grid: { display: false },
+            ticks: {
+              font: { family: 'Space Grotesk', size: 11, weight: '600' },
+              color: '#1e293b',
+            },
+          },
+        },
+      },
+    });
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+      }
+    };
+  }, [activeShapKey, activeShapData]);
 
   const urgentCases = cases.slice(0, 5);
 
@@ -361,7 +609,7 @@ export default function CommandCenter({
         </div>
       </section>
 
-      {/* Leading TreeSHAP Risk Drivers Card */}
+      {/* Leading TreeSHAP Risk Drivers & Feature Contributions Card */}
       <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
         <div className="syght-panel-header">
           <div className="panel-title-flex">
@@ -373,94 +621,157 @@ export default function CommandCenter({
               </p>
             </div>
           </div>
-          <span className="syght-chip font-mono">Global Explainer</span>
+          <span className="syght-chip font-mono">TreeSHAP Explainer</span>
         </div>
 
+        {/* Archetype / Scenario Selector Pills */}
+        <div className="shap-archetype-pills-row">
+          <span className="shap-pills-label font-mono">Select Typology Signature:</span>
+          <div className="shap-pills-list">
+            <button
+              type="button"
+              className={`shap-pill-btn ${activeShapKey === 'global' ? 'active' : ''}`}
+              onClick={() => setActiveShapKey('global')}
+            >
+              🌐 Global Portfolio Baseline
+            </button>
+            <button
+              type="button"
+              className={`shap-pill-btn ${activeShapKey === 'prv02' ? 'active' : ''}`}
+              onClick={() => setActiveShapKey('prv02')}
+            >
+              🔪 Ghost Surgery Mill (PRV_02)
+            </button>
+            <button
+              type="button"
+              className={`shap-pill-btn ${activeShapKey === 'prv03' ? 'active' : ''}`}
+              onClick={() => setActiveShapKey('prv03')}
+            >
+              🔄 Kickback Syndicate (PRV_03)
+            </button>
+            <button
+              type="button"
+              className={`shap-pill-btn ${activeShapKey === 'prv08' ? 'active' : ''}`}
+              onClick={() => setActiveShapKey('prv08')}
+            >
+              🏥 ICU Stay Upcoding (PRV_08)
+            </button>
+            <button
+              type="button"
+              className={`shap-pill-btn ${activeShapKey === 'prv04' ? 'active' : ''}`}
+              onClick={() => setActiveShapKey('prv04')}
+            >
+              🛡️ Clean Rural Kendra (PRV_04)
+            </button>
+          </div>
+        </div>
+
+        {/* Mathematical SHAP Metric Chips Bar */}
+        <div className="shap-metrics-bar">
+          <div className="shap-metric-item">
+            <span className="shap-metric-lbl">ACTIVE SIGNATURE</span>
+            <span className="shap-metric-val">{activeShapData.title.split(' (')[0]}</span>
+          </div>
+          <div className="shap-metric-item">
+            <span className="shap-metric-lbl">TOP RISK DRIVER</span>
+            <span className="shap-metric-val text-rose font-mono">
+              {activeShapData.topPositive.val} ({activeShapData.topPositive.name.split(' (')[0]})
+            </span>
+          </div>
+          <div className="shap-metric-item">
+            <span className="shap-metric-lbl">TOP PROTECTIVE FACTOR</span>
+            <span className="shap-metric-val text-emerald font-mono">
+              {activeShapData.topNegative.val} ({activeShapData.topNegative.name.split(' (')[0]})
+            </span>
+          </div>
+          <div className="shap-metric-item">
+            <span className="shap-metric-lbl">BASE E[f(x)] / CUTOFF</span>
+            <span className="shap-metric-val font-mono">
+              0.128 / <strong className="text-sky-600">0.5364</strong>
+            </span>
+          </div>
+        </div>
+
+        {/* The Interactive TreeSHAP Chart Canvas Box */}
+        <div className="shap-interactive-chart-box">
+          <div className="shap-chart-header">
+            <div>
+              <div className="shap-chart-title">
+                {activeShapData.title}
+              </div>
+              <div className="shap-chart-subtitle">
+                {activeShapData.subtitle}
+              </div>
+            </div>
+            <div className="shap-legend-row">
+              <span className="shap-legend-chip rose">
+                <span className="shap-legend-dot bg-rose" />
+                <span>+ Pushes Toward Audit (Risk)</span>
+              </span>
+              <span className="shap-legend-chip emerald">
+                <span className="shap-legend-dot bg-emerald" />
+                <span>- Pulls Toward Clean (Protective)</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="shap-chart-canvas-wrapper">
+            <canvas ref={shapChartRef} />
+          </div>
+        </div>
+
+        {/* Detailed Feature Explanatory Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-xs text-slate-800">Inpatient Payout Share</span>
-              <span className="shap-value-badge positive font-mono">+0.324 SHAP</span>
-            </div>
-            <div className="shap-bar-track mb-2">
-              <div className="shap-bar-fill push-positive" style={{ width: '88%' }} />
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Facilities with &gt; 80% inpatient billing face +3.8x higher odds of systemic phantom hospitalization.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-xs text-slate-800">Physician Monopoly</span>
-              <span className="shap-value-badge positive font-mono">+0.285 SHAP</span>
-            </div>
-            <div className="shap-bar-track mb-2">
-              <div className="shap-bar-fill push-positive" style={{ width: '76%' }} />
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Single doctor billing &gt; 65% of all hospital claims indicates kickback nexus or ghost physician recycling.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-xs text-slate-800">Graph Degree Centrality</span>
-              <span className="shap-value-badge positive font-mono">+0.264 SHAP</span>
-            </div>
-            <div className="shap-bar-track mb-2">
-              <div className="shap-bar-fill push-positive" style={{ width: '70%' }} />
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Shared clinical staff appearing simultaneously across 3+ distinct physical facilities in 24 hours.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-xs text-slate-800">Same-Day Unbundling</span>
-              <span className="shap-value-badge positive font-mono">+0.218 SHAP</span>
-            </div>
-            <div className="shap-bar-track mb-2">
-              <div className="shap-bar-fill push-positive" style={{ width: '58%' }} />
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Artificial splitting of single diagnostic procedures into multiple distinct reimbursement claims.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-xs text-slate-800">ICU Length-of-Stay Drift</span>
-              <span className="shap-value-badge positive font-mono">+0.198 SHAP</span>
-            </div>
-            <div className="shap-bar-track mb-2">
-              <div className="shap-bar-fill push-positive" style={{ width: '54%' }} />
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Mean ICU duration &gt; 8.5 days exceeding standard clinical protocol for admitted ICD diagnosis.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-emerald-50/50 border border-emerald-200/80 transition-all">
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-xs text-emerald-900">Community Outpatient Volume</span>
-              <span className="shap-value-badge negative font-mono">-0.195 SHAP</span>
-            </div>
-            <div className="shap-bar-track mb-2">
-              <div className="shap-bar-fill push-negative" style={{ width: '52%' }} />
-            </div>
-            <p className="text-xs text-emerald-800 leading-relaxed">
-              Balanced outpatient volume and high physician diversity strongly correlate with legitimate community clinics.
-            </p>
-          </div>
+          {activeShapData.labels.slice(0, 6).map((label, idx) => {
+            const val = activeShapData.values[idx];
+            const isPositive = val >= 0;
+            const desc = activeShapData.descriptions[idx];
+            return (
+              <div
+                key={label}
+                className={`p-4 rounded-xl border transition-all ${
+                  isPositive
+                    ? 'bg-slate-50 border-slate-200/80 hover:border-slate-300'
+                    : 'bg-emerald-50/50 border-emerald-200/80'
+                }`}
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <span className={`font-semibold text-xs ${isPositive ? 'text-slate-800' : 'text-emerald-900'}`}>
+                    {label}
+                  </span>
+                  <span className={`shap-value-badge ${isPositive ? 'positive' : 'negative'} font-mono`}>
+                    {isPositive ? '+' : ''}{val.toFixed(3)} SHAP
+                  </span>
+                </div>
+                <div className="shap-bar-track mb-2">
+                  <div
+                    className={`shap-bar-fill ${isPositive ? 'push-positive' : 'push-negative'}`}
+                    style={{ width: `${Math.min(100, Math.abs(val) * 240)}%` }}
+                  />
+                </div>
+                <p className={`text-xs leading-relaxed ${isPositive ? 'text-slate-600' : 'text-emerald-800'}`}>
+                  {desc}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         <div className="syght-banner-notice mt-4">
           <IconShield size={18} className="text-sky-600 shrink-0 mt-0.5" />
-          <div>
-            <strong>Defensible Due Process:</strong> All risk scores are accompanied by mathematical TreeSHAP attributions 
-            ensuring clear, defensible evidence for legal clawback proceedings and administrative hearings.
+          <div className="flex items-center justify-between gap-4 w-full flex-wrap">
+            <div>
+              <strong>Defensible Due Process:</strong> All risk scores are accompanied by exact mathematical TreeSHAP attributions 
+              ensuring clear, defensible evidence for legal clawback proceedings and administrative hearings.
+            </div>
+            <button
+              type="button"
+              className="syght-btn-secondary text-xs px-3 py-1 font-mono"
+              onClick={() => onInspectCase('PRV_02_PHANTOM_SURGERY_MILL')}
+              title="Open Deep SHAP Waterfall Analyzer"
+            >
+              <span>Inspect in SHAP Analyzer ↗</span>
+            </button>
           </div>
         </div>
       </section>
