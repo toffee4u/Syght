@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import {
   UploadCloud,
   FileSpreadsheet,
-  FileText,
   Play,
   Download,
   CheckCircle2,
@@ -11,7 +10,6 @@ import {
   ArrowRight,
   Trash2,
   Search,
-  Layers,
   Database,
   BarChart3,
   Eye,
@@ -22,20 +20,6 @@ import {
   Zap,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Progress } from './ui/progress';
-import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-} from './ui/table';
 
 import {
   SAMPLE_DATASET_ROWS,
@@ -66,7 +50,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
       key: 'collusion',
       title: 'Doctor Recycling Syndicate',
       badge: 'High Collusion',
-      badgeVariant: 'destructive',
+      badgeVariant: 'badge-destructive',
       desc: 'Bipartite kickback rings, shared physician networks, and phantom surgeries.',
       count: '10 Cases',
       icon: Activity,
@@ -75,7 +59,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
       key: 'upcoding',
       title: 'ICU & Package Upcoding',
       badge: 'Critical LOS',
-      badgeVariant: 'warning',
+      badgeVariant: 'badge-warning',
       desc: 'Artificial length-of-stay prolongation, unbundled lab panels, post-mortem claims.',
       count: '8 Cases',
       icon: Zap,
@@ -84,7 +68,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
       key: 'clean',
       title: 'Accredited Rural Health',
       badge: 'Auto-Cleared',
-      badgeVariant: 'success',
+      badgeVariant: 'badge-success',
       desc: 'Compliant community healthcare kendras, diabetic clinics, accredited maternity centers.',
       count: '7 Cases',
       icon: ShieldCheck,
@@ -93,7 +77,7 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
       key: 'all',
       title: 'Full SIU Benchmark',
       badge: 'Balanced 25 Cases',
-      badgeVariant: 'secondary',
+      badgeVariant: 'badge-secondary',
       desc: 'Heterogeneous mix across phantom mills, kickback rings, and clean primary hospitals.',
       count: '25 Cases',
       icon: Database,
@@ -340,7 +324,6 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
             topShap = +0.264;
           }
 
-          // Compute statistical confidence from decision threshold 0.5364
           const margin = Math.abs(riskScore - 0.5364);
           const confVal = Math.min(99.9, Math.max(74.0, (0.5 + margin * 0.98) * 100));
           const confTier = confVal >= 95 ? 'VERY HIGH' : confVal >= 85 ? 'HIGH' : confVal >= 75 ? 'MODERATE' : 'BORDERLINE';
@@ -360,32 +343,25 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
             priority: priority,
             top_driver: {
               feature: topDriverFeature,
-              description: topDriverDesc,
               shap_contribution: topShap,
+              description: topDriverDesc,
             },
-            latency_ms: (1.4 + Math.random() * 0.7).toFixed(2),
           };
         });
 
-        const elapsed = (performance.now() - startTime).toFixed(2);
-        const avgScore = results.reduce((acc, r) => acc + r.fraud_risk_score, 0) / results.length;
-        const avgConfidence = (results.reduce((acc, r) => acc + Number(r.confidence_score), 0) / results.length).toFixed(1);
+        const elapsed = Math.round(performance.now() - startTime);
 
         const simulatedData = {
-          status: 'success',
-          dataset_name: activeDataset.name,
           total_evaluated: results.length,
           flagged_count: flaggedCount,
           cleared_count: clearedCount,
           critical_count: criticalCount,
           high_count: highCount,
-          total_exposure: totalExposure,
           flagged_exposure: flaggedExposure,
-          average_fraud_score: avgScore,
-          average_confidence: avgConfidence,
-          decision_threshold: 0.5364,
-          champion_model: 'LightGBM (1-SE Rule)',
+          total_exposure: totalExposure,
+          average_confidence: (results.reduce((acc, r) => acc + Number(r.confidence_score), 0) / results.length).toFixed(1),
           total_batch_latency_ms: elapsed,
+          decision_threshold: 0.5364,
           results: results,
         };
 
@@ -486,147 +462,138 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
 
         {/* Quick Action Buttons */}
         <div className="page-header-actions">
-          <Button
-            variant="outline"
+          <button
+            type="button"
+            className="syght-btn-secondary"
             onClick={handleDownloadTemplate}
             title="Download CSV Template"
           >
             <Download size={15} />
             <span>Download CSV Template</span>
-          </Button>
+          </button>
 
-          <Button
-            variant="primary"
+          <button
+            type="button"
+            className="syght-btn-primary"
             onClick={() => handleSelectPreset('all')}
             title="Load Complete 25-Case Benchmark"
           >
             <Sparkles size={15} />
             <span>Load 25-Case Benchmark</span>
-          </Button>
+          </button>
         </div>
       </div>
 
       {/* Unified Dataset Upload & Model Execution Master Card */}
-      <Card className="border-slate-200 shadow-sm bg-white overflow-hidden mb-6">
-        <CardHeader className="border-b border-slate-100 bg-slate-50/40 pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center shrink-0">
-                <UploadCloud className="w-5 h-5" />
-              </div>
-              <div>
-                <CardTitle className="text-lg">Healthcare Claims Dataset Upload & Model Runner</CardTitle>
-                <CardDescription className="text-xs mt-0.5">
-                  Drag and drop claims (.csv, .json, .txt) or select benchmark datasets to evaluate calibrated fraud risk with TreeSHAP attributions
-                </CardDescription>
-              </div>
+      <div className="upload-master-card">
+        <div className="upload-card-header">
+          <div className="upload-card-header-left">
+            <div className="upload-card-icon-badge">
+              <UploadCloud size={22} />
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownloadTemplate}
-                className="text-xs h-8"
-                title="Download CSV Schema Template"
-              >
-                <Download size={13} className="mr-1" />
-                <span>CSV Template</span>
-              </Button>
+            <div>
+              <h2 className="upload-card-title">Healthcare Claims Dataset Upload & Model Runner</h2>
+              <p className="upload-card-desc">
+                Drag and drop claims (.csv, .json, .txt) or select benchmark datasets to evaluate calibrated fraud risk with TreeSHAP attributions
+              </p>
             </div>
           </div>
-        </CardHeader>
+          <div>
+            <button
+              type="button"
+              className="syght-btn-secondary text-xs"
+              onClick={handleDownloadTemplate}
+              title="Download CSV Schema Template"
+            >
+              <Download size={13} />
+              <span>CSV Template</span>
+            </button>
+          </div>
+        </div>
 
-        <CardContent className="p-6 space-y-6">
+        <div className="upload-card-body">
           {/* Drag & Drop Dropzone Box */}
           <div
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`relative flex flex-col items-center justify-center p-8 sm:p-10 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-200 text-center ${
-              isDragging
-                ? 'border-sky-500 bg-sky-50/80 scale-[1.008]'
-                : 'border-slate-200 bg-slate-50/50 hover:bg-slate-100/60 hover:border-sky-400'
-            }`}
+            className={`dropzone-box ${isDragging ? 'is-dragging' : ''}`}
           >
+            {/* Native file input is 100% hidden so no ugly default browser widget appears */}
             <input
               ref={fileInputRef}
               type="file"
               accept=".csv,.json,.txt"
-              className="hidden"
+              style={{ display: 'none' }}
               onChange={handleFileChange}
             />
 
-            <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-sky-600 mb-3 group-hover:scale-105 transition-transform">
-              <UploadCloud className="w-7 h-7" />
+            <div className="dropzone-icon-bubble">
+              <UploadCloud size={30} />
             </div>
 
-            <div className="font-semibold text-slate-900 text-base">
+            <div className="dropzone-primary-text">
               Drag and drop your claims dataset here
             </div>
-            <p className="text-xs text-slate-500 mt-1 max-w-md">
+            <p className="dropzone-sub-text">
               Accepts CSV files with column headers, JSON array of claims, or TXT exports. Maximum file size: 50MB.
             </p>
 
-            <div className="mt-4 flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="bg-white border-slate-300 hover:bg-slate-50 text-slate-800 text-xs font-semibold px-4 py-1.5 shadow-xs"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  fileInputRef.current?.click();
-                }}
-              >
-                <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-sky-600" />
-                <span>Browse Local Computer</span>
-              </Button>
-            </div>
+            <button
+              type="button"
+              className="dropzone-browse-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                fileInputRef.current?.click();
+              }}
+            >
+              <UploadCloud size={16} />
+              <span>Browse Local Computer</span>
+            </button>
 
-            <div className="flex items-center gap-2 mt-4 flex-wrap justify-center">
-              <Badge variant="secondary" className="text-[10px] font-mono">61 Tabular Features</Badge>
-              <Badge variant="secondary" className="text-[10px] font-mono">LightGBM 1-SE (&lt; 2ms)</Badge>
-              <Badge variant="secondary" className="text-[10px] font-mono">Exact TreeSHAP Values</Badge>
+            <div className="dropzone-tags-row">
+              <span className="dropzone-spec-tag">61 Tabular Features</span>
+              <span className="dropzone-spec-tag">LightGBM 1-SE (&lt; 2ms)</span>
+              <span className="dropzone-spec-tag">Exact TreeSHAP Values</span>
             </div>
           </div>
 
           {/* Active File Loaded Banner */}
           {activeDataset && (
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl border border-sky-200 bg-sky-50/60">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <FileSpreadsheet className="w-5 h-5" />
+            <div className="active-file-banner">
+              <div className="active-file-left">
+                <div className="active-file-icon">
+                  <FileSpreadsheet size={22} />
                 </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm text-slate-900 font-mono truncate">
+                <div className="active-file-info">
+                  <div className="active-file-title-row">
+                    <span className="active-file-name">
                       {activeDataset.name}
                     </span>
-                    <Badge variant="success" className="text-[10px] font-mono">
-                      Validated
-                    </Badge>
+                    <span className="active-file-validated-tag">
+                      ✓ Validated
+                    </span>
                   </div>
-                  <div className="text-xs text-slate-600 font-mono mt-0.5">
+                  <div className="active-file-meta">
                     <strong>{activeDataset.rows.length} Records</strong> • {activeDataset.size} • 61 Features Synthesized
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <Button
-                  variant="outline"
-                  size="sm"
+              <div className="active-file-actions">
+                <button
+                  type="button"
+                  className="syght-btn-secondary text-xs font-mono"
                   onClick={() => setShowDataPreview(!showDataPreview)}
-                  className="bg-white text-slate-700 hover:text-slate-900 text-xs font-mono"
                   title="Toggle Data Preview"
                 >
-                  {showDataPreview ? <EyeOff className="w-3.5 h-3.5 mr-1" /> : <Eye className="w-3.5 h-3.5 mr-1" />}
+                  {showDataPreview ? <EyeOff size={14} /> : <Eye size={14} />}
                   <span>{showDataPreview ? 'Hide Preview' : 'Preview Data'}</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                </button>
+                <button
+                  type="button"
+                  className="action-btn-freeze text-xs"
                   onClick={(e) => {
                     e.stopPropagation();
                     setActiveDataset(null);
@@ -634,53 +601,46 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
                     setTestResults(null);
                     setShowDataPreview(false);
                   }}
-                  className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 text-xs font-mono h-8"
                   title="Clear Loaded Dataset"
                 >
-                  <Trash2 className="w-3.5 h-3.5 mr-1" />
+                  <Trash2 size={13} />
                   <span>Clear</span>
-                </Button>
+                </button>
               </div>
             </div>
           )}
 
           {/* 1-Click Preset Benchmark Scenarios */}
           <div>
-            <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
-                Or Test Instantly with Verified PMJAY / Medicare Benchmark Presets:
-              </span>
+            <div className="presets-section-title">
+              Or Test Instantly with Verified PMJAY / Medicare Benchmark Presets:
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="presets-grid">
               {PRESETS.map((p) => {
                 const isSelected = selectedPresetKey === p.key;
                 return (
-                  <div
+                  <button
                     key={p.key}
+                    type="button"
                     onClick={() => handleSelectPreset(p.key)}
-                    className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
-                      isSelected
-                        ? 'border-sky-500 bg-sky-50/50 shadow-xs ring-1 ring-sky-500/30'
-                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60'
-                    }`}
+                    className={`preset-card-btn ${isSelected ? 'is-selected' : ''}`}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-semibold text-xs text-slate-900 truncate">
-                        {p.title}
-                      </span>
-                      <Badge variant={p.badgeVariant} className="text-[10px] font-mono shrink-0">
+                    <div className="preset-card-top">
+                      <span className="preset-title">{p.title}</span>
+                      <span className={`preset-badge ${p.badgeVariant}`}>
                         {p.count}
-                      </Badge>
+                      </span>
                     </div>
-                    <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
-                      {p.desc}
-                    </p>
-                    <div className="mt-2 text-[11px] font-mono text-sky-600 font-medium flex items-center justify-between">
-                      <span>{isSelected ? '✓ Loaded' : 'Click to Load'}</span>
-                      <ChevronRight size={12} />
+                    <p className="preset-desc">{p.desc}</p>
+                    <div className="preset-footer">
+                      <span className="preset-count">{p.count}</span>
+                      <span className="preset-action">
+                        <span>{isSelected ? '✓ Loaded' : 'Click to Load'}</span>
+                        <ChevronRight size={13} />
+                      </span>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -688,13 +648,18 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
 
           {/* Inference Progress Tracker (when running) */}
           {isRunningInference && (
-            <div className="inference-stage-tracker p-4 bg-sky-50/70 border border-sky-200 rounded-xl">
-              <div className="flex justify-between text-xs font-mono font-semibold text-sky-900 mb-2">
+            <div className="inference-stage-tracker">
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--syght-font-mono)', fontSize: '0.78rem', fontWeight: 600, color: '#0369a1' }}>
                 <span>{inferenceStage}</span>
                 <span>{inferenceProgress}%</span>
               </div>
-              <Progress value={inferenceProgress} variant="primary" />
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 font-mono text-xs text-slate-600">
+              <div className="progress-track-wrapper">
+                <div
+                  className="progress-bar-fill"
+                  style={{ width: `${inferenceProgress}%` }}
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px', marginTop: '6px' }}>
                 <div className={`stage-step ${inferenceProgress >= 20 ? 'done' : 'active'}`}>
                   <span className="stage-step-dot" />
                   <span>1. Schema Validation</span>
@@ -716,23 +681,22 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
           )}
 
           {/* Model Execution Bar */}
-          <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-slate-500 font-mono">
-              <span>Engine: <strong className="text-slate-800">LightGBM (1-SE Rule)</strong></span>
-              <span className="mx-2">•</span>
-              <span>Cutoff: <strong className="text-sky-600 font-bold">0.5364</strong></span>
-              <span className="mx-2">•</span>
-              <span>Latency: <strong className="text-emerald-600 font-bold">&lt; 2.0 ms/claim</strong></span>
+          <div className="upload-runner-footer">
+            <div className="runner-telemetry">
+              <span>Engine: <strong>LightGBM (1-SE Rule)</strong></span>
+              <span>•</span>
+              <span>Cutoff: <strong style={{ color: '#0284c7' }}>0.5364</strong></span>
+              <span>•</span>
+              <span>Latency: <strong style={{ color: '#059669' }}>&lt; 2.0 ms/claim</strong></span>
             </div>
 
-            <Button
-              variant="default"
-              size="lg"
+            <button
+              type="button"
               disabled={!activeDataset || isRunningInference}
               onClick={handleRunModelInference}
-              className="w-full sm:w-auto min-w-[260px] bg-slate-900 hover:bg-slate-800 text-white font-semibold py-5 px-6 rounded-xl shadow-md text-sm cursor-pointer"
+              className="runner-btn-execute"
             >
-              <Play className="w-4 h-4 fill-white mr-2" />
+              <Play size={16} fill="currentColor" />
               <span>
                 {isRunningInference
                   ? 'Running Model Inference...'
@@ -740,421 +704,375 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
                   ? `Run Model on ${activeDataset.rows.length} Claims →`
                   : 'Select or Upload Dataset to Run'}
               </span>
-            </Button>
+            </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Collapsible Raw Data Preview */}
       {activeDataset && showDataPreview && (
-        <div className="data-preview-container animate-in fade-in duration-200">
+        <div className="data-preview-container">
           <div className="data-preview-header">
-            <div className="flex items-center gap-2">
-              <Database className="w-4 h-4 text-sky-600" />
-              <span className="font-semibold text-xs text-slate-800 uppercase tracking-wider font-mono">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Database size={16} className="text-sky-600" />
+              <span style={{ fontFamily: 'var(--syght-font-mono)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#0f172a' }}>
                 Raw Ingested Records Preview (First 5 of {activeDataset.rows.length})
               </span>
             </div>
-            <span className="text-xs text-slate-500 font-mono">
+            <span style={{ fontFamily: 'var(--syght-font-mono)', fontSize: '0.75rem', color: '#64748b' }}>
               61 Features Extracted • Ready for Inference
             </span>
           </div>
 
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50/60">
-                  <TableHead className="text-xs font-mono">Provider ID</TableHead>
-                  <TableHead className="text-xs font-mono">Facility Name</TableHead>
-                  <TableHead className="text-xs font-mono">Clinical Archetype</TableHead>
-                  <TableHead className="text-xs font-mono">Surgeries</TableHead>
-                  <TableHead className="text-xs font-mono">Attending MDs</TableHead>
-                  <TableHead className="text-xs font-mono">Mean LOS</TableHead>
-                  <TableHead className="text-xs font-mono">Billed Exposure (₹)</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+          <div className="table-responsive-wrapper">
+            <table className="syght-table">
+              <thead>
+                <tr>
+                  <th>Provider ID</th>
+                  <th>Facility Name</th>
+                  <th>Clinical Archetype</th>
+                  <th>Surgeries</th>
+                  <th>Attending MDs</th>
+                  <th>Mean LOS</th>
+                  <th>Billed Exposure (₹)</th>
+                </tr>
+              </thead>
+              <tbody>
                 {activeDataset.rows.slice(0, 5).map((r, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="font-mono text-xs font-semibold text-slate-900">
+                  <tr key={i}>
+                    <td className="font-mono font-semibold text-slate-900">
                       {r.provider_id || `RECORD_${i + 1}`}
-                    </TableCell>
-                    <TableCell className="text-xs text-slate-700 max-w-[200px] truncate">
+                    </td>
+                    <td className="text-slate-700">
                       {r.name || 'Clinical Facility'}
-                    </TableCell>
-                    <TableCell className="text-xs">
+                    </td>
+                    <td>
                       <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-mono">
                         {r.archetype || 'Institutional'}
                       </span>
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-slate-600">
+                    </td>
+                    <td className="font-mono text-slate-600">
                       {r.total_inpatient_surgeries || 0}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-slate-600">
+                    </td>
+                    <td className="font-mono text-slate-600">
                       {r.unique_attending_physicians || 1}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-slate-600">
+                    </td>
+                    <td className="font-mono text-slate-600">
                       {r.mean_inpatient_los || 3.0} d
-                    </TableCell>
-                    <TableCell className="font-mono text-xs font-semibold text-slate-900">
+                    </td>
+                    <td className="font-mono font-semibold text-slate-900">
                       ₹{Number((r.inpatient_reimbursed_sum || 0) + (r.outpatient_reimbursed_sum || 0)).toLocaleString()}
-                    </TableCell>
-                  </TableRow>
+                    </td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
       {/* Real Test Results Section (Renders after execution) */}
       {testResults && (
-        <div className="mt-8 space-y-6 animate-in fade-in duration-300">
+        <div className="dataset-results-section">
           {/* Section Divider with Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-slate-200/80 pb-3">
+          <div className="dataset-results-header">
             <div>
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-sky-600" />
-                <h2 className="text-xl font-bold text-slate-900">Real Test Results & SIU Audit Verdicts</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BarChart3 size={20} className="text-sky-600" />
+                <h2 style={{ fontFamily: 'var(--syght-font-sans)', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                  Real Test Results & SIU Audit Verdicts
+                </h2>
               </div>
-              <p className="text-sm text-slate-500 mt-0.5">
+              <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '4px 0 0 0' }}>
                 Evaluated {testResults.total_evaluated} healthcare providers against calibrated decision threshold ({testResults.decision_threshold}) in {testResults.total_batch_latency_ms}ms.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
-              <Button
-                variant="primary"
-                size="sm"
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className="syght-btn-primary text-xs"
                 onClick={() => {
                   if (onRunComplete) onRunComplete(testResults);
                 }}
-                className="bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-xs"
               >
-                <ArrowRight className="w-4 h-4 mr-1.5" />
+                <ArrowRight size={14} />
                 <span>Open Dedicated Results & Graphs Page →</span>
-              </Button>
+              </button>
 
-              <Button variant="outline" size="sm" onClick={handleExportResultsCsv}>
-                <Download className="w-4 h-4 mr-1.5" />
+              <button
+                type="button"
+                className="syght-btn-secondary text-xs"
+                onClick={handleExportResultsCsv}
+              >
+                <Download size={14} />
                 <span>Export CSV</span>
-              </Button>
+              </button>
             </div>
           </div>
 
           {/* Bento Summary Strip */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="dataset-results-grid">
             {/* Total Evaluated */}
-            <Card className="p-4 border-slate-200">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wider">
+            <div className="dataset-stat-card">
+              <div className="dataset-stat-label">
                 <span>EVALUATED RECORDS</span>
-                <Database className="w-4 h-4 text-slate-400" />
+                <Database size={15} />
               </div>
-              <div className="text-2xl font-bold font-mono text-slate-900 mt-2">
+              <div className="dataset-stat-val">
                 {testResults.total_evaluated}
               </div>
-              <div className="text-xs text-slate-500 mt-1 font-mono">
+              <div className="dataset-stat-sub">
                 Institutional Portfolios Analyzed
               </div>
-            </Card>
+            </div>
 
             {/* Mean Confidence */}
-            <Card className="p-4 border-purple-200/70 bg-purple-50/20">
-              <div className="flex items-center justify-between text-purple-600 text-xs font-semibold uppercase tracking-wider">
+            <div className="dataset-stat-card is-confidence">
+              <div className="dataset-stat-label">
                 <span>MEAN CONFIDENCE</span>
-                <Sparkles className="w-4 h-4 text-purple-500" />
+                <Sparkles size={15} />
               </div>
-              <div className="text-2xl font-bold font-mono text-purple-700 mt-2">
+              <div className="dataset-stat-val text-purple">
                 {testResults.average_confidence || '89.2'}%
               </div>
-              <div className="text-xs text-purple-600/80 mt-1 font-mono">
+              <div className="dataset-stat-sub">
                 Calibrated Distance from Cutoff
               </div>
-            </Card>
+            </div>
 
             {/* Flagged for Audit */}
-            <Card className="p-4 border-rose-200/70 bg-rose-50/20">
-              <div className="flex items-center justify-between text-rose-600 text-xs font-semibold uppercase tracking-wider">
+            <div className="dataset-stat-card is-danger">
+              <div className="dataset-stat-label">
                 <span>FLAGGED FOR AUDIT</span>
-                <AlertTriangle className="w-4 h-4 text-rose-500" />
+                <AlertTriangle size={15} />
               </div>
-              <div className="text-2xl font-bold font-mono text-rose-600 mt-2">
+              <div className="dataset-stat-val text-rose">
                 {testResults.flagged_count}{' '}
-                <span className="text-sm font-normal text-rose-500">
+                <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>
                   ({((testResults.flagged_count / testResults.total_evaluated) * 100).toFixed(1)}%)
                 </span>
               </div>
-              <div className="text-xs text-rose-600/80 mt-1 font-mono">
+              <div className="dataset-stat-sub">
                 {testResults.critical_count} Critical • {testResults.high_count} High Risk
               </div>
-            </Card>
+            </div>
 
             {/* Suspicious Rupee Exposure */}
-            <Card className="p-4 border-rose-200/70 bg-rose-50/20">
-              <div className="flex items-center justify-between text-rose-600 text-xs font-semibold uppercase tracking-wider">
+            <div className="dataset-stat-card is-danger">
+              <div className="dataset-stat-label">
                 <span>SUSPICIOUS EXPOSURE</span>
-                <span className="font-mono text-rose-600 font-bold">₹</span>
+                <span className="font-mono">₹</span>
               </div>
-              <div className="text-2xl font-bold font-mono text-rose-600 mt-2">
+              <div className="dataset-stat-val text-rose">
                 ₹{(testResults.flagged_exposure / 10000000).toFixed(2)} Cr
               </div>
-              <div className="text-xs text-rose-600/80 mt-1 font-mono">
+              <div className="dataset-stat-sub">
                 Direct Financial Clawback Target
               </div>
-            </Card>
+            </div>
 
             {/* Auto-Cleared */}
-            <Card className="p-4 border-emerald-200/70 bg-emerald-50/20">
-              <div className="flex items-center justify-between text-emerald-600 text-xs font-semibold uppercase tracking-wider">
+            <div className="dataset-stat-card">
+              <div className="dataset-stat-label">
                 <span>AUTO-CLEARED</span>
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <CheckCircle2 size={15} className="text-emerald-600" />
               </div>
-              <div className="text-2xl font-bold font-mono text-emerald-600 mt-2">
+              <div className="dataset-stat-val" style={{ color: '#059669' }}>
                 {testResults.cleared_count}{' '}
-                <span className="text-sm font-normal text-emerald-500">
+                <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>
                   ({((testResults.cleared_count / testResults.total_evaluated) * 100).toFixed(1)}%)
                 </span>
               </div>
-              <div className="text-xs text-emerald-600/80 mt-1 font-mono">
+              <div className="dataset-stat-sub">
                 Authorized for Fast-Track Payout
               </div>
-            </Card>
-          </div>
-
-          {/* Visual Risk Distribution Track */}
-          <div className="p-4 bg-white border border-slate-200 rounded-xl">
-            <div className="flex justify-between items-center text-xs font-mono text-slate-600 mb-1.5">
-              <span>Risk Category Distribution Breakdown:</span>
-              <span>
-                <strong className="text-rose-600">{testResults.flagged_count} Flagged</strong> |{' '}
-                <strong className="text-emerald-600">{testResults.cleared_count} Cleared</strong>
-              </span>
-            </div>
-            <div className="risk-distribution-track">
-              <div
-                className="risk-distribution-segment critical"
-                style={{ width: `${(testResults.critical_count / testResults.total_evaluated) * 100}%` }}
-                title={`Critical: ${testResults.critical_count}`}
-              />
-              <div
-                className="risk-distribution-segment high"
-                style={{ width: `${(testResults.high_count / testResults.total_evaluated) * 100}%` }}
-                title={`High: ${testResults.high_count}`}
-              />
-              <div
-                className="risk-distribution-segment cleared"
-                style={{ width: `${(testResults.cleared_count / testResults.total_evaluated) * 100}%` }}
-                title={`Cleared: ${testResults.cleared_count}`}
-              />
-            </div>
-            <div className="flex items-center gap-4 text-[11px] font-mono text-slate-500">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-rose-500" /> Critical ({testResults.critical_count})
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-500" /> High ({testResults.high_count})
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" /> Auto-Cleared ({testResults.cleared_count})
-              </span>
             </div>
           </div>
 
           {/* Interactive Results Table with Filters & Search */}
-          <Card>
-            <CardHeader className="pb-4">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                {/* Tabs Filter */}
-                <Tabs value={filterTab} onValueChange={setFilterTab}>
-                  <TabsList>
-                    <TabsTrigger value="all">
-                      All Records ({testResults.results.length})
-                    </TabsTrigger>
-                    <TabsTrigger value="critical">
-                      Critical Risk ({testResults.critical_count})
-                    </TabsTrigger>
-                    <TabsTrigger value="high">
-                      High Risk ({testResults.high_count})
-                    </TabsTrigger>
-                    <TabsTrigger value="cleared">
-                      Auto-Cleared ({testResults.cleared_count})
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-
-                {/* Search Input */}
-                <div className="relative min-w-[260px]">
-                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by ID, hospital, archetype..."
-                    className="w-full pl-9 pr-4 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
-                  />
-                </div>
+          <div className="syght-panel">
+            <div className="syght-controls-panel" style={{ marginBottom: '1rem' }}>
+              {/* Filter Tabs */}
+              <div className="tab-pill-group">
+                <button
+                  type="button"
+                  className={`tab-pill-btn ${filterTab === 'all' ? 'active' : ''}`}
+                  onClick={() => setFilterTab('all')}
+                >
+                  All Records ({testResults.results.length})
+                </button>
+                <button
+                  type="button"
+                  className={`tab-pill-btn ${filterTab === 'critical' ? 'active' : ''}`}
+                  onClick={() => setFilterTab('critical')}
+                >
+                  Critical Risk ({testResults.critical_count})
+                </button>
+                <button
+                  type="button"
+                  className={`tab-pill-btn ${filterTab === 'high' ? 'active' : ''}`}
+                  onClick={() => setFilterTab('high')}
+                >
+                  High Risk ({testResults.high_count})
+                </button>
+                <button
+                  type="button"
+                  className={`tab-pill-btn ${filterTab === 'cleared' ? 'active' : ''}`}
+                  onClick={() => setFilterTab('cleared')}
+                >
+                  Auto-Cleared ({testResults.cleared_count})
+                </button>
               </div>
-            </CardHeader>
 
-            <CardContent>
-              <div className="rounded-xl border border-slate-200/80 overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-slate-50/75">
-                      <TableHead>Provider ID & Facility</TableHead>
-                      <TableHead>Clinical Archetype</TableHead>
-                      <TableHead>Surgeries / MDs</TableHead>
-                      <TableHead>Billed Exposure (₹)</TableHead>
-                      <TableHead>Calibrated Risk</TableHead>
-                      <TableHead>Confidence</TableHead>
-                      <TableHead>Audit Decision</TableHead>
-                      <TableHead>Primary TreeSHAP Driver</TableHead>
-                      <TableHead className="text-right">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredResults.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={9} className="text-center py-8 text-slate-500 font-mono text-xs">
-                          No matching records found for "{searchQuery}".
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredResults.map((item) => {
-                        const isFlagged = item.decision.includes('FLAGGED');
-                        const isPositiveShap = item.top_driver.shap_contribution > 0;
-                        const confScore = item.confidence_score || '88.5';
-                        const confTier = item.confidence_tier || (Number(confScore) >= 95 ? 'VERY HIGH' : Number(confScore) >= 85 ? 'HIGH' : 'MODERATE');
+              {/* Search Box */}
+              <div className="syght-search-wrapper">
+                <Search size={14} className="search-icon-indicator" />
+                <input
+                  type="text"
+                  className="syght-search-input font-mono"
+                  placeholder="Filter by ID, facility, archetype..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
 
-                        return (
-                          <TableRow key={item.provider_id}>
-                            {/* Provider ID & Name */}
-                            <TableCell>
-                              <div className="flex flex-col">
-                                <span className="font-mono font-bold text-slate-900 text-xs">
-                                  {item.provider_id}
-                                </span>
-                                <span className="text-slate-500 text-[11px] truncate max-w-[180px]">
-                                  {item.name}
-                                </span>
-                              </div>
-                            </TableCell>
+            <div className="table-responsive-wrapper">
+              <table className="syght-table">
+                <thead>
+                  <tr>
+                    <th>Provider ID & Facility</th>
+                    <th>Clinical Archetype</th>
+                    <th>Surgeries / MDs</th>
+                    <th>Billed Exposure (₹)</th>
+                    <th>Calibrated Risk</th>
+                    <th>Confidence</th>
+                    <th>Audit Decision</th>
+                    <th>Primary TreeSHAP Driver</th>
+                    <th className="text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredResults.length === 0 ? (
+                    <tr>
+                      <td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: '#64748b', fontFamily: 'var(--syght-font-mono)' }}>
+                        No matching records found for "{searchQuery}".
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredResults.map((item) => {
+                      const isFlagged = item.decision.includes('FLAGGED');
+                      const isPositiveShap = item.top_driver.shap_contribution > 0;
+                      const confScore = item.confidence_score || '88.5';
+                      const confTier = item.confidence_tier || (Number(confScore) >= 95 ? 'VERY HIGH' : Number(confScore) >= 85 ? 'HIGH' : 'MODERATE');
 
-                            {/* Archetype */}
-                            <TableCell>
-                              <span className="font-mono text-xs text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
-                                {item.archetype}
+                      return (
+                        <tr key={item.provider_id}>
+                          {/* Provider ID & Name */}
+                          <td>
+                            <div className="provider-cell">
+                              <span className="provider-id-tag font-mono">{item.provider_id}</span>
+                              <span className="font-semibold text-slate-900 text-xs">{item.name}</span>
+                            </div>
+                          </td>
+
+                          {/* Archetype */}
+                          <td>
+                            <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-mono">
+                              {item.archetype}
+                            </span>
+                          </td>
+
+                          {/* Surgeries & MDs */}
+                          <td className="font-mono text-xs text-slate-600">
+                            {item.surgeries} Surgeries ({item.physicians} MDs)
+                          </td>
+
+                          {/* Payout */}
+                          <td className="font-mono font-semibold text-slate-900 text-xs">
+                            ₹{Number(item.reimbursement).toLocaleString()}
+                          </td>
+
+                          {/* Risk Gauge Bar */}
+                          <td>
+                            <div className="risk-metric-box">
+                              <div
+                                className="risk-bar-indicator"
+                                style={{ width: `${Math.round(item.fraud_risk_score * 100)}%` }}
+                              />
+                              <span className={`risk-number-badge font-mono ${item.fraud_risk_score >= 0.8 ? 'is-danger' : item.fraud_risk_score >= 0.5 ? 'is-warning' : 'is-clean'}`}>
+                                {item.risk_percentage}
                               </span>
-                            </TableCell>
+                            </div>
+                          </td>
 
-                            {/* Surgeries & MDs */}
-                            <TableCell className="font-mono text-xs text-slate-600">
-                              {item.surgeries} Surgeries ({item.physicians} MDs)
-                            </TableCell>
-
-                            {/* Payout */}
-                            <TableCell className="font-mono font-semibold text-slate-900 text-xs">
-                              ₹{Number(item.reimbursement).toLocaleString()}
-                            </TableCell>
-
-                            {/* Risk Gauge Bar */}
-                            <TableCell>
-                              <div className="flex items-center gap-2 min-w-[110px]">
-                                <div className="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
-                                  <div
-                                    className={`h-full ${
-                                      item.fraud_risk_score >= 0.8
-                                        ? 'bg-rose-500'
-                                        : item.fraud_risk_score >= 0.5
-                                        ? 'bg-amber-500'
-                                        : 'bg-emerald-500'
-                                    }`}
-                                    style={{ width: `${Math.round(item.fraud_risk_score * 100)}%` }}
-                                  />
-                                </div>
-                                <span className="font-mono text-xs font-bold text-slate-800">
-                                  {item.risk_percentage}
-                                </span>
-                              </div>
-                            </TableCell>
-
-                            {/* Statistical Confidence */}
-                            <TableCell>
-                              <div className="flex flex-col">
-                                <span className="font-mono text-xs font-bold text-slate-900">
-                                  {confScore}%
-                                </span>
-                                <span
-                                  className={`text-[9px] font-mono px-1.5 py-0.5 rounded w-fit mt-0.5 font-semibold ${
-                                    confTier === 'VERY HIGH'
-                                      ? 'bg-purple-100 text-purple-700 border border-purple-200'
-                                      : confTier === 'HIGH'
-                                      ? 'bg-sky-100 text-sky-700 border border-sky-200'
-                                      : 'bg-amber-100 text-amber-700 border border-amber-200'
-                                  }`}
-                                >
-                                  {confTier}
-                                </span>
-                              </div>
-                            </TableCell>
-
-                            {/* Decision */}
-                            <TableCell>
-                              {isFlagged ? (
-                                <Badge variant="destructive" className="font-mono text-[10px]">
-                                  FLAGGED FOR AUDIT
-                                </Badge>
-                              ) : (
-                                <Badge variant="success" className="font-mono text-[10px]">
-                                  AUTO-CLEARED
-                                </Badge>
-                              )}
-                            </TableCell>
-
-                            {/* Top SHAP Driver */}
-                            <TableCell className="max-w-[220px]">
-                              <div className="flex flex-col text-xs">
-                                <div className="flex items-center gap-1.5 font-semibold text-slate-800">
-                                  <span
-                                    className={`text-[10px] font-mono px-1 rounded ${
-                                      isPositiveShap
-                                        ? 'bg-rose-100 text-rose-700'
-                                        : 'bg-emerald-100 text-emerald-700'
-                                    }`}
-                                  >
-                                    {isPositiveShap ? '+' : ''}
-                                    {item.top_driver.shap_contribution}
-                                  </span>
-                                  <span className="truncate">{item.top_driver.feature}</span>
-                                </div>
-                                <span className="text-[11px] text-slate-500 truncate mt-0.5">
-                                  {item.top_driver.description}
-                                </span>
-                              </div>
-                            </TableCell>
-
-                            {/* Action Button */}
-                            <TableCell className="text-right">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => onInspectCase(item.provider_id)}
-                                className="text-sky-600 hover:text-sky-700 hover:bg-sky-50 h-8 px-2.5 text-xs font-mono"
-                                title="Inspect in SHAP Waterfall Analyzer"
+                          {/* Statistical Confidence */}
+                          <td>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                              <span className="font-mono font-bold text-slate-900 text-xs">
+                                {confScore}%
+                              </span>
+                              <span
+                                className={`text-[9px] font-mono px-1.5 py-0.5 rounded w-fit mt-0.5 font-semibold ${
+                                  confTier === 'VERY HIGH'
+                                    ? 'bg-purple-100 text-purple-700'
+                                    : confTier === 'HIGH'
+                                    ? 'bg-sky-100 text-sky-700'
+                                    : 'bg-amber-100 text-amber-700'
+                                }`}
                               >
-                                <span>Inspect</span>
-                                <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
+                                {confTier}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Decision */}
+                          <td>
+                            <span className={`status-tag ${isFlagged ? 'tag-flagged' : 'tag-cleared'}`}>
+                              {isFlagged ? 'FLAGGED FOR AUDIT' : 'AUTO-CLEARED'}
+                            </span>
+                          </td>
+
+                          {/* Top SHAP Driver */}
+                          <td style={{ maxWidth: '240px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', fontSize: '0.75rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: '#0f172a' }}>
+                                <span
+                                  className={`shap-value-badge ${isPositiveShap ? 'positive' : 'negative'} font-mono`}
+                                  style={{ fontSize: '0.65rem', padding: '1px 5px' }}
+                                >
+                                  {isPositiveShap ? '+' : ''}
+                                  {item.top_driver.shap_contribution}
+                                </span>
+                                <span className="truncate">{item.top_driver.feature}</span>
+                              </div>
+                              <span style={{ fontSize: '0.7rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: '2px' }}>
+                                {item.top_driver.description}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Action Button */}
+                          <td className="text-right">
+                            <button
+                              type="button"
+                              className="action-btn-inspect"
+                              onClick={() => onInspectCase(item.provider_id)}
+                              title="Inspect in SHAP Waterfall Analyzer"
+                            >
+                              <Search size={13} />
+                              <span>Inspect</span>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       )}
     </div>
