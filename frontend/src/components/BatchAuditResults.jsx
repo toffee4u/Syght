@@ -383,60 +383,83 @@ export default function BatchAuditResults({
       },
     ]);
 
+    let progressVal = 0;
+    let stageTracked = 0;
+
     intervalRef.current = setInterval(() => {
       const currentElapsed = Math.round(performance.now() - startTime);
       setElapsedMs(currentElapsed);
 
-      setExecutionProgress((prev) => {
-        const next = prev + 14;
+      progressVal += 16;
+      const nextProgress = Math.min(progressVal, 100);
+      setExecutionProgress(nextProgress);
 
-        if (next >= 25 && next < 50) {
-          setCurrentStageIndex(1);
-          setModelsState((curr) =>
-            curr.map((m) => {
-              if (m.id === 'graph') return { ...m, status: 'PROCESSING', progress: 70, statusText: 'Synthesizing 1,420 edges...' };
-              if (m.id === 'lgbm') return { ...m, status: 'EVALUATING', progress: 45, statusText: 'Evaluating split criteria...' };
-              if (m.id === 'xgb') return { ...m, status: 'EVALUATING', progress: 35, statusText: 'Building histogram splits...' };
-              return m;
-            })
-          );
-        } else if (next >= 50 && next < 75) {
-          setCurrentStageIndex(2);
-          setModelsState((curr) =>
-            curr.map((m) => {
-              if (m.id === 'graph') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: 3 Ring Syndicates Isolated (4.10ms)' };
-              if (m.id === 'lgbm') return { ...m, status: 'EVALUATING', progress: 85, statusText: 'Calibrating probabilities...' };
-              if (m.id === 'xgb') return { ...m, status: 'EVALUATING', progress: 80, statusText: 'Aggregating boosting rounds...' };
-              if (m.id === 'rf') return { ...m, status: 'EVALUATING', progress: 65, statusText: 'Averaging 100 tree votes...' };
-              if (m.id === 'lr') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Sigmoid Calibration (0.95ms)' };
-              return m;
-            })
-          );
-        } else if (next >= 75 && next < 95) {
-          setCurrentStageIndex(3);
-          setModelsState((curr) =>
-            curr.map((m) => {
-              if (m.id === 'lgbm') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Champion Inference (1.84ms)' };
-              if (m.id === 'xgb') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: HistGradient (2.12ms)' };
-              if (m.id === 'rf') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Bagging Consensus (3.85ms)' };
-              return { ...m, status: 'COMPLETED', progress: 100 };
-            })
-          );
-        } else if (next >= 95) {
-          setCurrentStageIndex(4);
+      if (nextProgress >= 25 && nextProgress < 50 && stageTracked < 1) {
+        stageTracked = 1;
+        setCurrentStageIndex(1);
+        setTerminalLogs((prev) => [
+          ...prev,
+          `[00:00.28] Bipartite Graph Engine constructed. Analyzing adjacency matrix for provider-beneficiary collusion...`,
+        ]);
+        setModelsState((curr) =>
+          curr.map((m) => {
+            if (m.id === 'graph') return { ...m, status: 'PROCESSING', progress: 70, statusText: 'Synthesizing 1,420 edges...' };
+            if (m.id === 'lgbm') return { ...m, status: 'EVALUATING', progress: 45, statusText: 'Evaluating split criteria...' };
+            if (m.id === 'xgb') return { ...m, status: 'EVALUATING', progress: 35, statusText: 'Building histogram splits...' };
+            return m;
+          })
+        );
+      } else if (nextProgress >= 50 && nextProgress < 75 && stageTracked < 2) {
+        stageTracked = 2;
+        setCurrentStageIndex(2);
+        setTerminalLogs((prev) => [
+          ...prev,
+          `[00:00.45] 5-Model Ensemble scoring triggered. Running LightGBM Champion, XGBoost, Random Forest, & Collusion Graph...`,
+        ]);
+        setModelsState((curr) =>
+          curr.map((m) => {
+            if (m.id === 'graph') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: 3 Ring Syndicates Isolated (4.10ms)' };
+            if (m.id === 'lgbm') return { ...m, status: 'EVALUATING', progress: 85, statusText: 'Calibrating probabilities...' };
+            if (m.id === 'xgb') return { ...m, status: 'EVALUATING', progress: 80, statusText: 'Aggregating boosting rounds...' };
+            if (m.id === 'rf') return { ...m, status: 'EVALUATING', progress: 65, statusText: 'Averaging 100 tree votes...' };
+            if (m.id === 'lr') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Sigmoid Calibration (0.95ms)' };
+            return m;
+          })
+        );
+      } else if (nextProgress >= 75 && nextProgress < 95 && stageTracked < 3) {
+        stageTracked = 3;
+        setCurrentStageIndex(3);
+        setTerminalLogs((prev) => [
+          ...prev,
+          `[00:00.68] 1-SE Decision Rule applied (cost-optimal cutoff: 0.5364). Computing TreeSHAP forensic attribution...`,
+        ]);
+        setModelsState((curr) =>
+          curr.map((m) => {
+            if (m.id === 'lgbm') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Champion Inference (1.84ms)' };
+            if (m.id === 'xgb') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: HistGradient (2.12ms)' };
+            if (m.id === 'rf') return { ...m, status: 'COMPLETED', progress: 100, statusText: 'Completed: Bagging Consensus (3.85ms)' };
+            return { ...m, status: 'COMPLETED', progress: 100 };
+          })
+        );
+      } else if (nextProgress >= 95 && stageTracked < 4) {
+        stageTracked = 4;
+        setCurrentStageIndex(4);
+        setTerminalLogs((prev) => [
+          ...prev,
+          `[00:00.82] Audit synthesis complete. Generating forensic dashboard & risk distribution cards...`,
+        ]);
+      }
+
+      if (nextProgress >= 100) {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
         }
-
-        if (next >= 100) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-          }
+        setTimeout(() => {
           finishExecution(dataPayload);
-          return 100;
-        }
-        return next;
-      });
-    }, 180);
+        }, 100);
+      }
+    }, 130);
   };
 
   const finishExecution = (dataPayload) => {
@@ -449,6 +472,11 @@ export default function BatchAuditResults({
     setExecutionProgress(100);
     setCurrentStageIndex(4);
     setCurrentResults(dataPayload);
+
+    // Consume and clear trigger after successful run
+    if (onClearExecutionTrigger) {
+      onClearExecutionTrigger();
+    }
 
     if (onSaveAuditResults) {
       onSaveAuditResults(dataPayload);
@@ -487,15 +515,20 @@ export default function BatchAuditResults({
     }
   };
 
-  // Execution trigger consumption (Guarantees no infinite re-runs)
+  // Cleanup timer strictly on component unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, []);
+
+  // Execution trigger consumption (Single-run guarantee, does not get stuck)
   useEffect(() => {
     if (pipelineExecutionTrigger && pipelineExecutionTrigger.timestamp !== lastProcessedTriggerRef.current) {
       lastProcessedTriggerRef.current = pipelineExecutionTrigger.timestamp;
-
-      // Consume the trigger immediately in parent
-      if (onClearExecutionTrigger) {
-        onClearExecutionTrigger();
-      }
 
       if (pipelineExecutionTrigger.source === 'sample-10') {
         const payload = buildResultsFrom10Cases();
@@ -510,13 +543,7 @@ export default function BatchAuditResults({
       // Existing history: show without running
       setCurrentResults(resultsData);
     }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [pipelineExecutionTrigger, resultsData]);
+  }, [pipelineExecutionTrigger, resultsData, isExecuting]);
 
   // Chart.js visualizations
   useEffect(() => {

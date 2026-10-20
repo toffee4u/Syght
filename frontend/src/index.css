@@ -119,12 +119,12 @@ a {
   pointer-events: auto;
   position: relative;
   z-index: 50;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   width: 100%;
-  max-width: 1340px;
+  max-width: 1400px;
   height: 60px;
   align-items: center;
-  justify-content: space-between;
   padding: 0 1rem;
   border-radius: 20px;
   border: 1px solid rgba(226, 232, 240, 0.85);
@@ -134,7 +134,6 @@ a {
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.7), 0 4px 20px -4px rgba(0, 0, 0, 0.06);
   gap: 0.5rem;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 /* Brand & Team Pulse Cluster */
@@ -142,7 +141,8 @@ a {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  flex-shrink: 0;
+  justify-self: start;
+  min-width: 0;
 }
 
 .brand-anchor {
@@ -228,17 +228,18 @@ a {
   50% { opacity: 1; transform: scale(1.35); box-shadow: 0 0 12px #059669; }
 }
 
-/* Center Pill Navigation */
+/* Center Pill Navigation (Centered between brand and actions) */
 .navbar-nav-pills {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 3px;
+  justify-content: center;
+  justify-self: center;
+  gap: 3px;
+  padding: 3px 6px;
   background: #f1f5f9;
   border: 1px solid #e2e8f0;
   border-radius: var(--syght-radius-full);
-  flex: 0 1 auto;
-  min-width: 0;
+  margin: 0 auto;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
@@ -311,13 +312,14 @@ a {
   border-color: #e11d48;
 }
 
-/* Actions Right */
+/* Actions Right (Balanced grid column with brand on left) */
 .navbar-actions-cluster {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
   gap: 0.45rem;
-  flex-shrink: 0;
-  margin-left: auto;
+  min-width: 0;
   z-index: 5;
 }
 
@@ -2272,34 +2274,34 @@ a {
    Responsive Breakpoints & Navbar Anti-Collision Rules
    ============================================================================== */
 
-/* Ensure the navbar layout never causes overlapping children */
+/* Ensure the navbar layout keeps center nav pills perfectly centered */
 .syght-navbar {
-  display: flex !important;
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr !important;
   align-items: center !important;
-  justify-content: space-between !important;
   gap: 0.5rem !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
 }
 
 .navbar-brand-cluster {
-  flex-shrink: 0 !important;
+  justify-self: start !important;
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
 }
 
 .navbar-nav-pills {
-  flex-shrink: 1 !important;
-  min-width: 0 !important;
+  justify-self: center !important;
+  margin: 0 auto !important;
   display: flex !important;
   align-items: center !important;
-  gap: 2px !important;
-  padding: 2px 4px !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  padding: 3px 6px !important;
   background: #f1f5f9 !important;
   border: 1px solid #e2e8f0 !important;
   border-radius: 9999px !important;
-  overflow: hidden !important;
+  white-space: nowrap !important;
 }
 
 .nav-pill-btn {
@@ -2310,11 +2312,12 @@ a {
 }
 
 .navbar-actions-cluster {
-  flex-shrink: 0 !important;
+  justify-self: end !important;
   display: flex !important;
   align-items: center !important;
+  justify-content: flex-end !important;
   gap: 0.45rem !important;
-  margin-left: auto !important;
+  margin-left: 0 !important;
 }
 
 /* Medium Desktop & Standard Laptop (1100px - 1340px) */
