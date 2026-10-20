@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🩺 Syght — Healthinsurance Fraud Detector Platform
+# 🩺 Syght — Health Insurance Fraud Detector Platform
 
 **A transparent, high-precision machine learning system engineered for healthcare insurance Special Investigation Units (SIUs) to detect suspicious billing patterns, uncover collusion rings, and intercept fraudulent claims in sub-5ms.**
 
@@ -312,5 +312,5 @@ Syght/
 ---
 
 <div align="center">
-  <sub>Engineered by <strong>Team Pulse</strong> • Syght Healthinsurance Fraud Detector Platform</sub>
+  <sub>Engineered by <strong>Team Pulse</strong> • Syght Health Insurance Fraud Detector Platform</sub>
 </div>
