@@ -283,7 +283,36 @@ export default function CommandCenter({
     };
   }, [activeShapKey, activeShapData]);
 
-  const urgentCases = cases.slice(0, 5);
+  const urgentCases = [...cases]
+    .sort((a, b) => (b.risk || 0) - (a.risk || 0))
+    .slice(0, 6);
+
+  const investigatingCases = cases.filter(
+    (c) => c.status === 'investigating' || c.decision.includes('FLAGGED')
+  );
+  const investigatingCount = investigatingCases.length;
+  const criticalCount = cases.filter((c) => c.category === 'critical').length;
+  const reviewedCount = cases.filter(
+    (c) => c.status === 'cleared' || c.status === 'frozen'
+  ).length;
+  const flaggedCount = cases.filter(
+    (c) => c.category === 'critical' || c.category === 'high'
+  ).length;
+  const totalExposure = cases
+    .filter((c) => c.decision.includes('FLAGGED'))
+    .reduce((acc, c) => acc + c.reimbursement, 0);
+
+  const totalAudited = cases.reduce((acc, c) => acc + c.reimbursement, 0);
+
+  const formattedFlaggedExposure =
+    totalExposure >= 10000000
+      ? `₹${(totalExposure / 10000000).toFixed(2)} Cr`
+      : `₹${(totalExposure / 100000).toFixed(2)} Lakhs`;
+
+  const formattedTotalAudited =
+    totalAudited >= 10000000
+      ? `₹${(totalAudited / 10000000).toFixed(2)} Cr`
+      : `₹${(totalAudited / 100000).toFixed(2)} Lakhs`;
 
   const handleRunAudit = () => {
     if (onRunAuditWithSample) {
@@ -309,10 +338,10 @@ export default function CommandCenter({
       setAuditProgress(100);
       setIsAuditing(false);
       setAuditSummary({
-        total: 10,
-        flagged: 5,
-        cleared: 5,
-        exposureSaved: '₹1.45 Cr',
+        total: cases.length,
+        flagged: flaggedCount,
+        cleared: cases.length - flaggedCount,
+        exposureSaved: formattedFlaggedExposure,
         timestamp: new Date().toLocaleTimeString(),
       });
     }, 1100);
@@ -349,7 +378,7 @@ export default function CommandCenter({
               disabled={isAuditing}
             >
               <IconZap size={16} className={isAuditing ? 'animate-spin' : ''} />
-              <span>{isAuditing ? `Auditing 10 Cases (${auditProgress}%)...` : 'Run Audit with 10 Sample Cases'}</span>
+              <span>{isAuditing ? `Auditing ${cases.length} Facilities (${auditProgress}%)...` : `Run Audit on ${cases.length} Portfolio Facilities`}</span>
             </button>
             <button
               type="button"
@@ -395,7 +424,7 @@ export default function CommandCenter({
                     Audit Run Complete ({auditSummary.timestamp})
                   </div>
                   <div className="text-xs text-slate-600 mt-0.5">
-                    Evaluated 10 benchmark facilities: <strong className="text-rose-600">5 High-Risk Flagged</strong>, <strong className="text-emerald-600">5 Clean Auto-Cleared</strong> with 100% precision.
+                    Evaluated {cases.length} portfolio facilities: <strong className="text-rose-600">{auditSummary.flagged} High-Risk Flagged</strong>, <strong className="text-emerald-600">{auditSummary.cleared} Clean Auto-Cleared</strong>. Total clawback exposure target: <strong className="text-rose-600">{auditSummary.exposureSaved}</strong>.
                   </div>
                 </div>
               </div>
@@ -424,7 +453,7 @@ export default function CommandCenter({
           </div>
           <div className="bento-card-value font-mono">571,018</div>
           <div className="bento-card-sub positive">
-            <span>↑ 100% Schema-Validated (5,410 Providers)</span>
+            <span>↑ 100% Schema-Validated ({cases.length} Facilities Monitored)</span>
           </div>
           <div className="bento-hairline-indicator" />
         </div>
@@ -438,9 +467,9 @@ export default function CommandCenter({
               <IconAlert size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-rose-600 font-mono">14 Cases</div>
+          <div className="bento-card-value text-rose-600 font-mono">{investigatingCount} Facilities</div>
           <div className="bento-card-sub danger">
-            <span>5 Active Ring Facilities in Triage</span>
+            <span>{criticalCount} Critical Risk in Triage</span>
           </div>
           <div className="bento-hairline-indicator accent-rose" />
         </div>
@@ -454,9 +483,9 @@ export default function CommandCenter({
               <IconCheckCircle size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-emerald-600 font-mono">38 Providers</div>
+          <div className="bento-card-value text-emerald-600 font-mono">{reviewedCount} Facilities</div>
           <div className="bento-card-sub positive">
-            <span>₹1.46 Cr Incurred Claims Audited</span>
+            <span>{formattedTotalAudited} Incurred Claims Audited</span>
           </div>
           <div className="bento-hairline-indicator accent-emerald" />
         </div>
@@ -470,9 +499,9 @@ export default function CommandCenter({
               <IconAlert size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-amber-600 font-mono">108</div>
+          <div className="bento-card-value text-amber-600 font-mono">{flaggedCount}</div>
           <div className="bento-card-sub warning">
-            <span>Top-K Queue Capture (89.2% Sensitivity)</span>
+            <span>{((flaggedCount / cases.length) * 100).toFixed(1)}% SIU Flag Rate</span>
           </div>
           <div className="bento-hairline-indicator accent-amber" />
         </div>
@@ -481,14 +510,14 @@ export default function CommandCenter({
         <div className="bento-card group highlight-card">
           <div className="bento-watermark">05</div>
           <div className="bento-card-header">
-            <span className="bento-card-label">EXPOSURE RECOVERED</span>
+            <span className="bento-card-label">TOTAL FLAGGED EXPOSURE</span>
             <span className="bento-card-icon-box text-sky-600">
               <IconShield size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-sky-600 font-mono">₹382.4 Cr</div>
+          <div className="bento-card-value text-sky-600 font-mono">{formattedFlaggedExposure}</div>
           <div className="bento-card-sub positive">
-            <span>₹45.9 Cr Direct Clawback Target</span>
+            <span>Direct Clawback & Audit Target</span>
           </div>
           <div className="bento-hairline-indicator accent-cyan" />
         </div>
@@ -550,7 +579,7 @@ export default function CommandCenter({
                   <td>
                     <div className="provider-cell">
                       <span className="provider-id-tag font-mono">{c.id}</span>
-                      <span className="font-semibold text-slate-900 text-xs">{c.name || c.id}</span>
+                      <span className="font-semibold text-slate-900 text-xs">{c.name || c.id}{c.city ? ` • ${c.city}` : ''}</span>
                     </div>
                   </td>
                   <td>
@@ -559,7 +588,7 @@ export default function CommandCenter({
                     </span>
                   </td>
                   <td className="font-mono font-semibold text-slate-900">
-                    ₹{c.reimbursement.toLocaleString()}
+                    ₹{c.reimbursement.toLocaleString('en-IN')}
                   </td>
                   <td>
                     <div className="risk-metric-box">

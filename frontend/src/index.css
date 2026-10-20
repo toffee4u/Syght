@@ -4838,9 +4838,16 @@ a {
 
 .forensic-findings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: 1.25rem;
   margin-top: 1rem;
+}
+
+.chart-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .forensic-finding-card {
@@ -5408,5 +5415,828 @@ a {
   margin-top: 1px;
 }
 
+/* ==============================================================================
+   Mobile Responsiveness Enhancements (Dataset Studio, Pre-Auth, Network)
+   ============================================================================== */
 
+/* Base container & utility helpers */
+.syght-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
 
+.w-full {
+  width: 100% !important;
+}
+
+.mt-5 {
+  margin-top: 1.25rem !important;
+}
+
+.shrink-0 {
+  flex-shrink: 0 !important;
+}
+
+.truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Tab Filter Pills (used in Dataset Studio test results) */
+.tab-pill-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.tab-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.4rem 0.8rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--syght-radius-full);
+  font-family: var(--syght-font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--syght-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.tab-pill-btn:hover {
+  color: #09090b;
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.tab-pill-btn.active {
+  color: #ffffff;
+  background: #09090b;
+  border-color: #09090b;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.search-icon-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: var(--syght-text-tertiary);
+  pointer-events: none;
+}
+
+/* Prevent flag text overflow in Pre-Auth Gateway */
+.syght-flag-pill {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.syght-flag-pill span {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Network canvas wrapper overflow containment */
+.canvas-wrapper {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.network-canvas {
+  touch-action: pan-y;
+  max-width: 100%;
+}
+
+/* Touch-optimized Table Scrollbar */
+.table-responsive-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.table-responsive-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-responsive-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* ==============================================================================
+   Breakpoint: Tablets and Mobile Devices (<= 768px)
+   ============================================================================== */
+@media (max-width: 768px) {
+  .main-layout {
+    padding: 0 0.85rem;
+    margin: 0.85rem auto 2.5rem;
+  }
+
+  .syght-page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .page-header-title-box {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .syght-page-title {
+    font-size: 1.45rem;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    word-break: break-word;
+  }
+
+  .syght-page-desc {
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+
+  .page-header-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .page-header-actions > button,
+  .page-header-actions > a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .syght-panel {
+    padding: 1.25rem 1rem;
+    border-radius: var(--syght-radius-lg);
+    margin-bottom: 1.25rem;
+  }
+
+  .syght-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .syght-split-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .presets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==============================================================================
+   Breakpoint: Smartphones & Narrow Screens (<= 640px)
+   ============================================================================== */
+@media (max-width: 640px) {
+  .main-layout {
+    padding: 0 0.6rem;
+    margin: 0.65rem auto 2rem;
+  }
+
+  .syght-page-title {
+    font-size: 1.32rem;
+    line-height: 1.25;
+  }
+
+  .syght-page-desc {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .syght-panel {
+    padding: 1rem 0.85rem;
+  }
+
+  /* 1. DATASET STUDIO RESPONSIVE RULES */
+  .upload-master-card {
+    border-radius: var(--syght-radius-lg);
+    margin-bottom: 1.5rem;
+  }
+
+  .upload-card-header {
+    padding: 1rem 0.85rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .upload-card-header-left {
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .upload-card-icon-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .upload-card-title {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .upload-card-desc {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .upload-card-header > div:last-child {
+    width: 100%;
+  }
+
+  .upload-card-header > div:last-child > button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .upload-card-body {
+    padding: 1rem 0.85rem;
+    gap: 1.15rem;
+  }
+
+  .dropzone-box {
+    padding: 1.75rem 0.85rem;
+    border-radius: 14px;
+  }
+
+  .dropzone-icon-bubble {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    margin-bottom: 0.75rem;
+  }
+
+  .dropzone-primary-text {
+    font-size: 0.96rem;
+    line-height: 1.35;
+  }
+
+  .dropzone-sub-text {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    margin-bottom: 1rem;
+  }
+
+  .dropzone-browse-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.82rem;
+  }
+
+  .dropzone-tags-row {
+    gap: 0.35rem;
+    margin-top: 1rem;
+  }
+
+  .dropzone-spec-tag {
+    font-size: 0.66rem;
+    padding: 2px 7px;
+  }
+
+  .active-file-banner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.85rem;
+    gap: 0.75rem;
+  }
+
+  .active-file-left {
+    width: 100%;
+    gap: 0.65rem;
+  }
+
+  .active-file-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .active-file-name {
+    font-size: 0.82rem;
+    max-width: 160px;
+  }
+
+  .active-file-meta {
+    font-size: 0.7rem;
+    line-height: 1.35;
+  }
+
+  .active-file-actions {
+    width: 100%;
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .active-file-actions > button {
+    flex: 1;
+    justify-content: center;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.74rem;
+  }
+
+  .presets-section-title {
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+
+  .presets-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .preset-card-btn {
+    padding: 0.85rem;
+    border-radius: 12px;
+  }
+
+  .preset-title {
+    font-size: 0.85rem;
+  }
+
+  .preset-desc {
+    font-size: 0.74rem;
+    line-height: 1.4;
+  }
+
+  .inference-stage-tracker {
+    padding: 0.85rem;
+    gap: 0.4rem;
+    border-radius: 12px;
+  }
+
+  .stage-step {
+    font-size: 0.7rem;
+    gap: 0.45rem;
+  }
+
+  .upload-runner-footer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.95rem 0.85rem;
+    gap: 0.85rem;
+  }
+
+  .runner-telemetry {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 0.6rem;
+    font-size: 0.72rem;
+    text-align: center;
+  }
+
+  .runner-telemetry span:nth-child(2),
+  .runner-telemetry span:nth-child(4) {
+    display: none;
+  }
+
+  .runner-btn-execute {
+    width: 100%;
+    min-width: 0;
+    padding: 0.85rem 1rem;
+    font-size: 0.86rem;
+    justify-content: center;
+  }
+
+  .data-preview-container {
+    border-radius: var(--syght-radius-md);
+  }
+
+  .data-preview-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .dataset-results-section {
+    margin-top: 1.5rem;
+    gap: 1.15rem;
+  }
+
+  .dataset-results-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .dataset-results-header h2 {
+    font-size: 1.1rem !important;
+  }
+
+  .dataset-results-header > div:last-child {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .dataset-results-header button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 0.85rem !important;
+  }
+
+  .dataset-results-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .dataset-stat-card {
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+  }
+
+  .dataset-stat-val {
+    font-size: 1.5rem;
+  }
+
+  .tab-pill-group {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+  }
+
+  .tab-pill-btn {
+    flex-shrink: 0;
+    font-size: 0.74rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .syght-search-wrapper {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .syght-table {
+    min-width: 700px;
+  }
+
+  .syght-table th, .syght-table td {
+    padding: 0.55rem 0.65rem;
+    font-size: 0.76rem;
+  }
+
+  .provider-cell {
+    max-width: 170px;
+  }
+
+  /* 2. PRE-AUTH GATEWAY RESPONSIVE RULES */
+  .syght-split-grid.analyzer-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-grid-syght {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .form-field {
+    width: 100%;
+  }
+
+  .syght-input, .syght-select {
+    font-size: 0.86rem;
+    padding: 0.65rem 0.75rem;
+    min-height: 42px;
+  }
+
+  .preauth-decision-banner {
+    padding: 1rem 0.85rem;
+    border-radius: var(--syght-radius-md);
+    margin-bottom: 1rem;
+  }
+
+  .decision-banner-top {
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .decision-icon-large {
+    flex-shrink: 0;
+  }
+
+  .decision-main-title {
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .decision-metrics-strip {
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+    padding-top: 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .policy-section-title {
+    font-size: 0.82rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .flag-pills-list {
+    gap: 6px;
+  }
+
+  .syght-flag-pill {
+    font-size: 0.7rem;
+    padding: 0.45rem 0.65rem;
+    line-height: 1.4;
+  }
+
+  .reasons-list {
+    gap: 6px;
+  }
+
+  .reason-item {
+    font-size: 0.74rem;
+    line-height: 1.45;
+  }
+
+  /* 3. COLLUSION NETWORK RESPONSIVE RULES */
+  .network-controls-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .network-filter-pills {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+  }
+
+  .filter-pill-item {
+    flex-shrink: 0;
+    font-size: 0.74rem;
+    padding: 0.32rem 0.7rem;
+  }
+
+  .network-legend-bar {
+    width: 100%;
+    gap: 0.55rem 0.75rem;
+    font-size: 0.72rem;
+  }
+
+  .canvas-wrapper {
+    border-radius: 12px;
+  }
+
+  .canvas-hover-tooltip {
+    max-width: 250px;
+    font-size: 0.72rem;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .node-details-card {
+    padding: 0.85rem;
+    border-radius: var(--syght-radius-md);
+    margin-top: 0.85rem;
+  }
+
+  .inspector-header {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .inspector-node-title {
+    font-size: 0.95rem;
+    word-break: break-word;
+    line-height: 1.3;
+  }
+
+  .inspector-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+
+  .inspector-stat-box {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .inspector-stat-box .stat-label {
+    font-size: 0.64rem;
+  }
+
+  .inspector-stat-box .stat-val {
+    font-size: 0.85rem;
+  }
+
+  .inspector-directive-text {
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .bento-card {
+    padding: 1.15rem 1rem;
+    border-radius: var(--syght-radius-md);
+  }
+
+  .bento-watermark {
+    font-size: 3.2rem;
+    top: 0.2rem;
+    right: 0.65rem;
+  }
+
+  /* Batch Audit Results Mobile Refinements */
+  .table-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem 0.85rem;
+    gap: 0.75rem;
+  }
+
+  .table-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .table-filter-pills {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding: 3px;
+  }
+
+  .table-filter-pills .filter-pill {
+    flex-shrink: 0;
+  }
+
+  .forensic-findings-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .finding-card-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .finding-metrics-strip {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4rem;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .finding-actions-footer {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .finding-actions-footer > button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Model Performance Charts */
+  .models-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-canvas-wrapper {
+    height: 220px !important;
+  }
+
+  /* Claim Analyzer Presets */
+  .analyzer-scenario-pills {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+  }
+
+  .analyzer-scenario-pill {
+    flex-shrink: 0;
+  }
+
+  /* Review Queue Filters & Action Cluster */
+  .syght-filter-pills {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+  }
+
+  .syght-filter-pill {
+    flex-shrink: 0;
+  }
+
+  .action-button-cluster {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .action-btn-inspect,
+  .action-btn-freeze,
+  .action-btn-clear {
+    padding: 5px 8px;
+    font-size: 0.72rem;
+  }
+
+  /* Footer Brand */
+  .footer-giant-brand-text {
+    font-size: clamp(2.2rem, 9.5vw, 3.8rem);
+  }
+}
+
+/* ==============================================================================
+   Breakpoint: Extra Compact Mobile (<= 400px)
+   ============================================================================== */
+@media (max-width: 400px) {
+  .syght-page-title {
+    font-size: 1.22rem;
+  }
+
+  .decision-main-title {
+    font-size: 1.15rem;
+  }
+
+  .inspector-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .active-file-actions {
+    flex-direction: column;
+  }
+
+  .active-file-actions > button {
+    width: 100%;
+  }
+
+  .finding-metrics-strip {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .syght-hero-section {
+    padding: 1.5rem 0.85rem 1.25rem;
+  }
+
+  .hero-headline-primary {
+    font-size: 1.45rem;
+    line-height: 1.25;
+  }
+
+  .syght-panel {
+    padding: 0.85rem 0.75rem;
+  }
+
+  .bento-card-value {
+    font-size: 1.55rem;
+  }
+
+  .gauge-percentage {
+    font-size: 2.1rem;
+  }
+
+  .footer-giant-brand-text {
+    font-size: clamp(1.85rem, 8.5vw, 2.5rem);
+  }
+}

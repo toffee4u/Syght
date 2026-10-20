@@ -125,7 +125,7 @@ export default function App() {
     };
   }, []);
 
-  // Fetch API Health on boot
+  // Fetch API Health & Real Verified Cases on boot
   useEffect(() => {
     fetch('/health')
       .then(r => r.json())
@@ -140,6 +140,23 @@ export default function App() {
           selected_model: 'LightGBM',
           decision_threshold: 0.5364
         });
+      });
+
+    // Fetch verified live cases from API
+    fetch('/api/v1/cases')
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(data => {
+        if (data && Array.isArray(data.cases) && data.cases.length > 0) {
+          setCases(data.cases);
+          setSelectedCaseId(data.cases[0].id);
+        }
+      })
+      .catch(err => {
+        // BENCHMARK_CASES is already the 25 rich verified cases fallback
+        console.info('Using verified local benchmark cases:', err?.message || err);
       });
   }, []);
 

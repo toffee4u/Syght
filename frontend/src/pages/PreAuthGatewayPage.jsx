@@ -3,8 +3,8 @@ import PreAuthGateway from '../components/PreAuthGateway';
 
 export default function PreAuthGatewayPage({ onShowToast }) {
   return (
-    <main className="syght-page page-preauth-gateway" id="page-preauth">
+    <div className="syght-page page-preauth-gateway" id="page-preauth">
       <PreAuthGateway onShowToast={onShowToast} />
-    </main>
+    </div>
   );
 }

@@ -52,6 +52,7 @@ kaggle.json
 /data/processed/
 /data/interim/
 /data/sample/
+!data/portfolio_cases.json
 !frontend/src/data/
 *.csv
 *.tsv

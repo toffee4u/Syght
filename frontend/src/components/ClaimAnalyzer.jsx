@@ -177,17 +177,11 @@ export default function ClaimAnalyzer({
                 <span>Quick Scenario Presets:</span>
               </label>
             </div>
-            
             <div className="analyzer-scenario-pills">
               {benchmarkCases.slice(0, 4).map((c) => {
                 const isSelected = selectedCaseId === c.id;
                 const isFlg = c.decision.includes('FLAGGED');
-                const label = c.id
-                  .replace('PRV_02_PHANTOM_SURGERY_MILL', 'Phantom Surgery')
-                  .replace('PRV_08_ICU_LENGTH_OF_STAY_UPCODING', 'ICU Upcoding')
-                  .replace('PRV_01_RURAL_PRIMARY_CLINIC', 'Rural Clinic Clean')
-                  .replace('PRV_04_LAB_UNBUNDLING_NETWORK', 'Lab Unbundling')
-                  .replace(/^PRV_\d+_/, '');
+                const shortName = c.name ? c.name.split(' ').slice(0, 2).join(' ') : c.id.replace(/^PRV_\d+_/, '');
 
                 return (
                   <button
@@ -195,10 +189,10 @@ export default function ClaimAnalyzer({
                     type="button"
                     className={`analyzer-scenario-pill ${isSelected ? 'active' : ''}`}
                     onClick={() => onCaseSelected(c.id)}
-                    title={c.tag}
+                    title={`${c.name || c.id} (${c.city || ''}) — ${c.tag}`}
                   >
                     <span className={`pill-beacon ${isFlg ? 'rose' : 'emerald'}`} />
-                    <span className="scenario-pill-name">{label}</span>
+                    <span className="scenario-pill-name">{shortName}</span>
                     <span className={`scenario-pill-risk font-mono ${isFlg ? 'text-rose' : 'text-emerald'}`}>
                       {(c.risk * 100).toFixed(0)}%
                     </span>
@@ -215,7 +209,7 @@ export default function ClaimAnalyzer({
               >
                 {benchmarkCases.map(c => (
                   <option key={c.id} value={c.id}>
-                    {c.id} — {c.tag} ({c.decision})
+                    {c.id} — {c.name || 'Facility'} {c.city ? `(${c.city})` : ''} • {c.tag}
                   </option>
                 ))}
               </select>

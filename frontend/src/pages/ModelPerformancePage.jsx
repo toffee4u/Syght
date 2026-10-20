@@ -3,8 +3,8 @@ import ModelPerformance from '../components/ModelPerformance';
 
 export default function ModelPerformancePage({ models }) {
   return (
-    <main className="syght-page page-model-performance" id="page-benchmarks">
+    <div className="syght-page page-model-performance" id="page-benchmarks">
       <ModelPerformance models={models} />
-    </main>
+    </div>
   );
 }
