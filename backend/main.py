@@ -121,9 +121,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Syght — Healthcare Insurance Fraud Prevention API",
+    title="Syght Enterprise API — Team Pulse",
     description=(
-        "Production-grade, explainable machine learning & graph intelligence API "
+        "Engineered by Team Pulse. Production-grade, explainable machine learning & graph intelligence API "
         "for detecting healthcare insurance fraud (Ayushman Bharat PM-JAY / Private TPAs). "
         "Provides provider risk scoring with SHAP explainability and sub-5ms real-time pre-authorization."
     ),
@@ -146,6 +146,7 @@ async def root():
     """Root endpoint welcoming clients and directing to OpenAPI documentation."""
     return {
         "service": "Syght Healthcare Fraud Prevention API",
+        "team": "Team Pulse",
         "version": "1.0.0",
         "status": "online",
         "documentation": "/docs",
@@ -161,6 +162,7 @@ async def health_check():
     return HealthCheckResponse(
         status="healthy" if model_ready else "degraded_no_model",
         version="1.0.0",
+        team="Team Pulse",
         model_loaded=model_ready,
         selected_model=predictor.metadata.get("selected_model") if model_ready else None,
         decision_threshold=predictor.decision_threshold if model_ready else None,

@@ -91,7 +91,7 @@ export default function App() {
     if (!targetCase) return;
 
     if (action === 'FREEZE') {
-      setCases(prev => prev.map(c => 
+      setCases(prev => prev.map(c =>
         c.id === caseId ? { ...c, status: 'frozen' } : c
       ));
       showToast(
@@ -99,7 +99,7 @@ export default function App() {
         'danger'
       );
     } else if (action === 'CLEAR') {
-      setCases(prev => prev.map(c => 
+      setCases(prev => prev.map(c =>
         c.id === caseId ? { ...c, status: 'cleared' } : c
       ));
       confetti({
@@ -173,6 +173,76 @@ export default function App() {
           <PreAuthGateway onShowToast={showToast} />
         )}
       </main>
+
+      {/* Superbrain Inspired High-Tech Footer */}
+      <footer className="superbrain-footer">
+        <div className="footer-inner-cluster">
+          <div className="footer-brand-col">
+            <div className="footer-logo-row">
+              <span className="footer-brand-title">SYGHT</span>
+              <span className="team-pulse-pill compact">
+                <span className="pulse-dot-beacon" />
+                Team Pulse
+              </span>
+            </div>
+            <p className="footer-brand-desc">
+              Next-generation autonomous healthcare insurance fraud intelligence engine. 
+              Designed for SIU audit teams to intercept fraudulent claims in sub-5ms with full SHAP transparency.
+            </p>
+            <div className="footer-copyright font-mono">
+              © 2026 Team Pulse (Syght Project) • All Rights Reserved.
+            </div>
+          </div>
+
+          <div className="footer-metrics-col">
+            <div className="footer-col-heading">System Telemetry</div>
+            <div className="footer-telemetry-grid font-mono">
+              <div className="telemetry-item">
+                <span className="telemetry-label">Champion Engine:</span>
+                <span className="telemetry-val text-cyan-400">LightGBM (1-SE Rule)</span>
+              </div>
+              <div className="telemetry-item">
+                <span className="telemetry-label">Decision Threshold:</span>
+                <span className="telemetry-val text-cyan-400">{healthData?.decision_threshold?.toFixed(4) || '0.5364'}</span>
+              </div>
+              <div className="telemetry-item">
+                <span className="telemetry-label">Pre-Auth Latency:</span>
+                <span className="telemetry-val text-emerald-400">1.84 ms (SLA &lt; 5ms)</span>
+              </div>
+              <div className="telemetry-item">
+                <span className="telemetry-label">Auditing Mode:</span>
+                <span className="telemetry-val text-emerald-400">Real-Time Inline Intercept</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-links-col">
+            <div className="footer-col-heading">Quick Actions</div>
+            <ul className="footer-links-list">
+              <li>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-dashboard')}>
+                  Command Center Radar
+                </button>
+              </li>
+              <li>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-queue')}>
+                  Priority Review Queue
+                </button>
+              </li>
+              <li>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-performance')}>
+                  ROC-AUC & PR-AUC Benchmarks
+                </button>
+              </li>
+              <li>
+                <a href="/docs" target="_blank" rel="noopener noreferrer" className="footer-link-btn">
+                  FastAPI OpenAPI 3.0 Docs ↗
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
 
       {/* Image Zoom Modal */}
       <ImageModal
