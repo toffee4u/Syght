@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  IconSyghtLogo,
   IconShield,
   IconZap,
   IconClipboardList,
@@ -100,7 +101,7 @@ export default function Header({
             title="Syght — Enterprise Fraud Detection Platform"
           >
             <div className="brand-gem-container">
-              <IconShield size={20} className="brand-gem-icon" />
+              <IconSyghtLogo size={22} className="brand-gem-icon" />
               <span className="brand-gem-aura" />
             </div>
             <div className="brand-identity">
@@ -197,7 +198,7 @@ export default function Header({
           >
             <div className="mobile-drawer-header">
               <div className="mobile-drawer-brand">
-                <IconShield size={20} className="text-cyan-400" />
+                <IconSyghtLogo size={22} />
                 <span className="mobile-brand-title">SYGHT</span>
               </div>
               <button 

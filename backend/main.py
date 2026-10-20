@@ -157,8 +157,9 @@ app.add_middleware(
 
 @app.get("/favicon.ico", include_in_schema=False)
 @app.get("/favicon.svg", include_in_schema=False)
+@app.get("/logo.svg", include_in_schema=False)
 async def get_favicon():
-    """Serves the attractive Syght cyber shield and radar SVG favicon."""
+    """Serves the authentic Syght main logo SVG favicon."""
     return Response(content=SYGHT_FAVICON_SVG, media_type="image/svg+xml")
 
 
