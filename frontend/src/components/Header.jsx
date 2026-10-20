@@ -31,7 +31,7 @@ export default function Header({
   // Close mobile menu on resize to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1150) {
+      if (window.innerWidth >= 1200) {
         setMobileMenuOpen(false);
       }
     };
@@ -49,14 +49,14 @@ export default function Header({
   }, [mobileMenuOpen]);
 
   const tabs = [
-    { id: 'tab-dashboard', label: 'Command Center', shortLabel: 'Command', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
-    { id: 'tab-queue', label: 'Review Queue', shortLabel: 'Review', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
-    { id: 'tab-dataset', label: 'Dataset Studio', shortLabel: 'Upload', icon: IconDatabase, desc: 'Upload Claims Dataset' },
-    { id: 'tab-results', label: 'Audit Results', shortLabel: 'Results', icon: IconBarChart, badge: resultsCount, desc: 'Confidence & Graph Report' },
-    { id: 'tab-analyzer', label: 'Claim Analyzer', shortLabel: 'Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
-    { id: 'tab-performance', label: 'Benchmarks', shortLabel: 'Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
-    { id: 'tab-network', label: 'Collusion Graph', shortLabel: 'Network', icon: IconNetwork, desc: 'Multi-Provider Rings' },
-    { id: 'tab-preauth', label: 'Pre-Auth', shortLabel: 'Pre-Auth', icon: IconClock, desc: 'Sub-5ms Real-Time API' },
+    { id: 'tab-dashboard', label: 'Command', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
+    { id: 'tab-queue', label: 'Review Queue', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
+    { id: 'tab-dataset', label: 'Dataset Studio', icon: IconDatabase, desc: 'Upload Claims Dataset' },
+    { id: 'tab-results', label: 'Audit Results', icon: IconBarChart, badge: resultsCount, desc: 'Confidence & Graph Report' },
+    { id: 'tab-analyzer', label: 'Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
+    { id: 'tab-performance', label: 'Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
+    { id: 'tab-network', label: 'Network', icon: IconNetwork, desc: 'Multi-Provider Rings' },
+    { id: 'tab-preauth', label: 'Pre-Auth', icon: IconClock, desc: 'Sub-5ms Real-Time API' },
   ];
 
   const isHealthy = healthData?.model_loaded;
@@ -98,7 +98,7 @@ export default function Header({
           </div>
         </div>
 
-        {/* Center Pill Nav (Desktop: >= 1100px) */}
+        {/* Center Pill Nav (Desktop: >= 1150px) */}
         <div className="navbar-nav-pills">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -111,9 +111,8 @@ export default function Header({
                 onClick={() => handleSelectTab(tab.id)}
                 title={tab.desc}
               >
-                <Icon size={15} className="pill-icon shrink-0" />
-                <span className="pill-label pill-label-full">{tab.label}</span>
-                <span className="pill-label pill-label-short">{tab.shortLabel}</span>
+                <Icon size={14} className="pill-icon shrink-0" />
+                <span className="pill-label">{tab.label}</span>
                 {tab.badge !== undefined && tab.badge > 0 && (
                   <span className="pill-counter-badge">{tab.badge}</span>
                 )}

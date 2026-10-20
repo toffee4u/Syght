@@ -247,19 +247,230 @@ export default function CommandCenter({
         </div>
       </section>
 
-      {/* Operational Efficiency Progress Metrics */}
-      <section className="syght-panel">
+      {/* Urgent Priority Review Triage (Full Width Table Card) */}
+      <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
         <div className="syght-panel-header">
-          <div>
-            <div className="panel-title-flex">
-              <IconClock size={20} className="text-sky-600" />
-              <h3>Operational Workload & Pipeline Progress</h3>
+          <div className="panel-title-flex">
+            <IconAlert size={20} className="text-rose-600" />
+            <div>
+              <h3>Urgent Priority Review Triage</h3>
+              <p className="panel-subtitle-text">
+                Live High-Risk Inpatient & Ring Facilities Flagged for Immediate SIU Intervention
+              </p>
             </div>
-            <p className="panel-subtitle-text">
-              Live Enterprise Pipeline Health & Investigation Workload Tracking • Team Pulse
+          </div>
+          <button
+            type="button"
+            className="panel-link-action"
+            onClick={onViewAllCases}
+          >
+            <span>View Full Queue ({cases.length} Cases)</span>
+            <IconArrowRight size={13} />
+          </button>
+        </div>
+
+        <div className="table-responsive-wrapper">
+          <table className="syght-table">
+            <thead>
+              <tr>
+                <th>Provider / Healthcare Entity</th>
+                <th>Clinical Scheme Archetype</th>
+                <th>Total Billed Payout</th>
+                <th>Calibrated Risk</th>
+                <th>Audit Decision</th>
+                <th className="text-right">Action Protocol</th>
+              </tr>
+            </thead>
+            <tbody>
+              {urgentCases.map((c) => (
+                <tr key={c.id}>
+                  <td>
+                    <div className="provider-cell">
+                      <span className="provider-id-tag font-mono">{c.id}</span>
+                      <span className="font-semibold text-slate-900 text-xs">{c.name || c.id}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[11px] font-mono">
+                      {c.tag || 'Institutional Provider'}
+                    </span>
+                  </td>
+                  <td className="font-mono font-semibold text-slate-900">
+                    ₹{c.reimbursement.toLocaleString()}
+                  </td>
+                  <td>
+                    <div className="risk-metric-box">
+                      <div
+                        className="risk-bar-indicator"
+                        style={{ width: `${Math.round(c.risk * 100)}%` }}
+                      />
+                      <span className={`risk-number-badge font-mono ${c.risk >= 0.8 ? 'is-danger' : c.risk >= 0.5 ? 'is-warning' : 'is-clean'}`}>
+                        {(c.risk * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className={`status-tag ${c.decision.includes('FLAGGED') ? 'tag-flagged' : 'tag-cleared'}`}>
+                      {c.decision.includes('FLAGGED') ? 'FLAGGED FOR AUDIT' : 'AUTO-CLEARED'}
+                    </span>
+                  </td>
+                  <td className="text-right">
+                    <div className="action-button-cluster justify-end">
+                      <button
+                        type="button"
+                        className="action-btn-inspect"
+                        onClick={() => onInspectCase(c.id)}
+                        title="Inspect in SHAP Waterfall Analyzer"
+                      >
+                        <IconSearch size={13} />
+                        <span>Inspect</span>
+                      </button>
+                      {c.status !== 'frozen' && c.decision.includes('FLAGGED') && (
+                        <button
+                          type="button"
+                          className="action-btn-freeze"
+                          onClick={() => onTriageAction(c.id, 'FREEZE')}
+                          title="Freeze Reimbursements & Open SIU Case"
+                        >
+                          <IconFreeze size={13} />
+                          <span>Freeze</span>
+                        </button>
+                      )}
+                      {c.status !== 'cleared' && !c.decision.includes('FLAGGED') && (
+                        <button
+                          type="button"
+                          className="action-btn-clear"
+                          onClick={() => onTriageAction(c.id, 'CLEAR')}
+                          title="Fast-Track Reimbursement Clearance"
+                        >
+                          <IconCheckCircle size={13} />
+                          <span>Clear</span>
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Leading TreeSHAP Risk Drivers Card */}
+      <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
+        <div className="syght-panel-header">
+          <div className="panel-title-flex">
+            <IconSparkles size={20} className="text-violet-600" />
+            <div>
+              <h3>Leading TreeSHAP Risk Drivers & Feature Contributions</h3>
+              <p className="panel-subtitle-text">
+                Additive game-theoretic attribution quantifying why claims cross the 0.5364 operational decision boundary
+              </p>
+            </div>
+          </div>
+          <span className="syght-chip font-mono">Global Explainer</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-semibold text-xs text-slate-800">Inpatient Payout Share</span>
+              <span className="shap-value-badge positive font-mono">+0.324 SHAP</span>
+            </div>
+            <div className="shap-bar-track mb-2">
+              <div className="shap-bar-fill push-positive" style={{ width: '88%' }} />
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Facilities with &gt; 80% inpatient billing face +3.8x higher odds of systemic phantom hospitalization.
             </p>
           </div>
-          <span className="syght-chip font-mono">Real-Time Telemetry</span>
+
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-semibold text-xs text-slate-800">Physician Monopoly</span>
+              <span className="shap-value-badge positive font-mono">+0.285 SHAP</span>
+            </div>
+            <div className="shap-bar-track mb-2">
+              <div className="shap-bar-fill push-positive" style={{ width: '76%' }} />
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Single doctor billing &gt; 65% of all hospital claims indicates kickback nexus or ghost physician recycling.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-semibold text-xs text-slate-800">Graph Degree Centrality</span>
+              <span className="shap-value-badge positive font-mono">+0.264 SHAP</span>
+            </div>
+            <div className="shap-bar-track mb-2">
+              <div className="shap-bar-fill push-positive" style={{ width: '70%' }} />
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Shared clinical staff appearing simultaneously across 3+ distinct physical facilities in 24 hours.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-semibold text-xs text-slate-800">Same-Day Unbundling</span>
+              <span className="shap-value-badge positive font-mono">+0.218 SHAP</span>
+            </div>
+            <div className="shap-bar-track mb-2">
+              <div className="shap-bar-fill push-positive" style={{ width: '58%' }} />
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Artificial splitting of single diagnostic procedures into multiple distinct reimbursement claims.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition-all">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-semibold text-xs text-slate-800">ICU Length-of-Stay Drift</span>
+              <span className="shap-value-badge positive font-mono">+0.198 SHAP</span>
+            </div>
+            <div className="shap-bar-track mb-2">
+              <div className="shap-bar-fill push-positive" style={{ width: '54%' }} />
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Mean ICU duration &gt; 8.5 days exceeding standard clinical protocol for admitted ICD diagnosis.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl bg-emerald-50/50 border border-emerald-200/80 transition-all">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-semibold text-xs text-emerald-900">Community Outpatient Volume</span>
+              <span className="shap-value-badge negative font-mono">-0.195 SHAP</span>
+            </div>
+            <div className="shap-bar-track mb-2">
+              <div className="shap-bar-fill push-negative" style={{ width: '52%' }} />
+            </div>
+            <p className="text-xs text-emerald-800 leading-relaxed">
+              Balanced outpatient volume and high physician diversity strongly correlate with legitimate community clinics.
+            </p>
+          </div>
+        </div>
+
+        <div className="syght-banner-notice mt-4">
+          <IconShield size={18} className="text-sky-600 shrink-0 mt-0.5" />
+          <div>
+            <strong>Defensible Due Process:</strong> All risk scores are accompanied by mathematical TreeSHAP attributions 
+            ensuring clear, defensible evidence for legal clawback proceedings and administrative hearings.
+          </div>
+        </div>
+      </section>
+
+      {/* Operational Workload & Pipeline Telemetry */}
+      <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
+        <div className="syght-panel-header">
+          <div className="panel-title-flex">
+            <IconClock size={20} className="text-sky-600" />
+            <div>
+              <h3>Enterprise Pipeline Telemetry & Workload Tracking</h3>
+              <p className="panel-subtitle-text">Real-time throughput, model lift, and SLA compliance</p>
+            </div>
+          </div>
+          <span className="syght-chip font-mono">Team Pulse Live</span>
         </div>
 
         <div className="multi-progress-grid">
@@ -272,10 +483,6 @@ export default function CommandCenter({
             <div className="progress-track">
               <div className="progress-fill fill-gradient-cyan" style={{ width: '73.1%' }} />
             </div>
-            <div className="progress-meta">
-              <span>Auditors reviewing 14 flagged high-dollar inpatient cases</span>
-              <span className="progress-percent font-mono">73.1%</span>
-            </div>
           </div>
 
           {/* Progress 2 */}
@@ -286,10 +493,6 @@ export default function CommandCenter({
             </div>
             <div className="progress-track">
               <div className="progress-fill fill-gradient-amber" style={{ width: '74.8%' }} />
-            </div>
-            <div className="progress-meta">
-              <span>Prioritizing top 5% recovers ₹380+ Crore in direct clawbacks</span>
-              <span className="progress-percent font-mono">74.8%</span>
             </div>
           </div>
 
@@ -302,28 +505,9 @@ export default function CommandCenter({
             <div className="progress-track">
               <div className="progress-fill fill-gradient-purple" style={{ width: '88.5%' }} />
             </div>
-            <div className="progress-meta">
-              <span>Bipartite centrality algorithm detected 34 shared physician referrals</span>
-              <span className="progress-percent font-mono">88.5% Ring Coverage</span>
-            </div>
           </div>
 
           {/* Progress 4 */}
-          <div className="progress-item">
-            <div className="progress-info">
-              <span className="progress-label">Model Generalization & ROC Performance</span>
-              <span className="progress-value font-mono">ROC-AUC: 0.8724 | PR-AUC: 0.7418</span>
-            </div>
-            <div className="progress-track">
-              <div className="progress-fill fill-gradient-emerald" style={{ width: '87.2%' }} />
-            </div>
-            <div className="progress-meta">
-              <span>Surpasses baseline heuristic (0.6890) by +26.6%</span>
-              <span className="progress-percent font-mono">87.2% AUC</span>
-            </div>
-          </div>
-
-          {/* Progress 5 */}
           <div className="progress-item">
             <div className="progress-info">
               <span className="progress-label">Sub-5ms Pre-Auth SLA Compliance</span>
@@ -332,192 +516,9 @@ export default function CommandCenter({
             <div className="progress-track">
               <div className="progress-fill fill-gradient-cyan" style={{ width: '99.8%' }} />
             </div>
-            <div className="progress-meta">
-              <span>Real-time claim gateway throughput: 1,420 claims/sec</span>
-              <span className="progress-percent font-mono">99.8% SLA</span>
-            </div>
           </div>
         </div>
       </section>
-
-      {/* Split Grid: Urgent Triage Worklist & Top SHAP Drivers */}
-      <div className="syght-split-grid">
-        {/* Left Column: Urgent Review Triage */}
-        <section className="syght-panel">
-          <div className="syght-panel-header">
-            <div className="panel-title-flex">
-              <IconAlert size={20} className="text-rose-600" />
-              <h3>Urgent Priority Review Triage</h3>
-            </div>
-            <button
-              type="button"
-              className="panel-link-action"
-              onClick={onViewAllCases}
-            >
-              <span>View All {cases.length} Cases</span>
-              <IconArrowRight size={13} />
-            </button>
-          </div>
-
-          <div className="table-responsive-wrapper">
-            <table className="syght-table">
-              <thead>
-                <tr>
-                  <th>Provider / Entity</th>
-                  <th>Total Payout</th>
-                  <th>Risk Score</th>
-                  <th>Status</th>
-                  <th>Quick Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {urgentCases.map((c) => (
-                  <tr key={c.id}>
-                    <td>
-                      <div className="provider-cell">
-                        <span className="provider-id-tag font-mono">{c.id}</span>
-                        <span className="provider-sub-tag">{c.tag}</span>
-                      </div>
-                    </td>
-                    <td className="font-mono text-slate-800">₹{c.reimbursement.toLocaleString()}</td>
-                    <td>
-                      <div className="risk-metric-box">
-                        <div
-                          className="risk-bar-indicator"
-                          style={{ width: `${Math.round(c.risk * 100)}%` }}
-                        />
-                        <span className={`risk-number-badge font-mono ${c.risk >= 0.8 ? 'is-danger' : c.risk >= 0.5 ? 'is-warning' : 'is-clean'}`}>
-                          {(c.risk * 100).toFixed(1)}%
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`status-tag ${c.decision.includes('FLAGGED') ? 'tag-flagged' : 'tag-cleared'}`}>
-                        {c.decision.includes('FLAGGED') ? 'FLAGGED FOR AUDIT' : 'AUTO-CLEARED'}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="action-button-cluster">
-                        <button
-                          type="button"
-                          className="action-btn-inspect"
-                          onClick={() => onInspectCase(c.id)}
-                          title="Inspect SHAP Waterfall"
-                        >
-                          <IconSearch size={13} />
-                          <span>Score</span>
-                        </button>
-                        {c.status !== 'frozen' && c.decision.includes('FLAGGED') && (
-                          <button
-                            type="button"
-                            className="action-btn-freeze"
-                            onClick={() => onTriageAction(c.id, 'FREEZE')}
-                            title="Freeze Disbursements"
-                          >
-                            <IconFreeze size={13} />
-                            <span>Freeze</span>
-                          </button>
-                        )}
-                        {c.status !== 'cleared' && !c.decision.includes('FLAGGED') && (
-                          <button
-                            type="button"
-                            className="action-btn-clear"
-                            onClick={() => onTriageAction(c.id, 'CLEAR')}
-                            title="Fast-Track Reimbursement"
-                          >
-                            <IconCheckCircle size={13} />
-                            <span>Clear</span>
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        {/* Right Column: Global SHAP Feature Importance */}
-        <section className="syght-panel">
-          <div className="syght-panel-header">
-            <div className="panel-title-flex">
-              <IconSparkles size={20} className="text-violet-600" />
-              <h3>Leading TreeSHAP Risk Drivers</h3>
-            </div>
-            <span className="syght-chip font-mono">Global Explainer</span>
-          </div>
-
-          <p className="panel-intro-text">
-            TreeSHAP additive attribution identifies the exact clinical & billing drivers pushing risk scores across the 0.5364 operational decision threshold.
-          </p>
-
-          <div className="shap-breakdown-list">
-            <div className="shap-item">
-              <div className="shap-meta">
-                <span className="shap-feature-name">Inpatient Claims Payout Share</span>
-                <span className="shap-value-badge positive font-mono">+0.324 SHAP</span>
-              </div>
-              <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '88%' }} />
-              </div>
-              <div className="shap-desc">Facilities with &gt; 80% inpatient billing face +3.8x fraud odds.</div>
-            </div>
-
-            <div className="shap-item">
-              <div className="shap-meta">
-                <span className="shap-feature-name">Physician Monopoly Concentration</span>
-                <span className="shap-value-badge positive font-mono">+0.285 SHAP</span>
-              </div>
-              <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '76%' }} />
-              </div>
-              <div className="shap-desc">Single doctor billing &gt; 65% of all hospital claims indicates kickback nexus.</div>
-            </div>
-
-            <div className="shap-item">
-              <div className="shap-meta">
-                <span className="shap-feature-name">Graph Degree Centrality (Shared Staff)</span>
-                <span className="shap-value-badge positive font-mono">+0.264 SHAP</span>
-              </div>
-              <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '70%' }} />
-              </div>
-              <div className="shap-desc">Attending physicians shared across 3+ distinct facilities in 1 day.</div>
-            </div>
-
-            <div className="shap-item">
-              <div className="shap-meta">
-                <span className="shap-feature-name">Same-Day Split Billing (Unbundling)</span>
-                <span className="shap-value-badge positive font-mono">+0.218 SHAP</span>
-              </div>
-              <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '58%' }} />
-              </div>
-              <div className="shap-desc">Artificial unbundling of diagnostic procedures into separate claims.</div>
-            </div>
-
-            <div className="shap-item">
-              <div className="shap-meta">
-                <span className="shap-feature-name">High Outpatient Visit Volume</span>
-                <span className="shap-value-badge negative font-mono">-0.195 SHAP</span>
-              </div>
-              <div className="shap-bar-track">
-                <div className="shap-bar-fill push-negative" style={{ width: '52%' }} />
-              </div>
-              <div className="shap-desc">High outpatient-to-inpatient ratio is characteristic of genuine community clinics.</div>
-            </div>
-          </div>
-
-          <div className="syght-banner-notice">
-            <IconShield size={18} className="text-sky-600 shrink-0 mt-0.5" />
-            <div>
-              <strong>Defensible Due Process:</strong> All risk scores are accompanied by mathematical TreeSHAP attributions 
-              ensuring clear, defensible explanations for human auditors during legal recovery proceedings.
-            </div>
-          </div>
-        </section>
-      </div>
     </div>
   );
 }

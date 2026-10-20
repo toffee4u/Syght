@@ -506,248 +506,244 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
         </div>
       </div>
 
-      {/* Preset Scenario Cards */}
-      <div className="mb-2">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
-            1-Click Preset Test Scenarios
-          </span>
-          <span className="text-xs text-slate-400">
-            Select a benchmark batch to test model sensitivity
-          </span>
-        </div>
-
-        <div className="dataset-preset-grid">
-          {PRESETS.map((p) => {
-            const Icon = p.icon;
-            const isSelected = selectedPresetKey === p.key;
-            return (
-              <div
-                key={p.key}
-                className={`dataset-preset-card ${isSelected ? 'is-active' : ''}`}
-                onClick={() => handleSelectPreset(p.key)}
+      {/* Unified Dataset Upload & Model Execution Master Card */}
+      <Card className="border-slate-200 shadow-sm bg-white overflow-hidden mb-6">
+        <CardHeader className="border-b border-slate-100 bg-slate-50/40 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+                <UploadCloud className="w-5 h-5" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">Healthcare Claims Dataset Upload & Model Runner</CardTitle>
+                <CardDescription className="text-xs mt-0.5">
+                  Drag and drop claims (.csv, .json, .txt) or select benchmark datasets to evaluate calibrated fraud risk with TreeSHAP attributions
+                </CardDescription>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadTemplate}
+                className="text-xs h-8"
+                title="Download CSV Schema Template"
               >
-                <div>
-                  <div className="preset-header">
-                    <span className="preset-title">{p.title}</span>
-                    <Badge variant={p.badgeVariant} className="text-[10px] font-mono">
-                      {p.count}
+                <Download size={13} className="mr-1" />
+                <span>CSV Template</span>
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="p-6 space-y-6">
+          {/* Drag & Drop Dropzone Box */}
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={`relative flex flex-col items-center justify-center p-8 sm:p-10 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-200 text-center ${
+              isDragging
+                ? 'border-sky-500 bg-sky-50/80 scale-[1.008]'
+                : 'border-slate-200 bg-slate-50/50 hover:bg-slate-100/60 hover:border-sky-400'
+            }`}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv,.json,.txt"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+
+            <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center text-sky-600 mb-3 group-hover:scale-105 transition-transform">
+              <UploadCloud className="w-7 h-7" />
+            </div>
+
+            <div className="font-semibold text-slate-900 text-base">
+              Drag and drop your claims dataset here
+            </div>
+            <p className="text-xs text-slate-500 mt-1 max-w-md">
+              Accepts CSV files with column headers, JSON array of claims, or TXT exports. Maximum file size: 50MB.
+            </p>
+
+            <div className="mt-4 flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="bg-white border-slate-300 hover:bg-slate-50 text-slate-800 text-xs font-semibold px-4 py-1.5 shadow-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
+              >
+                <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-sky-600" />
+                <span>Browse Local Computer</span>
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-2 mt-4 flex-wrap justify-center">
+              <Badge variant="secondary" className="text-[10px] font-mono">61 Tabular Features</Badge>
+              <Badge variant="secondary" className="text-[10px] font-mono">LightGBM 1-SE (&lt; 2ms)</Badge>
+              <Badge variant="secondary" className="text-[10px] font-mono">Exact TreeSHAP Values</Badge>
+            </div>
+          </div>
+
+          {/* Active File Loaded Banner */}
+          {activeDataset && (
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl border border-sky-200 bg-sky-50/60">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-lg bg-sky-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <FileSpreadsheet className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-sm text-slate-900 font-mono truncate">
+                      {activeDataset.name}
+                    </span>
+                    <Badge variant="success" className="text-[10px] font-mono">
+                      Validated
                     </Badge>
                   </div>
-                  <p className="preset-desc">{p.desc}</p>
-                </div>
-                <div className="preset-footer">
-                  <span className="flex items-center gap-1">
-                    <Icon size={12} />
-                    {isSelected ? 'Currently Loaded' : 'Click to Load'}
-                  </span>
-                  <ChevronRight size={14} className={isSelected ? 'translate-x-0.5' : ''} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Main Grid: Upload Dropzone & Model Execution Control */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Drag & Drop Area */}
-        <div className="lg:col-span-7">
-          <Card className="h-full flex flex-col justify-between">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <UploadCloud className="w-5 h-5 text-sky-600" />
-                  <CardTitle>Upload Custom Dataset</CardTitle>
-                </div>
-                <Badge variant="outline" className="font-mono text-xs">
-                  .CSV / .JSON / .TXT
-                </Badge>
-              </div>
-              <CardDescription>
-                Drag & drop your hospital admission records or claim audit batch.
-                The engine automatically extracts 61 clinical, financial, and graph centrality features.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-4">
-              {/* Dropzone Box */}
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className={`relative flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-200 text-center ${
-                  isDragging
-                    ? 'border-sky-500 bg-sky-50/70 scale-[1.01]'
-                    : 'border-slate-200 bg-slate-50/60 hover:bg-slate-100/60 hover:border-slate-300'
-                }`}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".csv,.json,.txt"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-
-                <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-center text-sky-600 mb-3">
-                  <UploadCloud className="w-6 h-6" />
-                </div>
-
-                <div className="font-semibold text-slate-800 text-sm">
-                  Click to choose file or drag & drop here
-                </div>
-                <p className="text-xs text-slate-500 mt-1 max-w-sm">
-                  Supports CSV (with column headers) or JSON array of provider claims. Max file size: 50MB.
-                </p>
-
-                <div className="flex items-center gap-2 mt-4 flex-wrap justify-center">
-                  <Badge variant="secondary" className="text-[10px]">61 Tabular Features</Badge>
-                  <Badge variant="secondary" className="text-[10px]">TreeSHAP Diagnostics</Badge>
-                  <Badge variant="secondary" className="text-[10px]">Sub-2ms Throughput</Badge>
+                  <div className="text-xs text-slate-600 font-mono mt-0.5">
+                    <strong>{activeDataset.rows.length} Records</strong> • {activeDataset.size} • 61 Features Synthesized
+                  </div>
                 </div>
               </div>
 
-              {/* Active Loaded Dataset Status Pill */}
-              {activeDataset && (
-                <div className="flex items-center justify-between p-3.5 rounded-xl border border-sky-200 bg-sky-50/60">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-lg bg-sky-600 text-white flex items-center justify-center shrink-0">
-                      <FileSpreadsheet className="w-5 h-5" />
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowDataPreview(!showDataPreview)}
+                  className="bg-white text-slate-700 hover:text-slate-900 text-xs font-mono"
+                  title="Toggle Data Preview"
+                >
+                  {showDataPreview ? <EyeOff className="w-3.5 h-3.5 mr-1" /> : <Eye className="w-3.5 h-3.5 mr-1" />}
+                  <span>{showDataPreview ? 'Hide Preview' : 'Preview Data'}</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveDataset(null);
+                    setSelectedPresetKey(null);
+                    setTestResults(null);
+                    setShowDataPreview(false);
+                  }}
+                  className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 text-xs font-mono h-8"
+                  title="Clear Loaded Dataset"
+                >
+                  <Trash2 className="w-3.5 h-3.5 mr-1" />
+                  <span>Clear</span>
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* 1-Click Preset Benchmark Scenarios */}
+          <div>
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
+                Or Test Instantly with Verified PMJAY / Medicare Benchmark Presets:
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {PRESETS.map((p) => {
+                const isSelected = selectedPresetKey === p.key;
+                return (
+                  <div
+                    key={p.key}
+                    onClick={() => handleSelectPreset(p.key)}
+                    className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                      isSelected
+                        ? 'border-sky-500 bg-sky-50/50 shadow-xs ring-1 ring-sky-500/30'
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-xs text-slate-900 truncate">
+                        {p.title}
+                      </span>
+                      <Badge variant={p.badgeVariant} className="text-[10px] font-mono shrink-0">
+                        {p.count}
+                      </Badge>
                     </div>
-                    <div className="min-w-0">
-                      <div className="font-semibold text-sm text-slate-900 font-mono truncate">
-                        {activeDataset.name}
-                      </div>
-                      <div className="text-xs text-slate-500 font-mono">
-                        {activeDataset.rows.length} Records Loaded • {activeDataset.size} • {activeDataset.type}
-                      </div>
+                    <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+                      {p.desc}
+                    </p>
+                    <div className="mt-2 text-[11px] font-mono text-sky-600 font-medium flex items-center justify-between">
+                      <span>{isSelected ? '✓ Loaded' : 'Click to Load'}</span>
+                      <ChevronRight size={12} />
                     </div>
                   </div>
+                );
+              })}
+            </div>
+          </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowDataPreview(!showDataPreview)}
-                      className="text-slate-600 hover:text-slate-900 text-xs font-mono"
-                      title="Toggle Data Preview"
-                    >
-                      {showDataPreview ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
-                      <span>{showDataPreview ? 'Hide Preview' : 'Preview'}</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveDataset(null);
-                        setSelectedPresetKey(null);
-                        setTestResults(null);
-                        setShowDataPreview(false);
-                      }}
-                      className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
-                      title="Clear Dataset"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Column: Execution Control */}
-        <div className="lg:col-span-5">
-          <Card className="h-full flex flex-col justify-between">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-emerald-600" />
-                  <CardTitle>Model Execution Control</CardTitle>
-                </div>
-                <Badge variant="success" className="font-mono text-xs">
-                  LightGBM 1-SE
-                </Badge>
+          {/* Inference Progress Tracker (when running) */}
+          {isRunningInference && (
+            <div className="inference-stage-tracker p-4 bg-sky-50/70 border border-sky-200 rounded-xl">
+              <div className="flex justify-between text-xs font-mono font-semibold text-sky-900 mb-2">
+                <span>{inferenceStage}</span>
+                <span>{inferenceProgress}%</span>
               </div>
-              <CardDescription>
-                Execute automated high-throughput fraud risk evaluation across all uploaded claims with full TreeSHAP attribution.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-4 flex-1 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex flex-col gap-2 font-mono text-xs text-slate-600">
-                  <div className="flex justify-between items-center">
-                    <span>Champion Architecture:</span>
-                    <strong className="text-slate-900">LightGBM Binary Classifier</strong>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Calibrated Cutoff (1-SE):</span>
-                    <strong className="text-sky-600">0.5364</strong>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Inference Throughput:</span>
-                    <strong className="text-emerald-600">&lt; 2.0 ms per record</strong>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span>Explainability Module:</span>
-                    <strong className="text-purple-600">TreeSHAP Fast Exact Explainer</strong>
-                  </div>
+              <Progress value={inferenceProgress} variant="primary" />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 font-mono text-xs text-slate-600">
+                <div className={`stage-step ${inferenceProgress >= 20 ? 'done' : 'active'}`}>
+                  <span className="stage-step-dot" />
+                  <span>1. Schema Validation</span>
                 </div>
-
-                {isRunningInference && (
-                  <div className="inference-stage-tracker">
-                    <div className="flex justify-between text-xs font-mono text-sky-800">
-                      <span>{inferenceStage}</span>
-                      <span>{inferenceProgress}%</span>
-                    </div>
-                    <Progress value={inferenceProgress} variant="primary" />
-                    <div className="grid grid-cols-2 gap-2 mt-1">
-                      <div className={`stage-step ${inferenceProgress >= 20 ? 'done' : 'active'}`}>
-                        <span className="stage-step-dot" />
-                        <span>Schema Validation</span>
-                      </div>
-                      <div className={`stage-step ${inferenceProgress >= 50 ? 'done' : inferenceProgress >= 20 ? 'active' : ''}`}>
-                        <span className="stage-step-dot" />
-                        <span>Tree Leaf Traversal</span>
-                      </div>
-                      <div className={`stage-step ${inferenceProgress >= 80 ? 'done' : inferenceProgress >= 50 ? 'active' : ''}`}>
-                        <span className="stage-step-dot" />
-                        <span>TreeSHAP Values</span>
-                      </div>
-                      <div className={`stage-step ${inferenceProgress >= 95 ? 'done' : inferenceProgress >= 80 ? 'active' : ''}`}>
-                        <span className="stage-step-dot" />
-                        <span>Audit Verdicts</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <div className={`stage-step ${inferenceProgress >= 50 ? 'done' : inferenceProgress >= 20 ? 'active' : ''}`}>
+                  <span className="stage-step-dot" />
+                  <span>2. Tree Traversal</span>
+                </div>
+                <div className={`stage-step ${inferenceProgress >= 80 ? 'done' : inferenceProgress >= 50 ? 'active' : ''}`}>
+                  <span className="stage-step-dot" />
+                  <span>3. TreeSHAP Attribution</span>
+                </div>
+                <div className={`stage-step ${inferenceProgress >= 95 ? 'done' : inferenceProgress >= 80 ? 'active' : ''}`}>
+                  <span className="stage-step-dot" />
+                  <span>4. Calibrated Verdicts</span>
+                </div>
               </div>
+            </div>
+          )}
 
-              {/* Run Button */}
-              <Button
-                variant="default"
-                size="lg"
-                disabled={!activeDataset || isRunningInference}
-                onClick={handleRunModelInference}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-6 rounded-xl shadow-md text-sm cursor-pointer"
-              >
-                <Play className="w-4 h-4 fill-white" />
-                <span>
-                  {isRunningInference
-                    ? 'Processing Model Predictions...'
-                    : activeDataset
-                    ? `Run Model on ${activeDataset.rows.length} Records`
-                    : 'Select a Preset or Upload Data First'}
-                </span>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+          {/* Model Execution Bar */}
+          <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-slate-500 font-mono">
+              <span>Engine: <strong className="text-slate-800">LightGBM (1-SE Rule)</strong></span>
+              <span className="mx-2">•</span>
+              <span>Cutoff: <strong className="text-sky-600 font-bold">0.5364</strong></span>
+              <span className="mx-2">•</span>
+              <span>Latency: <strong className="text-emerald-600 font-bold">&lt; 2.0 ms/claim</strong></span>
+            </div>
+
+            <Button
+              variant="default"
+              size="lg"
+              disabled={!activeDataset || isRunningInference}
+              onClick={handleRunModelInference}
+              className="w-full sm:w-auto min-w-[260px] bg-slate-900 hover:bg-slate-800 text-white font-semibold py-5 px-6 rounded-xl shadow-md text-sm cursor-pointer"
+            >
+              <Play className="w-4 h-4 fill-white mr-2" />
+              <span>
+                {isRunningInference
+                  ? 'Running Model Inference...'
+                  : activeDataset
+                  ? `Run Model on ${activeDataset.rows.length} Claims →`
+                  : 'Select or Upload Dataset to Run'}
+              </span>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Collapsible Raw Data Preview */}
       {activeDataset && showDataPreview && (
