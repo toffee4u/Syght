@@ -122,3 +122,17 @@ def test_api_predict_custom_dataset(client):
     assert "flagged_count" in data
     assert "total_exposure" in data
 
+
+def test_custom_docs_and_redoc_endpoints(client):
+    docs_resp = client.get("/docs")
+    assert docs_resp.status_code == 200
+    assert "text/html" in docs_resp.headers["content-type"]
+    assert "SwaggerUIBundle" in docs_resp.text
+    assert "Team Pulse" in docs_resp.text
+    assert "Syght Healthcare Fraud Intelligence API" in docs_resp.text
+
+    redoc_resp = client.get("/redoc")
+    assert redoc_resp.status_code == 200
+    assert "text/html" in redoc_resp.headers["content-type"]
+    assert "redoc" in redoc_resp.text
+
