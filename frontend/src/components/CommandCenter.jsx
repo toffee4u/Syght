@@ -225,7 +225,7 @@ export default function CommandCenter({
           </div>
           <div className="bento-card-value text-sky-600 font-mono">₹382.4 Cr</div>
           <div className="bento-card-sub positive">
-            <span>≈ ₹45.9M Direct Clawback Target</span>
+            <span>₹45.9 Cr Direct Clawback Target</span>
           </div>
           <div className="bento-hairline-indicator accent-cyan" />
         </div>
