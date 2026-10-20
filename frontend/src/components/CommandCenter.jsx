@@ -578,8 +578,11 @@ export default function CommandCenter({
                 <tr key={c.id}>
                   <td>
                     <div className="provider-cell">
-                      <span className="provider-id-tag font-mono">{c.id}</span>
-                      <span className="font-semibold text-slate-900 text-xs">{c.name || c.id}{c.city ? ` • ${c.city}` : ''}</span>
+                      <div className="font-semibold text-slate-900 text-xs" style={{ lineHeight: 1.3 }}>{c.name || c.id}</div>
+                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                        <span className="provider-id-tag font-mono">{c.hospital_id || c.id}</span>
+                        {c.city && <span className="text-[11px] text-slate-500 font-mono">📍 {c.city}</span>}
+                      </div>
                     </div>
                   </td>
                   <td>

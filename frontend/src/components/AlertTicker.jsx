@@ -6,31 +6,31 @@ export default function AlertTicker() {
     {
       type: 'danger',
       icon: IconAlert,
-      target: 'PRV_02_PHANTOM_SURGERY_MILL',
-      desc: '460 Inpatient Surgeries Billed by 2 Attending Doctors (₹5,100,000 Payout) — 100.0% Fraud Risk',
+      target: 'Apex Life Specialty (HOSP-MH-40192)',
+      desc: '460 Inpatient Surgeries Billed by 2 Attending Doctors (₹51.00 Lakhs Payout) — 100.0% Fraud Risk',
     },
     {
       type: 'danger',
       icon: IconAlert,
-      target: 'PRV_03_KICKBACK_COLLUSION_RING',
+      target: 'Metro Health Syndicate (HOSP-DL-10923)',
       desc: 'Doctor Recycling Syndicate (95% Shared Physicians across 11 Hospitals) — Critical Audit Triggered',
     },
     {
       type: 'danger',
       icon: IconAlert,
-      target: 'PRV_08_ICU_LENGTH_OF_STAY_UPCODING',
+      target: 'St. Jude Critical Care (HOSP-KA-82014)',
       desc: 'Artificial ICU Stay Prolongation (16.8 Days Mean LOS, Max 48 Days) — 99.9% Fraud Risk',
     },
     {
       type: 'warning',
       icon: IconAlert,
-      target: 'PRV_05_UNBUNDLING_DIAGNOSTIC_LAB',
+      target: 'PulsePath Diagnostics (HOSP-TS-90214)',
       desc: '44% Duplicate Same-Day Beneficiary Tests Detected — Automated Fee Bundling Recoup Triggered',
     },
     {
       type: 'success',
       icon: IconCheckCircle,
-      target: 'PRV_01_RURAL_PRIMARY_CLINIC',
+      target: 'Shanti Gramin Clinic (HOSP-MH-77218)',
       desc: 'Rural Primary Healthcare Center Clean & Auto-Cleared — Expedited Green-Channel Disbursement',
     },
   ];

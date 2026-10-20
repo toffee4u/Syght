@@ -206,18 +206,41 @@ export default function ReviewQueue({
                 <tr key={c.id}>
                   <td>
                     <div className="provider-cell">
-                      <span className="provider-id-tag font-mono">{c.id}</span>
-                      <span className="provider-sub-tag">{c.name}{c.city ? ` • ${c.city}` : ''}</span>
+                      <div className="provider-name-main font-semibold text-slate-900" style={{ fontSize: '0.92rem', lineHeight: 1.3 }}>
+                        {c.name}
+                      </div>
+                      <div className="provider-meta-row font-mono" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px', flexWrap: 'wrap' }}>
+                        <span className="provider-id-tag font-mono" style={{ fontSize: '0.68rem', padding: '1px 6px', background: '#f1f5f9', borderRadius: '4px', border: '1px solid #cbd5e1' }}>
+                          {c.hospital_id || c.id}
+                        </span>
+                        {c.city && (
+                          <span className="provider-sub-tag font-mono" style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                            📍 {c.city}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td>
                     <span className="archetype-pill font-mono">{c.tag}</span>
                   </td>
-                  <td className="font-mono text-slate-600 font-medium">
-                    {c.surgeries} Surgeries ({c.physicians} MDs)
+                  <td>
+                    <div className="font-mono text-slate-800 font-semibold" style={{ fontSize: '0.84rem' }}>
+                      {c.surgeries} Surgeries ({c.physicians} MDs)
+                    </div>
+                    <div className="font-mono text-slate-500" style={{ fontSize: '0.72rem', marginTop: '2px' }}>
+                      {c.claims || c.features?.total_claims_count || 480} Total Claims
+                    </div>
                   </td>
-                  <td className="font-mono font-semibold text-slate-900">
-                    ₹{c.reimbursement.toLocaleString('en-IN')}
+                  <td>
+                    <div className="font-mono font-bold text-slate-900" style={{ fontSize: '0.88rem' }}>
+                      ₹{c.reimbursement.toLocaleString('en-IN')}
+                    </div>
+                    <div className="font-mono text-slate-500" style={{ fontSize: '0.72rem', marginTop: '2px' }}>
+                      {c.reimbursement >= 10000000
+                        ? `₹${(c.reimbursement / 10000000).toFixed(2)} Cr`
+                        : `₹${(c.reimbursement / 100000).toFixed(2)} Lakhs`}
+                    </div>
                   </td>
                   <td>
                     <div className="risk-metric-box">
