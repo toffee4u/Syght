@@ -19,6 +19,7 @@ import {
 
 import { BENCHMARK_CASES } from './data/benchmarkCases';
 import { BENCHMARK_MODELS } from './data/benchmarkModels';
+import { buildAuditedPayloadFromRows } from './data/sampleDatasetsCatalog';
 
 const ROUTE_TO_TAB = {
   '': 'tab-dashboard',
@@ -331,6 +332,19 @@ export default function App() {
     showToast('Launched <strong>Real-Time Multi-Model Engine</strong> on 25 Portfolio Facilities', 'info');
   };
 
+  const handleRunAuditWithDataset = (dataset) => {
+    setBatchResults(null);
+    const payload = buildAuditedPayloadFromRows(dataset.rows, dataset.filename || dataset.name);
+    setPipelineExecutionTrigger({
+      source: 'custom',
+      datasetName: dataset.filename || dataset.name,
+      data: payload,
+      timestamp: Date.now(),
+    });
+    setActiveTab('tab-results');
+    showToast(`Launched <strong>Real-Time Multi-Model Engine</strong> on ${dataset.name}`, 'info');
+  };
+
   const handleRunCustomDataset = (datasetData) => {
     // Auto reset old results when new dataset runs
     setBatchResults(null);
@@ -372,6 +386,8 @@ export default function App() {
               onViewAllCases={() => setActiveTab('tab-queue', '/queue')}
               onOpenDatasetStudio={() => setActiveTab('tab-dataset', '/dataset')}
               onRunAuditWithSample={handleRunAuditWithSample}
+              onRunAuditWithPortfolio={handleRunAuditWithPortfolio}
+              onRunAuditWithDataset={handleRunAuditWithDataset}
             />
           )}
 

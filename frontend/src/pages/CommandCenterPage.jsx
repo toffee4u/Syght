@@ -8,6 +8,8 @@ export default function CommandCenterPage({
   onViewAllCases,
   onOpenDatasetStudio,
   onRunAuditWithSample,
+  onRunAuditWithPortfolio,
+  onRunAuditWithDataset,
 }) {
   return (
     <div className="syght-page page-command-center" id="page-command">
@@ -18,6 +20,8 @@ export default function CommandCenterPage({
         onViewAllCases={onViewAllCases}
         onOpenDatasetStudio={onOpenDatasetStudio}
         onRunAuditWithSample={onRunAuditWithSample}
+        onRunAuditWithPortfolio={onRunAuditWithPortfolio}
+        onRunAuditWithDataset={onRunAuditWithDataset}
       />
     </div>
   );

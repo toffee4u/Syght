@@ -6405,3 +6405,306 @@ a {
     font-size: clamp(1.85rem, 8.5vw, 2.5rem);
   }
 }
+
+/* ==============================================================================
+   Syght Multi-Dataset Benchmark & Custom Testing Hub Styles
+   ============================================================================== */
+.dataset-launcher-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.dataset-launcher-lead-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 0.85rem 1.15rem;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.04) 0%, rgba(99, 102, 241, 0.03) 100%);
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.dataset-launcher-lead-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 260px;
+}
+
+.dataset-launcher-lead-badge {
+  font-family: var(--syght-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  background: #0284c7;
+  color: #ffffff;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.dataset-launcher-lead-desc {
+  font-size: 0.82rem;
+  color: #334155;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.dataset-launcher-lead-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dataset-quick-file-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--syght-font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  color: #0f172a;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.dataset-quick-file-link:hover {
+  border-color: #0284c7;
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.05);
+  transform: translateY(-1px);
+}
+
+.dataset-cohorts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.dataset-cohort-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 0;
+  position: relative;
+}
+
+.dataset-cohort-card:hover {
+  border-color: #0284c7;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.08);
+  transform: translateY(-2px);
+}
+
+.dataset-cohort-card.is-featured {
+  border-color: #6366f1;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.02) 0%, #ffffff 100%);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2);
+}
+
+.dataset-cohort-card.is-featured::before {
+  content: '★ RECOMMENDED BENCHMARK';
+  position: absolute;
+  top: -9px;
+  right: 14px;
+  font-family: var(--syght-font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  background: #4f46e5;
+  color: #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+}
+
+.dataset-cohort-header {
+  margin-bottom: 0.65rem;
+}
+
+.dataset-cohort-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.dataset-cohort-title {
+  font-family: var(--syght-font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.dataset-cohort-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: #64748b;
+  font-family: var(--syght-font-mono);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.dataset-cohort-exposure strong {
+  color: #0f172a;
+}
+
+.dataset-cohort-tier strong {
+  color: #0284c7;
+}
+
+.dataset-cohort-desc {
+  font-size: 0.78rem;
+  color: #475569;
+  line-height: 1.45;
+  margin: 0 0 0.85rem 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.dataset-cohort-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.dataset-cohort-tag {
+  font-family: var(--syght-font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.dataset-cohort-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.dataset-run-btn {
+  flex: 1;
+  font-size: 0.78rem;
+  padding: 0.55rem 0.85rem;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.dataset-dl-btn {
+  font-size: 0.78rem;
+  padding: 0.55rem 0.75rem;
+  gap: 0.35rem;
+}
+
+.dataset-custom-hint-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1.25rem;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-wrap: wrap;
+}
+
+.dataset-custom-hint-box:hover {
+  border-color: #0284c7;
+  background: rgba(2, 132, 199, 0.03);
+}
+
+.dataset-custom-hint-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 240px;
+  flex: 1;
+}
+
+.dataset-custom-hint-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.dataset-custom-hint-title {
+  font-family: var(--syght-font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dataset-custom-hint-sub {
+  font-size: 0.76rem;
+  color: #64748b;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .dataset-cohorts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dataset-launcher-lead-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dataset-custom-hint-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dataset-custom-hint-box > button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .dataset-cohort-actions {
+    flex-direction: column;
+  }
+
+  .dataset-run-btn,
+  .dataset-dl-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

@@ -540,3 +540,5 @@ export function getDatasetPreset(key) {
   }
   return SAMPLE_DATASET_ROWS;
 }
+
+export { AVAILABLE_SAMPLE_DATASETS, buildAuditedPayloadFromRows } from './sampleDatasetsCatalog';

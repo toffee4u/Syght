@@ -56,6 +56,9 @@ kaggle.json
 !frontend/src/data/
 *.csv
 *.tsv
+!sample_datasets/*.csv
+!frontend/public/sample_datasets/*.csv
+!frontend/dist/sample_datasets/*.csv
 *.parquet
 *.feather
 *.duckdb

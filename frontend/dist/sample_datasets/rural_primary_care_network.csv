@@ -1,0 +1,21 @@
+provider_id,name,city,total_claims_count,inpatient_claims_count,inpatient_reimbursed_sum,outpatient_reimbursed_sum,mean_inpatient_los,max_inpatient_los,total_inpatient_surgeries,unique_attending_physicians,unique_beneficiaries_count,same_day_duplicate_rate,graph_degree_centrality,archetype,baseline_risk,status
+RURAL_PHC_01,Janani Gramin Primary Health Kendra,"Gorakhpur, UP",210,40,190000,240000,2.4,4,8,14,184,0.002,0.08,Compliant Rural Community PHC/CHC,0.032,CLEARED BASELINE
+RURAL_PHC_02,Kisan Kalyan Rural Dispensary,"Rohtak, HR",185,30,140000,210000,2.2,3,5,12,162,0.001,0.06,Compliant Rural Community PHC/CHC,0.025,CLEARED BASELINE
+RURAL_PHC_03,Gram Swaraj Community Health Center,"Varanasi, UP",340,90,480000,390000,2.8,5,24,18,299,0.004,0.11,Compliant Rural Community PHC/CHC,0.041,CLEARED BASELINE
+RURAL_PHC_04,Annapurna Maternal & Child PHC,"Darbhanga, BR",260,110,520000,280000,2.6,4,38,15,228,0.003,0.09,Compliant Rural Community PHC/CHC,0.038,CLEARED BASELINE
+RURAL_PHC_05,Maa Sharda Rural Health Post,"Satna, MP",140,25,110000,180000,2.1,3,4,10,123,0.001,0.05,Compliant Rural Community PHC/CHC,0.021,CLEARED BASELINE
+RURAL_PHC_06,Bapu Gramin Seva Dispensary,"Wardha, MH",195,35,160000,230000,2.5,4,6,13,171,0.002,0.07,Compliant Rural Community PHC/CHC,0.029,CLEARED BASELINE
+RURAL_PHC_07,Panchayat Kalyan Primary Clinic,"Gaya, BR",280,70,360000,310000,2.7,5,18,16,246,0.005,0.1,Compliant Rural Community PHC/CHC,0.045,CLEARED BASELINE
+RURAL_PHC_08,Savitribai Phule Women's PHC,"Kolhapur, MH",310,120,590000,340000,2.9,5,42,17,272,0.004,0.12,Compliant Rural Community PHC/CHC,0.039,CLEARED BASELINE
+RURAL_PHC_09,Sarvodaya Rural Health Mission,"Udaipur, RJ",225,45,210000,260000,2.3,4,9,14,198,0.002,0.08,Compliant Rural Community PHC/CHC,0.033,CLEARED BASELINE
+RURAL_PHC_10,Seva Bharati Community Dispensary,"Bhubaneswar, OD",170,30,130000,195000,2.2,3,4,11,149,0.001,0.06,Compliant Rural Community PHC/CHC,0.026,CLEARED BASELINE
+RURAL_PHC_11,Nimar Gramin CHC Hospital,"Khandwa, MP",390,130,680000,410000,3.1,6,45,20,343,0.006,0.14,Compliant Rural Community PHC/CHC,0.052,CLEARED BASELINE
+RURAL_PHC_12,Malwa Kisan Health Sanctuary,"Dewas, MP",205,40,180000,245000,2.4,4,7,13,180,0.002,0.07,Compliant Rural Community PHC/CHC,0.031,CLEARED BASELINE
+RURAL_PHC_13,Kaushalya Matri Raksha PHC,"Ayodhya, UP",290,115,540000,315000,2.7,5,39,16,255,0.003,0.1,Compliant Rural Community PHC/CHC,0.036,CLEARED BASELINE
+RURAL_PHC_14,Konkan Coastal Health Post,"Ratnagiri, MH",160,28,125000,185000,2.1,3,5,11,140,0.001,0.05,Compliant Rural Community PHC/CHC,0.024,CLEARED BASELINE
+RURAL_PHC_15,Doaba Rural Family Clinic,"Jalandhar, PB",240,55,270000,280000,2.5,4,12,15,211,0.003,0.09,Compliant Rural Community PHC/CHC,0.035,CLEARED BASELINE
+RURAL_PHC_16,Mithila Arogya Primary Center,"Madhubani, BR",275,80,390000,300000,2.6,5,21,15,242,0.004,0.1,Compliant Rural Community PHC/CHC,0.042,CLEARED BASELINE
+RURAL_PHC_17,Chhotanagpur Community Dispensary,"Hazaribagh, JH",180,32,145000,215000,2.3,4,6,12,158,0.002,0.07,Compliant Rural Community PHC/CHC,0.028,CLEARED BASELINE
+RURAL_PHC_18,Godavari Delta Rural CHC,"Rajahmundry, AP",360,105,560000,380000,2.9,5,32,19,316,0.005,0.13,Compliant Rural Community PHC/CHC,0.048,CLEARED BASELINE
+RURAL_PHC_19,Thar Desert Mobile PHC,"Barmer, RJ",130,20,95000,165000,2.0,3,3,9,114,0.001,0.04,Compliant Rural Community PHC/CHC,0.019,CLEARED BASELINE
+RURAL_PHC_20,Cauvery Gramin Health Station,"Thanjavur, TN",250,60,290000,295000,2.5,4,15,16,220,0.003,0.09,Compliant Rural Community PHC/CHC,0.034,CLEARED BASELINE

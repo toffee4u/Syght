@@ -1,0 +1,26 @@
+provider_id	name	city	total_claims_count	inpatient_claims_count	inpatient_reimbursed_sum	outpatient_reimbursed_sum	mean_inpatient_los	max_inpatient_los	total_inpatient_surgeries	unique_attending_physicians	unique_beneficiaries_count	same_day_duplicate_rate	graph_degree_centrality	archetype	baseline_risk	status
+PRV_02_PHANTOM_SURGERY_MILL	Apex Life Surgical Specialty Care	Mumbai, MH	460	420	5100000	120000	5.8	12	460	2	380	0.18	0.72	Phantom Surgery Mill (230 Surgeries/MD Outlier)	1.0	CRITICAL RISK
+PRV_03_KICKBACK_COLLUSION_RING	Metro Health Bipartite Syndicate	Delhi NCR	890	760	9800000	450000	7.2	18	580	34	720	0.32	0.94	Doctor Recycling & Kickback Ring Hub	0.998	CRITICAL RISK
+PRV_08_ICU_LENGTH_OF_STAY_UPCODING	St. Jude Critical Care & Trauma	Bengaluru, KA	310	310	6400000	0	16.8	48	140	6	280	0.05	0.58	ICU Stay Prolongation & Package Upcoding	0.999	CRITICAL RISK
+PRV_05_UNBUNDLING_DIAGNOSTIC_LAB	PulsePath Advanced Pathology & Imaging	Hyderabad, TS	1450	60	420000	2850000	1.2	3	0	18	1120	0.44	0.78	Unbundled Lab Panels & Duplicate Tests	0.954	HIGH RISK
+PRV_09_DEAD_PATIENT_BILLING_CLINIC	Sunrise Community Health Roster	Patna, BR	220	190	1850000	80000	4.2	9	80	3	160	0.22	0.48	Post-Decease Billing Claims	0.965	CRITICAL RISK
+PRV_01_RURAL_PRIMARY_CLINIC	Shanti Gramin Primary Health Kendra	Gorakhpur, UP	180	45	280000	190000	2.8	4	12	18	160	0.002	0.12	Compliant Rural Primary Health Kendra	0.048	CLEARED BASELINE
+PRV_04_DISTRICT_CIVIL_HOSPITAL	Jan Seva District Civil Hospital	Bhopal, MP	1250	410	2400000	950000	4.1	10	190	32	980	0.015	0.22	District General Hospital (Clean Public)	0.082	CLEARED BASELINE
+PRV_06_COMMUNITY_MATERNITY_CARE	Vatsalya Mother & Child Welfare Center	Ahmedabad, GJ	340	160	850000	420000	2.9	5	65	14	290	0.008	0.15	Maternal & Child Welfare Center	0.035	CLEARED BASELINE
+PRV_07_CHARITABLE_MISSION_TRUST	Jeevan Jyoti Mission Healthcare Trust	Kochi, KL	620	180	1100000	580000	3.4	7	95	22	520	0.012	0.18	Charitable Mission Multi-Specialty	0.061	CLEARED BASELINE
+PRV_10_AYUSH_WELLNESS_SANATORIUM	Aarogya AYUSH Integrator & Daycare	Ranchi, JH	140	20	120000	310000	2.1	4	0	11	130	0.001	0.08	Compliant AYUSH Wellness Polyclinic	0.029	CLEARED BASELINE
+PRV_11_CARDIOLOGY_STENT_STACKING	MedPulse Interventional Cardiology Institute	Pune, MH	520	480	7800000	150000	4.8	14	390	4	410	0.28	0.81	Cardiology Stent Stacking & Angioplasty Overbilling	0.982	CRITICAL RISK
+PRV_12_ORTHOPEDIC_IMPLANT_OVERBILLING	Asthi Ortho & Joint Replacement Hospital	Jaipur, RJ	380	350	6200000	90000	6.5	16	310	3	320	0.24	0.74	Orthopedic Knee Implant Upcoding Without Barcode	0.971	CRITICAL RISK
+PRV_13_NEPHROLOGY_DIALYSIS_REPEAT_CHURN	Vrikka Renal Dialysis Daycare Hub	Chennai, TN	1650	120	780000	3600000	1.1	2	0	5	210	0.38	0.86	Dialysis Session Duplicate Churn & Ghost Sessions	0.962	CRITICAL RISK
+PRV_14_ONCOLOGY_DAYCARE_PHANTOM_CHEMO	Sanjeevani Daycare Oncology Infusion Clinic	Kolkata, WB	780	80	950000	4900000	1.4	3	0	4	340	0.31	0.79	High-Cost Chemotherapy Infusion Phantom Billing	0.989	CRITICAL RISK
+PRV_15_NEUROLOGY_OVERUTILIZATION	MindCare Advanced Neurotrauma & Spine Center	Lucknow, UP	410	380	5800000	110000	11.2	28	180	5	340	0.19	0.69	Neurotrauma Level-3 ICU Upcoding & Prolongation	0.945	HIGH RISK
+PRV_16_CATARACT_CAMP_MASS_EXTRACTION	Drishti Community Eye Care Network	Varanasi, UP	920	890	4100000	140000	1.2	2	890	1	860	0.42	0.88	Cataract Camp Mass Extraction (890 Surgeries/1 MD)	0.992	CRITICAL RISK
+PRV_17_TRIBAL_SUB_CENTER_COMMUNITY	Vananchal Tribal Health Sub-Center	Sundargarh, OD	95	15	65000	140000	2.2	3	2	8	90	0.001	0.05	Tribal Healthcare Sub-Center (Clean)	0.022	CLEARED BASELINE
+PRV_18_BORDER_POST_CHRONIC_CARE	Seemanta Rural Chronic Care Dispensary	Firozpur, PB	210	35	180000	390000	2.6	5	6	12	190	0.004	0.09	Rural Chronic Care Dispensary (Clean)	0.038	CLEARED BASELINE
+PRV_19_MUNICIPAL_MATERNAL_HEALTH	Matri Raksha Municipal Maternity Dispensary	Nagpur, MH	380	190	920000	450000	2.7	4	78	16	350	0.006	0.14	Municipal Maternity Dispensary (Clean)	0.041	CLEARED BASELINE
+PRV_20_PUBLIC_SECTOR_POLYCLINIC	Shramik Kalyan ESIC Workers Polyclinic	Surat, GJ	490	110	580000	620000	3.1	6	42	20	440	0.007	0.16	ESIC Industrial Workers Polyclinic (Clean)	0.055	CLEARED BASELINE
+PRV_21_PEDIATRIC_IMMUNIZATION_HUB	Shishu Suraksha Immunization Clinic	Indore, MP	280	25	140000	410000	2.0	3	0	15	260	0.002	0.07	Pediatric Clinic & Day Immunization (Clean)	0.019	CLEARED BASELINE
+PRV_22_GERIATRIC_REHABILITATION_HOME	Vayoshreshtha Geriatric Care Sanatorium	Coimbatore, TN	310	140	890000	360000	4.5	9	18	18	280	0.009	0.17	Geriatric Rehabilitation Center (Clean)	0.068	CLEARED BASELINE
+PRV_23_AMBULANCE_GHOST_TRANSFER_LOOP	Vayu Emergency Trauma Response Consortium	Gurugram, HR	510	480	5200000	80000	8.9	21	240	4	430	0.36	0.91	Inter-Hospital Ghost Transfer & Ambulance Syndicate	0.978	CRITICAL RISK
+PRV_24_KIDNEY_STONE_LITHOTRIPSY_CHURN	Ashmari Urological Daycare Center	Agra, UP	440	390	3900000	120000	2.4	5	390	2	360	0.29	0.76	Kidney Stone Lithotripsy Repeat Shockwave Churn	0.958	CRITICAL RISK
+PRV_25_DIABETIC_FOOT_DEBRIDEMENT_FARM	Madhumeha Wound Care & Hyperbaric Clinic	Vadodara, GJ	680	590	4700000	210000	7.4	19	490	3	460	0.34	0.82	Diabetic Foot Daily Surgical Debridement Farming	0.967	CRITICAL RISK
