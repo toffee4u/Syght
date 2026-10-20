@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import {
-  HugeLineChart,
-  HugeSparkles,
-  HugeLayers,
-  HugeCheckCircle,
-  HugeArrowUpRight,
-} from './HugeIcons';
+  IconLineChart,
+  IconSparkles,
+  IconLayers,
+  IconCheckCircle,
+  IconArrowUpRight,
+} from './Icons';
 
 export default function ModelPerformance({
   models,
@@ -186,18 +186,18 @@ export default function ModelPerformance({
   }, []);
 
   return (
-    <div className="tab-view active superbrain-view">
+    <div className="tab-view active syght-view">
       {/* Header */}
-      <div className="superbrain-page-header">
+      <div className="syght-page-header">
         <div className="page-header-title-box">
-          <div className="superbrain-chip">
+          <div className="syght-chip">
             <span className="chip-dot" />
             Empirical Validation Benchmark
           </div>
-          <h1 className="superbrain-page-title">
+          <h1 className="syght-page-title">
             Model Benchmarks, Evaluation Curves & Research Artifacts
           </h1>
-          <p className="superbrain-page-desc">
+          <p className="syght-page-desc">
             Empirical comparison of 7 candidate model architectures trained with 5-fold stratified cross-validation. 
             Selected champion via the 1-Standard-Error rule balancing accuracy and deployment simplicity.
           </p>
@@ -206,52 +206,52 @@ export default function ModelPerformance({
 
       {/* 4 Interactive Real Charts Grid */}
       <div className="charts-2x2-grid">
-        <div className="superbrain-panel chart-panel">
-          <div className="superbrain-panel-header">
+        <div className="syght-panel chart-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeLineChart size={18} className="text-cyan-400" />
+              <IconLineChart size={18} className="text-cyan-400" />
               <h4>Multi-Model ROC-AUC vs. PR-AUC</h4>
             </div>
-            <span className="superbrain-chip">Cross-Validated</span>
+            <span className="syght-chip">Cross-Validated</span>
           </div>
           <div className="chart-canvas-wrapper" style={{ height: '260px' }}>
             <canvas ref={chart1Ref} />
           </div>
         </div>
 
-        <div className="superbrain-panel chart-panel">
-          <div className="superbrain-panel-header">
+        <div className="syght-panel chart-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeLineChart size={18} className="text-cyan-400" />
+              <IconLineChart size={18} className="text-cyan-400" />
               <h4>Receiver Operating Characteristic (ROC)</h4>
             </div>
-            <span className="superbrain-chip">AUC: 0.8724</span>
+            <span className="syght-chip">AUC: 0.8724</span>
           </div>
           <div className="chart-canvas-wrapper" style={{ height: '260px' }}>
             <canvas ref={chart2Ref} />
           </div>
         </div>
 
-        <div className="superbrain-panel chart-panel">
-          <div className="superbrain-panel-header">
+        <div className="syght-panel chart-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeLineChart size={18} className="text-emerald-400" />
+              <IconLineChart size={18} className="text-emerald-400" />
               <h4>Operational Queue Cumulative Fraud Capture</h4>
             </div>
-            <span className="superbrain-chip">Top-5% Lift: 74.8%</span>
+            <span className="syght-chip">Top-5% Lift: 74.8%</span>
           </div>
           <div className="chart-canvas-wrapper" style={{ height: '260px' }}>
             <canvas ref={chart3Ref} />
           </div>
         </div>
 
-        <div className="superbrain-panel chart-panel">
-          <div className="superbrain-panel-header">
+        <div className="syght-panel chart-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeLineChart size={18} className="text-rose-400" />
+              <IconLineChart size={18} className="text-rose-400" />
               <h4>Threshold Cost-Loss Function Minimization</h4>
             </div>
-            <span className="superbrain-chip font-mono">T* = 0.5364</span>
+            <span className="syght-chip font-mono">T* = 0.5364</span>
           </div>
           <div className="chart-canvas-wrapper" style={{ height: '260px' }}>
             <canvas ref={chart4Ref} />
@@ -260,17 +260,17 @@ export default function ModelPerformance({
       </div>
 
       {/* Model Benchmark Comparison Table */}
-      <section className="superbrain-panel" style={{ marginTop: '1.5rem' }}>
-        <div className="superbrain-panel-header">
+      <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
+        <div className="syght-panel-header">
           <div className="panel-title-flex">
-            <HugeLayers size={20} className="text-cyan-400" />
+            <IconLayers size={20} className="text-cyan-400" />
             <h3>7-Model Architectural Benchmark Suite</h3>
           </div>
-          <span className="superbrain-chip">5-Fold Stratified Provider CV</span>
+          <span className="syght-chip">5-Fold Stratified Provider CV</span>
         </div>
 
         <div className="table-responsive-wrapper">
-          <table className="superbrain-table">
+          <table className="syght-table">
             <thead>
               <tr>
                 <th>Model Architecture</th>
@@ -303,7 +303,7 @@ export default function ModelPerformance({
                   <td>
                     {m.isChampion ? (
                       <span className="status-tag tag-champion font-mono">
-                        <HugeCheckCircle size={12} className="inline mr-1" /> CHAMPION
+                        <IconCheckCircle size={12} className="inline mr-1" /> CHAMPION
                       </span>
                     ) : (
                       <span className="status-tag tag-review font-mono">Evaluated</span>
@@ -317,13 +317,13 @@ export default function ModelPerformance({
       </section>
 
       {/* Generated Figure Artifacts Gallery */}
-      <section className="superbrain-panel" style={{ marginTop: '1.5rem' }}>
-        <div className="superbrain-panel-header">
+      <section className="syght-panel" style={{ marginTop: '1.5rem' }}>
+        <div className="syght-panel-header">
           <div className="panel-title-flex">
-            <HugeSparkles size={20} className="text-cyan-400" />
+            <IconSparkles size={20} className="text-cyan-400" />
             <h3>Official Research Figure Artifacts Gallery</h3>
           </div>
-          <span className="superbrain-chip">High-Resolution Reports</span>
+          <span className="syght-chip">High-Resolution Reports</span>
         </div>
 
         <div className="figure-cards-grid">
@@ -341,7 +341,7 @@ export default function ModelPerformance({
                   className="figure-thumb-img"
                 />
                 <div className="figure-overlay-hover">
-                  <HugeArrowUpRight size={24} className="figure-zoom-icon" />
+                  <IconArrowUpRight size={24} className="figure-zoom-icon" />
                   <span>Click to Inspect High-Res</span>
                 </div>
               </div>

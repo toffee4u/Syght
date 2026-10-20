@@ -1,17 +1,17 @@
 import React from 'react';
 import {
-  HugeLineChart,
-  HugeAlert,
-  HugeCheckCircle,
-  HugeZap,
-  HugePulse,
-  HugeArrowRight,
-  HugeBrain,
-  HugeFreeze,
-  HugeSearch,
-  HugeSparkles,
-  HugeShield,
-} from './HugeIcons';
+  IconLineChart,
+  IconAlert,
+  IconCheckCircle,
+  IconZap,
+  IconPulse,
+  IconArrowRight,
+  IconBrain,
+  IconFreeze,
+  IconSearch,
+  IconSparkles,
+  IconShield,
+} from './Icons';
 
 export default function CommandCenter({
   cases,
@@ -22,9 +22,9 @@ export default function CommandCenter({
   const urgentCases = cases.slice(0, 5);
 
   return (
-    <div className="tab-view active superbrain-view">
-      {/* One Superbrain Inspired Hero Banner */}
-      <section className="superbrain-hero-section">
+    <div className="tab-view active syght-view">
+      {/* Syght Enterprise Inspired Hero Banner */}
+      <section className="syght-hero-section">
         <div className="hero-grid-ambient" aria-hidden="true" />
         <div className="hero-radial-spotlight" aria-hidden="true" />
 
@@ -47,25 +47,25 @@ export default function CommandCenter({
           <div className="hero-action-row">
             <button
               type="button"
-              className="superbrain-btn-primary"
+              className="syght-btn-primary"
               onClick={onViewAllCases}
             >
               <span>Review Audit Worklist ({cases.length} Cases)</span>
-              <HugeArrowRight size={15} />
+              <IconArrowRight size={15} />
             </button>
             <button
               type="button"
-              className="superbrain-btn-secondary"
+              className="syght-btn-secondary"
               onClick={() => onInspectCase('PRV_02_PHANTOM_SURGERY_MILL')}
             >
-              <HugeSparkles size={16} />
+              <IconSparkles size={16} />
               <span>Inspect Live Case PRV_02</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* Bento Grid: Key Operational KPI Metric Cards (One Superbrain Card Style) */}
+      {/* Bento Grid: Key Operational KPI Metric Cards (Syght Enterprise Card Style) */}
       <section className="bento-kpi-grid">
         {/* Card 01 */}
         <div className="bento-card group">
@@ -73,7 +73,7 @@ export default function CommandCenter({
           <div className="bento-card-header">
             <span className="bento-card-label">TOTAL CLAIMS ANALYZED</span>
             <span className="bento-card-icon-box text-cyan-400">
-              <HugeLineChart size={18} />
+              <IconLineChart size={18} />
             </span>
           </div>
           <div className="bento-card-value font-mono">571,018</div>
@@ -89,7 +89,7 @@ export default function CommandCenter({
           <div className="bento-card-header">
             <span className="bento-card-label">UNDER INVESTIGATION</span>
             <span className="bento-card-icon-box text-rose-400">
-              <HugeAlert size={18} />
+              <IconAlert size={18} />
             </span>
           </div>
           <div className="bento-card-value text-rose-400 font-mono">57</div>
@@ -105,7 +105,7 @@ export default function CommandCenter({
           <div className="bento-card-header">
             <span className="bento-card-label">REVIEWED TODAY</span>
             <span className="bento-card-icon-box text-emerald-400">
-              <HugeCheckCircle size={18} />
+              <IconCheckCircle size={18} />
             </span>
           </div>
           <div className="bento-card-value text-emerald-400 font-mono">18</div>
@@ -121,7 +121,7 @@ export default function CommandCenter({
           <div className="bento-card-header">
             <span className="bento-card-label">HIGH-RISK FLAGS TRIGGERED</span>
             <span className="bento-card-icon-box text-amber-400">
-              <HugeAlert size={18} />
+              <IconAlert size={18} />
             </span>
           </div>
           <div className="bento-card-value text-amber-400 font-mono">108</div>
@@ -137,7 +137,7 @@ export default function CommandCenter({
           <div className="bento-card-header">
             <span className="bento-card-label">EXPOSURE RECOVERED</span>
             <span className="bento-card-icon-box text-cyan-300">
-              <HugeShield size={18} />
+              <IconShield size={18} />
             </span>
           </div>
           <div className="bento-card-value text-cyan-300 font-mono">$45.9M</div>
@@ -153,7 +153,7 @@ export default function CommandCenter({
           <div className="bento-card-header">
             <span className="bento-card-label">AVG PRE-AUTH LATENCY</span>
             <span className="bento-card-icon-box text-violet-400">
-              <HugeZap size={18} />
+              <IconZap size={18} />
             </span>
           </div>
           <div className="bento-card-value font-mono">1.84 <span className="text-sm font-normal text-neutral-400">ms</span></div>
@@ -165,18 +165,18 @@ export default function CommandCenter({
       </section>
 
       {/* Multi Progress Bars & Operational Progress Section */}
-      <section className="superbrain-panel">
-        <div className="superbrain-panel-header">
+      <section className="syght-panel">
+        <div className="syght-panel-header">
           <div className="panel-title-group">
             <div className="panel-title-flex">
-              <HugePulse size={20} className="text-cyan-400" />
+              <IconPulse size={20} className="text-cyan-400" />
               <h3>Operational Audit Progress & Capacity Metrics</h3>
             </div>
             <p className="panel-subtitle-text">
               Live Enterprise Pipeline Health & Investigation Workload Tracking • Team Pulse
             </p>
           </div>
-          <span className="superbrain-chip">
+          <span className="syght-chip">
             <span className="chip-dot" />
             Active Shift Quota
           </span>
@@ -261,12 +261,12 @@ export default function CommandCenter({
       </section>
 
       {/* Split Grid: Urgent Triage Worklist & Top SHAP Drivers */}
-      <div className="superbrain-split-grid">
+      <div className="syght-split-grid">
         {/* Left Column: Urgent Review Triage */}
-        <section className="superbrain-panel">
-          <div className="superbrain-panel-header">
+        <section className="syght-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeAlert size={20} className="text-rose-400" />
+              <IconAlert size={20} className="text-rose-400" />
               <h3>Urgent Priority Review Triage</h3>
             </div>
             <button
@@ -275,12 +275,12 @@ export default function CommandCenter({
               onClick={onViewAllCases}
             >
               <span>View All {cases.length} Cases</span>
-              <HugeArrowRight size={13} />
+              <IconArrowRight size={13} />
             </button>
           </div>
 
           <div className="table-responsive-wrapper">
-            <table className="superbrain-table">
+            <table className="syght-table">
               <thead>
                 <tr>
                   <th>Provider / Entity</th>
@@ -324,7 +324,7 @@ export default function CommandCenter({
                           onClick={() => onInspectCase(c.id)}
                           title="Inspect SHAP Waterfall"
                         >
-                          <HugeSearch size={13} />
+                          <IconSearch size={13} />
                           <span>Score</span>
                         </button>
                         {c.status !== 'frozen' && c.decision.includes('FLAGGED') && (
@@ -334,7 +334,7 @@ export default function CommandCenter({
                             onClick={() => onTriageAction(c.id, 'FREEZE')}
                             title="Freeze Disbursements"
                           >
-                            <HugeFreeze size={13} />
+                            <IconFreeze size={13} />
                             <span>Freeze</span>
                           </button>
                         )}
@@ -345,7 +345,7 @@ export default function CommandCenter({
                             onClick={() => onTriageAction(c.id, 'CLEAR')}
                             title="Fast-Track Reimbursement"
                           >
-                            <HugeCheckCircle size={13} />
+                            <IconCheckCircle size={13} />
                             <span>Clear</span>
                           </button>
                         )}
@@ -359,14 +359,14 @@ export default function CommandCenter({
         </section>
 
         {/* Right Column: Real-Time SHAP Risk Drivers */}
-        <section className="superbrain-panel">
-          <div className="superbrain-panel-header">
+        <section className="syght-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeBrain size={20} className="text-cyan-400" />
+              <IconBrain size={20} className="text-cyan-400" />
               <h3>Real-Time SHAP Risk Drivers</h3>
             </div>
-            <span className="superbrain-chip">
-              <HugeSparkles size={12} className="text-cyan-400" />
+            <span className="syght-chip">
+              <IconSparkles size={12} className="text-cyan-400" />
               TreeExplainer Active
             </span>
           </div>
@@ -433,8 +433,8 @@ export default function CommandCenter({
             </div>
           </div>
 
-          <div className="superbrain-banner-notice">
-            <HugeShield size={16} className="text-cyan-400 shrink-0" />
+          <div className="syght-banner-notice">
+            <IconShield size={16} className="text-cyan-400 shrink-0" />
             <span>
               <strong>Fairness Guarantee:</strong> Patient demographic attributes (Gender & Race) are permanently excluded 
               from model training to guarantee 100% ethical impartiality across all healthcare providers.

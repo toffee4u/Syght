@@ -174,8 +174,8 @@ export default function App() {
         )}
       </main>
 
-      {/* Superbrain Inspired High-Tech Footer */}
-      <footer className="superbrain-footer">
+      {/* Syght Inspired High-Tech Footer */}
+      <footer className="syght-footer">
         <div className="footer-inner-cluster">
           <div className="footer-brand-col">
             <div className="footer-logo-row">

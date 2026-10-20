@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import {
-  HugeNetwork,
-  HugeRefresh,
-  HugeAlert,
-  HugeShield,
-  HugeSparkles,
-} from './HugeIcons';
+  IconNetwork,
+  IconRefresh,
+  IconAlert,
+  IconShield,
+  IconSparkles,
+} from './Icons';
 
 export default function CollusionNetwork() {
   const canvasRef = useRef(null);
@@ -172,32 +172,32 @@ export default function CollusionNetwork() {
   }, [highlightRings]);
 
   return (
-    <div className="tab-view active superbrain-view">
-      <div className="superbrain-page-header">
+    <div className="tab-view active syght-view">
+      <div className="syght-page-header">
         <div className="page-header-title-box">
-          <div className="superbrain-chip">
+          <div className="syght-chip">
             <span className="chip-dot" />
             Bipartite Centrality Engine
           </div>
-          <h1 className="superbrain-page-title">
+          <h1 className="syght-page-title">
             Collusion Graph Network & Syndicate Ring Visualizer
           </h1>
-          <p className="superbrain-page-desc">
+          <p className="syght-page-desc">
             Graph topology model revealing physician-hospital bipartite ties, kickback rings, 
             and multi-facility billing syndicates undetectable via isolated tabular features.
           </p>
         </div>
         <button
           type="button"
-          className="superbrain-btn-primary"
+          className="syght-btn-primary"
           onClick={() => setHighlightRings(!highlightRings)}
         >
-          <HugeRefresh size={15} />
+          <IconRefresh size={15} />
           <span>{highlightRings ? 'Disable Ring Spotlight' : 'Spotlight Syndicate Rings (PRV_03)'}</span>
         </button>
       </div>
 
-      <section className="superbrain-panel" style={{ padding: '1rem', position: 'relative' }}>
+      <section className="syght-panel" style={{ padding: '1rem', position: 'relative' }}>
         <div className="network-legend-bar">
           <div className="legend-chip">
             <span className="dot-cyan" />
@@ -240,7 +240,7 @@ export default function CollusionNetwork() {
           <div className="bento-card-header">
             <span className="bento-card-label">NETWORK TOPOLOGY INTELLIGENCE</span>
             <span className="bento-card-icon-box text-cyan-400">
-              <HugeNetwork size={18} />
+              <IconNetwork size={18} />
             </span>
           </div>
           <div className="bento-card-sub" style={{ marginTop: '0.5rem', lineHeight: '1.6' }}>
@@ -254,7 +254,7 @@ export default function CollusionNetwork() {
           <div className="bento-card-header">
             <span className="bento-card-label">SYNDICATE RING (PRV_03)</span>
             <span className="bento-card-icon-box text-rose-400">
-              <HugeAlert size={18} />
+              <IconAlert size={18} />
             </span>
           </div>
           <div className="bento-card-sub danger" style={{ marginTop: '0.5rem', lineHeight: '1.6' }}>
@@ -268,7 +268,7 @@ export default function CollusionNetwork() {
           <div className="bento-card-header">
             <span className="bento-card-label">GRAPH DEGREE SHAP CONTRIBUTION</span>
             <span className="bento-card-icon-box text-emerald-400">
-              <HugeShield size={18} />
+              <IconShield size={18} />
             </span>
           </div>
           <div className="bento-card-sub positive" style={{ marginTop: '0.5rem', lineHeight: '1.6' }}>

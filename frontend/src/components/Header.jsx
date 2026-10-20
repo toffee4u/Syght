@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import {
-  HugeShield,
-  HugeZap,
-  HugeClipboardList,
-  HugeSearch,
-  HugeLineChart,
-  HugeNetwork,
-  HugeClock,
-  HugeVolume,
-  HugeVolumeMute,
-  HugeArrowUpRight,
-  HugeMenu,
-  HugeClose,
-  HugePulse,
-} from './HugeIcons';
+  IconShield,
+  IconZap,
+  IconClipboardList,
+  IconSearch,
+  IconLineChart,
+  IconNetwork,
+  IconClock,
+  IconVolume,
+  IconVolumeMute,
+  IconArrowUpRight,
+  IconMenu,
+  IconClose,
+  IconPulse,
+} from './Icons';
 
 export default function Header({
   activeTab,
@@ -46,12 +46,12 @@ export default function Header({
   }, [mobileMenuOpen]);
 
   const tabs = [
-    { id: 'tab-dashboard', label: 'Command Center', icon: HugeZap, desc: 'Live Fraud Radar & Triage' },
-    { id: 'tab-queue', label: 'Review Queue', icon: HugeClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
-    { id: 'tab-analyzer', label: 'Claim Analyzer', icon: HugeSearch, desc: 'SHAP Feature Contributions' },
-    { id: 'tab-performance', label: 'Model Benchmarks', icon: HugeLineChart, desc: 'ROC/PR & Cost Curves' },
-    { id: 'tab-network', label: 'Collusion Graph', icon: HugeNetwork, desc: 'Multi-Provider Rings' },
-    { id: 'tab-preauth', label: 'Pre-Auth Gateway', icon: HugeClock, desc: 'Sub-5ms Real-Time API' },
+    { id: 'tab-dashboard', label: 'Command Center', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
+    { id: 'tab-queue', label: 'Review Queue', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
+    { id: 'tab-analyzer', label: 'Claim Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
+    { id: 'tab-performance', label: 'Model Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
+    { id: 'tab-network', label: 'Collusion Graph', icon: IconNetwork, desc: 'Multi-Provider Rings' },
+    { id: 'tab-preauth', label: 'Pre-Auth Gateway', icon: IconClock, desc: 'Sub-5ms Real-Time API' },
   ];
 
   const isHealthy = healthData?.model_loaded;
@@ -65,8 +65,8 @@ export default function Header({
   };
 
   return (
-    <header className="superbrain-header">
-      <nav aria-label="Main Navigation" className="superbrain-navbar">
+    <header className="syght-header">
+      <nav aria-label="Main Navigation" className="syght-navbar">
         {/* Brand & Team Pulse Tag */}
         <div className="navbar-brand-cluster">
           <button 
@@ -76,7 +76,7 @@ export default function Header({
             title="Syght — Team Pulse Enterprise Fraud Detection"
           >
             <div className="brand-gem-container">
-              <HugeShield size={22} className="brand-gem-icon" />
+              <IconShield size={22} className="brand-gem-icon" />
               <span className="brand-gem-aura" />
             </div>
             <div className="brand-identity">
@@ -135,9 +135,9 @@ export default function Header({
             title={soundEnabled ? 'Mute Audio Alerts' : 'Unmute Audio Alerts'}
           >
             {soundEnabled ? (
-              <HugeVolume size={18} />
+              <IconVolume size={18} />
             ) : (
-              <HugeVolumeMute size={18} />
+              <IconVolumeMute size={18} />
             )}
           </button>
 
@@ -150,7 +150,7 @@ export default function Header({
             title="FastAPI Interactive Swagger Documentation"
           >
             <span>API Docs</span>
-            <HugeArrowUpRight size={14} className="cta-icon" />
+            <IconArrowUpRight size={14} className="cta-icon" />
           </a>
 
           {/* Mobile Menu Hamburger Button */}
@@ -161,7 +161,7 @@ export default function Header({
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <HugeClose size={20} /> : <HugeMenu size={20} />}
+            {mobileMenuOpen ? <IconClose size={20} /> : <IconMenu size={20} />}
           </button>
         </div>
       </nav>
@@ -175,7 +175,7 @@ export default function Header({
           >
             <div className="mobile-drawer-header">
               <div className="mobile-drawer-brand">
-                <HugeShield size={20} className="text-cyan-400" />
+                <IconShield size={20} className="text-cyan-400" />
                 <span className="mobile-brand-title">SYGHT</span>
                 <span className="team-pulse-pill compact">
                   <span className="pulse-dot-beacon" />
@@ -188,7 +188,7 @@ export default function Header({
                 onClick={() => setMobileMenuOpen(false)}
                 aria-label="Close menu"
               >
-                <HugeClose size={18} />
+                <IconClose size={18} />
               </button>
             </div>
 
@@ -234,7 +234,7 @@ export default function Header({
                   className="mobile-sound-btn"
                   onClick={toggleSound}
                 >
-                  {soundEnabled ? <HugeVolume size={16} /> : <HugeVolumeMute size={16} />}
+                  {soundEnabled ? <IconVolume size={16} /> : <IconVolumeMute size={16} />}
                   <span>{soundEnabled ? 'Alert Audio On' : 'Alert Audio Muted'}</span>
                 </button>
                 <a
@@ -244,7 +244,7 @@ export default function Header({
                   className="mobile-api-link"
                 >
                   <span>API Docs</span>
-                  <HugeArrowUpRight size={14} />
+                  <IconArrowUpRight size={14} />
                 </a>
               </div>
             </div>

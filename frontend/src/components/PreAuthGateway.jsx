@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
-  HugeClock,
-  HugeZap,
-  HugeAlert,
-  HugeCheckCircle,
-  HugeShield,
-  HugeFreeze,
-  HugeBrain,
-} from './HugeIcons';
+  IconClock,
+  IconZap,
+  IconAlert,
+  IconCheckCircle,
+  IconShield,
+  IconFreeze,
+  IconBrain,
+} from './Icons';
 
 export default function PreAuthGateway({ onShowToast }) {
   const [formData, setFormData] = useState({
@@ -112,39 +112,39 @@ export default function PreAuthGateway({ onShowToast }) {
   const isRejected = decision.decision === 'REJECTED';
 
   return (
-    <div className="tab-view active superbrain-view">
-      <div className="superbrain-page-header">
+    <div className="tab-view active syght-view">
+      <div className="syght-page-header">
         <div className="page-header-title-box">
-          <div className="superbrain-chip">
+          <div className="syght-chip">
             <span className="chip-dot" />
             Team Pulse Inline Interceptor
           </div>
-          <h1 className="superbrain-page-title">
+          <h1 className="syght-page-title">
             Sub-5ms Real-Time Pre-Authorization Gateway
           </h1>
-          <p className="superbrain-page-desc">
+          <p className="syght-page-desc">
             Real-time inline claim interception at hospital admission. 
             Prevents phantom surgeries and diagnostic upcoding before discharge and disbursements occur.
           </p>
         </div>
       </div>
 
-      <div className="superbrain-split-grid analyzer-layout">
+      <div className="syght-split-grid analyzer-layout">
         {/* Left Column: Form */}
-        <section className="superbrain-panel">
-          <div className="superbrain-panel-header">
+        <section className="syght-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeZap size={20} className="text-cyan-400" />
+              <IconZap size={20} className="text-cyan-400" />
               <h3>Incoming Hospital Pre-Auth Request</h3>
             </div>
-            <span className="superbrain-chip">Sub-5ms Interceptor</span>
+            <span className="syght-chip">Sub-5ms Interceptor</span>
           </div>
 
-          <div className="form-grid-superbrain">
+          <div className="form-grid-syght">
             <div className="form-field full-col">
               <label className="field-label">Admitting Provider ID</label>
               <select
-                className="superbrain-select font-mono"
+                className="syght-select font-mono"
                 value={formData.provider_id}
                 onChange={e => setFormData({ ...formData, provider_id: e.target.value })}
               >
@@ -160,7 +160,7 @@ export default function PreAuthGateway({ onShowToast }) {
               <label className="field-label">Pre-Auth Claim ID</label>
               <input
                 type="text"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.claim_id}
                 onChange={e => setFormData({ ...formData, claim_id: e.target.value })}
               />
@@ -170,7 +170,7 @@ export default function PreAuthGateway({ onShowToast }) {
               <label className="field-label">Beneficiary ID</label>
               <input
                 type="text"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.bene_id}
                 onChange={e => setFormData({ ...formData, bene_id: e.target.value })}
               />
@@ -179,7 +179,7 @@ export default function PreAuthGateway({ onShowToast }) {
             <div className="form-field">
               <label className="field-label">Claim Type</label>
               <select
-                className="superbrain-select font-mono"
+                className="syght-select font-mono"
                 value={formData.claim_type}
                 onChange={e => setFormData({ ...formData, claim_type: e.target.value })}
               >
@@ -192,7 +192,7 @@ export default function PreAuthGateway({ onShowToast }) {
               <label className="field-label">Requested Amount ($)</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.reimbursed_amount}
                 onChange={e => setFormData({ ...formData, reimbursed_amount: e.target.value })}
               />
@@ -202,7 +202,7 @@ export default function PreAuthGateway({ onShowToast }) {
               <label className="field-label">Length of Stay (Days)</label>
               <input
                 type="number"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.length_of_stay}
                 onChange={e => setFormData({ ...formData, length_of_stay: e.target.value })}
               />
@@ -212,7 +212,7 @@ export default function PreAuthGateway({ onShowToast }) {
               <label className="field-label">Diagnosis ICD-9 Codes</label>
               <input
                 type="text"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.diagnosis_codes}
                 onChange={e => setFormData({ ...formData, diagnosis_codes: e.target.value })}
               />
@@ -222,7 +222,7 @@ export default function PreAuthGateway({ onShowToast }) {
               <label className="field-label">Procedure ICD-9 Codes</label>
               <input
                 type="text"
-                className="superbrain-input font-mono"
+                className="syght-input font-mono"
                 value={formData.procedure_codes}
                 onChange={e => setFormData({ ...formData, procedure_codes: e.target.value })}
               />
@@ -231,24 +231,24 @@ export default function PreAuthGateway({ onShowToast }) {
 
           <button
             type="button"
-            className="superbrain-btn-primary w-full mt-5"
+            className="syght-btn-primary w-full mt-5"
             onClick={handleIntercept}
             disabled={isLoading}
           >
-            <HugeClock size={16} />
+            <IconClock size={16} />
             <span>{isLoading ? 'Intercepting in Sub-5ms Pipeline...' : 'Simulate Real-Time Pre-Auth Interception'}</span>
           </button>
         </section>
 
         {/* Right Column: Pre-Auth Adjudication Decision */}
-        <section className="superbrain-panel">
-          <div className="superbrain-panel-header">
+        <section className="syght-panel">
+          <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <HugeShield size={20} className="text-cyan-400" />
+              <IconShield size={20} className="text-cyan-400" />
               <h3>Pre-Authorization Decision Card</h3>
             </div>
-            <div className="superbrain-chip font-mono">
-              <HugeClock size={12} className="text-cyan-400" />
+            <div className="syght-chip font-mono">
+              <IconClock size={12} className="text-cyan-400" />
               {decision.latencyMs} ms SLA
             </div>
           </div>
@@ -258,11 +258,11 @@ export default function PreAuthGateway({ onShowToast }) {
             <div className="decision-banner-top">
               <div className="decision-icon-large">
                 {isApproved ? (
-                  <HugeCheckCircle size={36} className="text-emerald-400" />
+                  <IconCheckCircle size={36} className="text-emerald-400" />
                 ) : isRejected ? (
-                  <HugeFreeze size={36} className="text-rose-400" />
+                  <IconFreeze size={36} className="text-rose-400" />
                 ) : (
-                  <HugeAlert size={36} className="text-amber-400" />
+                  <IconAlert size={36} className="text-amber-400" />
                 )}
               </div>
               <div className="decision-title-group">
@@ -290,8 +290,8 @@ export default function PreAuthGateway({ onShowToast }) {
             <h4 className="policy-section-title">Triggered Operational Policy Flags</h4>
             <div className="flag-pills-list">
               {decision.flags.map((flag, idx) => (
-                <div key={idx} className="superbrain-flag-pill font-mono">
-                  <HugeAlert size={14} className="text-rose-400 shrink-0" />
+                <div key={idx} className="syght-flag-pill font-mono">
+                  <IconAlert size={14} className="text-rose-400 shrink-0" />
                   <span>{flag}</span>
                 </div>
               ))}
