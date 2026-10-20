@@ -550,9 +550,9 @@ def get_custom_docs_html(
   <header class="docs-hero-section">
     <div class="hero-glow-halo"></div>
     <div class="docs-hero-chip">
-      <span>Team Pulse • Enterprise Fraud Intelligence Portal</span>
+      <span>Team Pulse • Healthinsurance Fraud Detector Portal</span>
     </div>
-    <h1 class="docs-hero-title">Syght Healthcare Fraud Intelligence API</h1>
+    <h1 class="docs-hero-title">Syght Healthinsurance Fraud Detector API</h1>
     <p class="docs-hero-tagline">
       High-throughput production gateway executing calibrated LightGBM risk scoring, TreeSHAP feature attributions, 
       and sub-5ms real-time pre-authorization interception for PM-JAY and private health insurance claims.
