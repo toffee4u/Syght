@@ -14,6 +14,7 @@ import {
   IconClose,
   IconPulse,
   IconDatabase,
+  IconBarChart,
 } from './Icons';
 
 export default function Header({
@@ -23,6 +24,7 @@ export default function Header({
   soundEnabled,
   toggleSound,
   queueCount,
+  resultsCount,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -49,7 +51,8 @@ export default function Header({
   const tabs = [
     { id: 'tab-dashboard', label: 'Command Center', shortLabel: 'Command', icon: IconZap, desc: 'Live Fraud Radar & Triage' },
     { id: 'tab-queue', label: 'Review Queue', shortLabel: 'Review', icon: IconClipboardList, badge: queueCount, desc: 'Prioritized Worklist' },
-    { id: 'tab-dataset', label: 'Dataset Studio', shortLabel: 'Dataset', icon: IconDatabase, desc: 'Upload & Batch Test' },
+    { id: 'tab-dataset', label: 'Dataset Studio', shortLabel: 'Upload', icon: IconDatabase, desc: 'Upload Claims Dataset' },
+    { id: 'tab-results', label: 'Audit Results', shortLabel: 'Results', icon: IconBarChart, badge: resultsCount, desc: 'Confidence & Graph Report' },
     { id: 'tab-analyzer', label: 'Claim Analyzer', shortLabel: 'Analyzer', icon: IconSearch, desc: 'SHAP Feature Contributions' },
     { id: 'tab-performance', label: 'Benchmarks', shortLabel: 'Benchmarks', icon: IconLineChart, desc: 'ROC/PR & Cost Curves' },
     { id: 'tab-network', label: 'Collusion Graph', shortLabel: 'Network', icon: IconNetwork, desc: 'Multi-Provider Rings' },

@@ -9,6 +9,7 @@ import ModelPerformance from './components/ModelPerformance';
 import CollusionNetwork from './components/CollusionNetwork';
 import PreAuthGateway from './components/PreAuthGateway';
 import DatasetStudio from './components/DatasetStudio';
+import BatchAuditResults from './components/BatchAuditResults';
 import Toast from './components/Toast';
 
 import { BENCHMARK_CASES } from './data/benchmarkCases';
@@ -18,6 +19,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('tab-dashboard');
   const [cases, setCases] = useState(BENCHMARK_CASES);
   const [selectedCaseId, setSelectedCaseId] = useState(BENCHMARK_CASES[0].id);
+  const [batchResults, setBatchResults] = useState(null);
   const [healthData, setHealthData] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [toast, setToast] = useState(null);
@@ -123,6 +125,7 @@ export default function App() {
         soundEnabled={soundEnabled}
         toggleSound={() => setSoundEnabled(!soundEnabled)}
         queueCount={cases.filter(c => c.status === 'investigating').length}
+        resultsCount={batchResults ? batchResults.results?.length : undefined}
       />
 
       {/* Live Alert Ticker */}
@@ -151,6 +154,19 @@ export default function App() {
         {activeTab === 'tab-dataset' && (
           <DatasetStudio
             onInspectCase={handleInspectCase}
+            onShowToast={showToast}
+            onRunComplete={(results) => {
+              setBatchResults(results);
+              setActiveTab('tab-results');
+            }}
+          />
+        )}
+
+        {activeTab === 'tab-results' && (
+          <BatchAuditResults
+            resultsData={batchResults}
+            onInspectCase={handleInspectCase}
+            onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
             onShowToast={showToast}
           />
         )}
@@ -237,6 +253,11 @@ export default function App() {
               <li>
                 <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-dataset')}>
                   Dataset Studio & Batch Runner
+                </button>
+              </li>
+              <li>
+                <button type="button" className="footer-link-btn" onClick={() => setActiveTab('tab-results')}>
+                  Audit Results & Confidence Report
                 </button>
               </li>
               <li>
