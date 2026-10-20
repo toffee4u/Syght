@@ -46,6 +46,22 @@ export default function Header({
     } else {
       document.body.style.overflow = '';
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Handle escape key to close menu
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+      }
+    };
+    if (mobileMenuOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mobileMenuOpen]);
 
   const tabs = [
@@ -210,7 +226,7 @@ export default function Header({
                     </div>
                     <div className="mobile-nav-content">
                       <div className="mobile-nav-title">
-                        {tab.label}
+                        <span>{tab.label}</span>
                         {tab.badge !== undefined && tab.badge > 0 && (
                           <span className="mobile-counter-badge">{tab.badge}</span>
                         )}

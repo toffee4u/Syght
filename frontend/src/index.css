@@ -423,25 +423,34 @@ a {
   z-index: 200;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
   padding: 1rem;
-  background: rgba(15, 23, 42, 0.35);
+  background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   pointer-events: auto;
   animation: fadeIn 0.2s ease-out;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-drawer-sheet {
   width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 440px;
+  margin: auto;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--syght-radius-xl);
-  padding: 1.25rem;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15);
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.25);
   animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 2rem);
+  max-height: calc(100vh - 2rem);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 @keyframes slideDown {
@@ -450,10 +459,11 @@ a {
 }
 
 .mobile-drawer-header {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 1rem;
+  padding-bottom: 0.85rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -465,7 +475,7 @@ a {
 
 .mobile-brand-title {
   font-family: var(--syght-font-sans);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #09090b;
 }
@@ -474,40 +484,69 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--syght-radius-full);
   color: #09090b;
   cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mobile-close-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .mobile-drawer-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 1rem 0;
+  gap: 0.35rem;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.mobile-drawer-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-drawer-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-drawer-nav::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
 }
 
 .mobile-nav-item {
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  padding: 0.75rem 0.85rem;
+  padding: 0.65rem 0.8rem;
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--syght-radius-md);
   color: var(--syght-text-secondary);
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s;
+  transition: all 0.15s;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-nav-item:hover, .mobile-nav-item.active {
   color: #09090b;
   background: #f1f5f9;
   border-color: rgba(0, 0, 0, 0.06);
+}
+
+.mobile-nav-item:active {
+  transform: scale(0.98);
 }
 
 .mobile-nav-icon-box {
@@ -519,18 +558,20 @@ a {
   background: rgba(2, 132, 199, 0.08);
   border-radius: var(--syght-radius-sm);
   color: var(--syght-cyan);
+  flex-shrink: 0;
 }
 
 .mobile-nav-content {
   flex: 1;
+  min-width: 0;
 }
 
 .mobile-nav-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
   font-family: var(--syght-font-sans);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #09090b;
 }
@@ -542,20 +583,24 @@ a {
   background: rgba(225, 29, 72, 0.1);
   border: 1px solid rgba(225, 29, 72, 0.25);
   border-radius: 9999px;
-  padding: 0 5px;
+  padding: 0 6px;
 }
 
 .mobile-nav-desc {
   font-size: 0.72rem;
   color: var(--syght-text-tertiary);
-  margin-top: 1px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mobile-drawer-footer {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding-top: 0.85rem;
+  gap: 0.65rem;
+  padding-top: 0.75rem;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -564,6 +609,10 @@ a {
   align-items: center;
   justify-content: space-between;
   font-size: 0.78rem;
+}
+
+.mobile-drawer-footer .engine-status-text {
+  display: inline !important;
 }
 
 .mobile-actions-row {
@@ -582,9 +631,16 @@ a {
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--syght-radius-md);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 500;
   color: var(--syght-text-secondary);
   cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mobile-sound-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #09090b;
 }
 
 .mobile-api-link {
@@ -597,8 +653,14 @@ a {
   background: #09090b;
   color: #ffffff;
   border-radius: var(--syght-radius-md);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.mobile-api-link:hover {
+  background: #27272a;
 }
 
 /* ==============================================================================
@@ -2325,8 +2387,8 @@ a {
   margin-left: 0 !important;
 }
 
-/* Medium Desktop & Standard Laptop (1100px - 1340px) */
-@media (max-width: 1340px) and (min-width: 1100px) {
+/* Medium Desktop & Standard Laptop (1141px - 1340px) */
+@media (max-width: 1340px) and (min-width: 1141px) {
   .syght-navbar {
     padding: 0 0.85rem !important;
     gap: 0.35rem !important;
@@ -2355,22 +2417,38 @@ a {
   }
 }
 
-/* Tablet & Smaller Laptops (< 1100px): Clean Mobile Drawer Mode */
-@media (max-width: 1099px) {
+/* Tablet & Mobile (< 1140px): Clean Mobile Drawer Mode */
+@media (max-width: 1140px) {
   .syght-navbar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
     height: 56px !important;
-    padding: 0 0.85rem !important;
+    padding: 0 1rem !important;
+  }
+
+  .navbar-brand-cluster {
+    flex-shrink: 0 !important;
   }
 
   .navbar-nav-pills {
     display: none !important;
   }
 
-  .engine-status-pill {
+  .navbar-actions-cluster {
+    justify-self: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.5rem !important;
+    margin-left: auto !important;
+  }
+
+  .navbar-actions-cluster .engine-status-pill {
     display: none !important;
   }
 
-  .navbar-cta-btn {
+  .navbar-actions-cluster .navbar-cta-btn {
     display: none !important;
   }
 
@@ -2379,8 +2457,71 @@ a {
   }
 }
 
-/* Desktop Screens (>= 1100px) */
-@media (min-width: 1100px) {
+/* Mobile Screens (<= 640px): Touch-Optimized Compact Layout */
+@media (max-width: 640px) {
+  .syght-header {
+    padding: 0.4rem 0.5rem 0 0.5rem !important;
+  }
+
+  .syght-navbar {
+    height: 52px !important;
+    padding: 0 0.75rem !important;
+    border-radius: 14px !important;
+  }
+
+  .brand-gem-container {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+  }
+
+  .brand-gem-icon {
+    width: 17px !important;
+    height: 17px !important;
+  }
+
+  .brand-name {
+    font-size: 1.05rem !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  .control-icon-btn,
+  .mobile-hamburger-btn {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .mobile-drawer-overlay {
+    padding: 0.5rem !important;
+  }
+
+  .mobile-drawer-sheet {
+    padding: 1rem !important;
+    border-radius: 16px !important;
+    max-height: calc(100dvh - 1rem) !important;
+    max-height: calc(100vh - 1rem) !important;
+  }
+
+  .mobile-nav-item {
+    padding: 0.55rem 0.7rem !important;
+  }
+
+  .mobile-nav-icon-box {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .mobile-nav-title {
+    font-size: 0.85rem !important;
+  }
+
+  .mobile-nav-desc {
+    font-size: 0.7rem !important;
+  }
+}
+
+/* Desktop Screens (>= 1141px) */
+@media (min-width: 1141px) {
   .mobile-hamburger-btn {
     display: none !important;
   }
@@ -3011,14 +3152,6 @@ a {
   }
 }
 
-@media (max-width: 1140px) {
-  .navbar-nav-pills {
-    display: none !important;
-  }
-  .mobile-hamburger-btn {
-    display: flex !important;
-  }
-}
 
 /* ==============================================================================
    Batch Audit Results Styling (Pure Vanilla CSS)
