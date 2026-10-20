@@ -82,48 +82,55 @@ A curated benchmark portfolio of **25 real-world healthcare provider facilities*
 
 ```mermaid
 flowchart TD
-    classDef input fill:#EBF5FB,stroke:#2980B9,stroke-width:2px,color:#1B4F72;
-    classDef audit fill:#E8F8F5,stroke:#117A65,stroke-width:2px,color:#0E6251;
-    classDef feature fill:#FEF9E7,stroke:#B7950B,stroke-width:2px,color:#7D6608;
-    classDef split fill:#F5EEF8,stroke:#7D3C98,stroke-width:2px,color:#512E5F;
-    classDef model fill:#EAF2F8,stroke:#2471A3,stroke-width:2px,color:#154360;
-    classDef eval fill:#FDEDEC,stroke:#C0392B,stroke-width:2px,color:#78281F;
+  subgraph Step1["① 🗄️ Multi-Table Ingestion & Data Audit"]
+    Inp(["🏥 Inpatient Claims"])
+    Out(["🏨 Outpatient Claims"])
+    Bene(["👥 Beneficiary Profiles"])
+    Labels(["🏷️ Provider Labels"])
+    Inp & Out & Bene & Labels --> Audit(["🔍 Pre-Flight Quality Audit<br/>validates schemas, duplicates & structural nulls"])
+  end
 
-    subgraph Step1["1. Multi-Table Ingestion & Data Audit"]
-        Inp["Inpatient Claims"]:::input
-        Out["Outpatient Claims"]:::input
-        Bene["Beneficiary Profiles"]:::input
-        Labels["Provider Labels"]:::input
-        Inp & Out & Bene & Labels --> Audit["Pre-Flight Quality Audit<br/><i>Validates schemas, duplicate claims & structural nulls</i>"]:::audit
-    end
+  subgraph Step2["② 🧪 Behavioral Feature Engineering"]
+    Audit --> Agg(["⚙️ Provider Aggregation Engine"])
+    Agg --> F1(["📊 Volume & Scale · 13"])
+    Agg --> F2(["💰 Financial Profiles · 15"])
+    Agg --> F3(["🚩 Behavioral Anomalies · 19"])
+    Agg --> F4(["🩺 Clinical Patient Mix · 11"])
+    Agg --> F5(["🕸️ Collusion Graph Signals · 3"])
+    Agg -.->|🛡️ Strict Protection| Drop(["🧹 Demographic Filter<br/>permanently drops Gender & Race"])
+  end
 
-    subgraph Step2["2. Behavioral Feature Engineering"]
-        Audit --> Agg["Provider Aggregation Engine"]:::feature
-        Agg --> F1["Volume & Scale (13)"]:::feature
-        Agg --> F2["Financial Profiles (15)"]:::feature
-        Agg --> F3["Behavioral Anomalies (19)"]:::feature
-        Agg --> F4["Clinical Patient Mix (11)"]:::feature
-        Agg --> F5["Collusion Graph Signals (3)"]:::feature
-        Agg -.->|Strict Protection| Drop["Demographic Filter<br/><i>Permanently drops Gender & Race</i>"]:::feature
-    end
+  subgraph Step3["③ 🎯 Leak-Free Stratified Split"]
+    F1 & F2 & F3 & F4 & F5 --> Split(["✂️ 80 / 20 Stratified Provider Split"])
+    Split --> TrainSet(["🟢 Training Providers · 80%"])
+    Split --> TestSet(["🧊 Frozen Held-Out Test Set · 20%"])
+  end
 
-    subgraph Step3["3. Leak-Free Stratified Split"]
-        F1 & F2 & F3 & F4 & F5 --> Split["80 / 20 Stratified Provider Split"]:::split
-        Split --> TrainSet["Training Providers (80%)"]:::split
-        Split --> TestSet["Frozen Held-Out Test Set (20%)"]:::split
-    end
+  subgraph Step4["④ 🔁 5-Fold Cross-Validation & Model Selection"]
+    TrainSet --> CV(["🔁 5-Fold Stratified Cross-Validation"])
+    CV --> Baselines(["📏 Heuristic Volume Baselines"])
+    CV --> MLSuite(["🤖 LightGBM · XGBoost · Random Forest · ElasticNet"])
+    Baselines & MLSuite --> Sel(["🏆 1-SE Parsimony Selection Rule<br/>Champion: LightGBM · PR-AUC 0.7378"])
+  end
 
-    subgraph Step4["4. 5-Fold Cross-Validation & Model Selection"]
-        TrainSet --> CV["5-Fold Stratified Cross-Validation"]:::model
-        CV --> Baselines["Heuristic Volume Baselines"]:::model
-        CV --> MLSuite["LightGBM, XGBoost, Random Forest, ElasticNet"]:::model
-        Baselines & MLSuite --> Sel["1-SE Parsimony Selection Rule<br/><i>Champion: LightGBM (PR-AUC: 0.7378)</i>"]:::model
-    end
+  subgraph Step5["⑤ ⚖️ Cost-Aware Threshold & Deployment"]
+    Sel --> Cost(["🎚️ Cost-Optimal Cutoff Tuning · Threshold 0.5364"])
+    TestSet & Cost --> Final(["🚀 Single-Pass Frozen Test Evaluation & TreeSHAP Notes"])
+  end
 
-    subgraph Step5["5. Cost-Aware Threshold & Deployment"]
-        Sel --> Cost["Cost-Optimal Cutoff Tuning<br/><i>Threshold: 0.5364</i>"]:::eval
-        TestSet & Cost --> Final["Single-Pass Frozen Test Evaluation & TreeSHAP Notes"]:::eval
-    end
+  classDef input fill:#EBF5FB,stroke:#2980B9,stroke-width:2px,color:#1B4F72
+  classDef audit fill:#E8F8F5,stroke:#117A65,stroke-width:3px,color:#0E6251
+  classDef feature fill:#FEF9E7,stroke:#B7950B,stroke-width:2px,color:#7D6608
+  classDef split fill:#F5EEF8,stroke:#7D3C98,stroke-width:2px,color:#512E5F
+  classDef model fill:#EAF2F8,stroke:#2471A3,stroke-width:2px,color:#154360
+  classDef eval fill:#FDEDEC,stroke:#C0392B,stroke-width:3px,color:#78281F
+
+  class Inp,Out,Bene,Labels input
+  class Audit audit
+  class Agg,F1,F2,F3,F4,F5,Drop feature
+  class Split,TrainSet,TestSet split
+  class CV,Baselines,MLSuite,Sel model
+  class Cost,Final eval
 ```
 
 ---
