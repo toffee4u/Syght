@@ -163,8 +163,8 @@ a {
   justify-content: center;
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(124, 58, 237, 0.08));
-  border: 1px solid rgba(2, 132, 199, 0.25);
+  background: linear-gradient(135deg, rgba(134, 59, 255, 0.14), rgba(2, 132, 199, 0.08));
+  border: 1px solid rgba(134, 59, 255, 0.28);
   border-radius: var(--syght-radius-md);
   color: var(--syght-cyan);
 }
@@ -173,7 +173,7 @@ a {
   position: absolute;
   inset: -3px;
   border-radius: var(--syght-radius-md);
-  border: 1px solid var(--syght-cyan);
+  border: 1px solid rgba(134, 59, 255, 0.35);
   opacity: 0.3;
   animation: auraPulse 2.8s ease-in-out infinite;
 }
