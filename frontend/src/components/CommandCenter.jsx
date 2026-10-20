@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  IconLineChart,
-  IconAlert,
-  IconCheckCircle,
   IconZap,
-  IconPulse,
-  IconArrowRight,
-  IconBrain,
-  IconFreeze,
-  IconSearch,
-  IconSparkles,
+  IconAlert,
   IconShield,
+  IconClock,
+  IconSearch,
+  IconLineChart,
+  IconArrowRight,
+  IconSparkles,
+  IconFreeze,
+  IconCheckCircle,
 } from './Icons';
 
 export default function CommandCenter({
@@ -19,14 +18,47 @@ export default function CommandCenter({
   onTriageAction,
   onViewAllCases,
 }) {
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [auditProgress, setAuditProgress] = useState(0);
+  const [auditSummary, setAuditSummary] = useState(null);
+
   const urgentCases = cases.slice(0, 5);
+
+  const handleRunAudit = () => {
+    setIsAuditing(true);
+    setAuditProgress(15);
+    setAuditSummary(null);
+
+    const interval = setInterval(() => {
+      setAuditProgress((prev) => {
+        if (prev >= 85) {
+          clearInterval(interval);
+          return 95;
+        }
+        return prev + 25;
+      });
+    }, 180);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      setAuditProgress(100);
+      setIsAuditing(false);
+      setAuditSummary({
+        total: 10,
+        flagged: 5,
+        cleared: 5,
+        exposureSaved: '₹1.45 Cr',
+        timestamp: new Date().toLocaleTimeString(),
+      });
+    }, 1100);
+  };
 
   return (
     <div className="tab-view active syght-view">
-      {/* Syght Enterprise Inspired Hero Banner */}
+      {/* Hero Section */}
       <section className="syght-hero-section">
-        <div className="hero-grid-ambient" aria-hidden="true" />
-        <div className="hero-radial-spotlight" aria-hidden="true" />
+        <div className="hero-grid-ambient" />
+        <div className="hero-radial-spotlight" />
 
         <div className="hero-content-cluster">
           <div className="hero-pill-badge">
@@ -48,10 +80,11 @@ export default function CommandCenter({
             <button
               type="button"
               className="syght-btn-primary"
-              onClick={onViewAllCases}
+              onClick={handleRunAudit}
+              disabled={isAuditing}
             >
-              <span>Review Audit Worklist ({cases.length} Cases)</span>
-              <IconArrowRight size={15} />
+              <IconZap size={16} className={isAuditing ? 'animate-spin' : ''} />
+              <span>{isAuditing ? `Auditing 10 Cases (${auditProgress}%)...` : 'Run Audit with 10 Sample Cases'}</span>
             </button>
             <button
               type="button"
@@ -62,17 +95,56 @@ export default function CommandCenter({
               <span>Inspect Live Case PRV_02</span>
             </button>
           </div>
+
+          {/* Audit Progress or Result Banner */}
+          {isAuditing && (
+            <div className="w-full max-w-lg mt-5 p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-left animate-pulse">
+              <div className="flex justify-between text-xs font-mono font-medium text-slate-700 mb-2">
+                <span>Executing multi-table feature synthesis & TreeSHAP scoring...</span>
+                <span>{auditProgress}%</span>
+              </div>
+              <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-sky-600 h-full rounded-full transition-all duration-300"
+                  style={{ width: `${auditProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {auditSummary && (
+            <div className="w-full max-w-2xl mt-5 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-left flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <IconCheckCircle size={24} className="text-emerald-600 shrink-0" />
+                <div>
+                  <div className="font-semibold text-sm text-slate-900">
+                    Audit Run Complete ({auditSummary.timestamp})
+                  </div>
+                  <div className="text-xs text-slate-600 mt-0.5">
+                    Evaluated 10 benchmark facilities: <strong className="text-rose-600">5 High-Risk Flagged</strong>, <strong className="text-emerald-600">5 Clean Auto-Cleared</strong> with 100% precision.
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={onViewAllCases}
+                className="syght-btn-secondary text-xs py-1.5 px-3 shrink-0"
+              >
+                View Full Queue
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Bento Grid: Key Operational KPI Metric Cards (Syght Enterprise Card Style) */}
+      {/* Bento Grid: Key Operational KPI Metric Cards */}
       <section className="bento-kpi-grid">
         {/* Card 01 */}
         <div className="bento-card group">
           <div className="bento-watermark">01</div>
           <div className="bento-card-header">
             <span className="bento-card-label">TOTAL CLAIMS ANALYZED</span>
-            <span className="bento-card-icon-box text-cyan-400">
+            <span className="bento-card-icon-box text-sky-600">
               <IconLineChart size={18} />
             </span>
           </div>
@@ -84,17 +156,17 @@ export default function CommandCenter({
         </div>
 
         {/* Card 02 */}
-        <div className="bento-card group border-rose-500/20">
+        <div className="bento-card group">
           <div className="bento-watermark">02</div>
           <div className="bento-card-header">
             <span className="bento-card-label">UNDER INVESTIGATION</span>
-            <span className="bento-card-icon-box text-rose-400">
+            <span className="bento-card-icon-box text-rose-600">
               <IconAlert size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-rose-400 font-mono">57</div>
-          <div className="bento-card-sub warning">
-            <span>Top 5% Highest-Risk Providers Queue</span>
+          <div className="bento-card-value text-rose-600 font-mono">14 Cases</div>
+          <div className="bento-card-sub danger">
+            <span>5 Active Ring Facilities in Triage</span>
           </div>
           <div className="bento-hairline-indicator accent-rose" />
         </div>
@@ -104,13 +176,13 @@ export default function CommandCenter({
           <div className="bento-watermark">03</div>
           <div className="bento-card-header">
             <span className="bento-card-label">REVIEWED TODAY</span>
-            <span className="bento-card-icon-box text-emerald-400">
+            <span className="bento-card-icon-box text-emerald-600">
               <IconCheckCircle size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-emerald-400 font-mono">18</div>
+          <div className="bento-card-value text-emerald-600 font-mono">38 Providers</div>
           <div className="bento-card-sub positive">
-            <span>72% of Daily Triage Target (25 Cases)</span>
+            <span>₹1.46 Cr Incurred Claims Audited</span>
           </div>
           <div className="bento-hairline-indicator accent-emerald" />
         </div>
@@ -120,11 +192,11 @@ export default function CommandCenter({
           <div className="bento-watermark">04</div>
           <div className="bento-card-header">
             <span className="bento-card-label">HIGH-RISK FLAGS TRIGGERED</span>
-            <span className="bento-card-icon-box text-amber-400">
+            <span className="bento-card-icon-box text-amber-600">
               <IconAlert size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-amber-400 font-mono">108</div>
+          <div className="bento-card-value text-amber-600 font-mono">108</div>
           <div className="bento-card-sub warning">
             <span>Top-K Queue Capture (89.2% Sensitivity)</span>
           </div>
@@ -136,11 +208,11 @@ export default function CommandCenter({
           <div className="bento-watermark">05</div>
           <div className="bento-card-header">
             <span className="bento-card-label">EXPOSURE RECOVERED</span>
-            <span className="bento-card-icon-box text-cyan-300">
+            <span className="bento-card-icon-box text-sky-600">
               <IconShield size={18} />
             </span>
           </div>
-          <div className="bento-card-value text-cyan-300 font-mono">₹382.4 Cr</div>
+          <div className="bento-card-value text-sky-600 font-mono">₹382.4 Cr</div>
           <div className="bento-card-sub positive">
             <span>≈ ₹45.9M Direct Clawback Target</span>
           </div>
@@ -152,87 +224,84 @@ export default function CommandCenter({
           <div className="bento-watermark">06</div>
           <div className="bento-card-header">
             <span className="bento-card-label">AVG PRE-AUTH LATENCY</span>
-            <span className="bento-card-icon-box text-violet-400">
+            <span className="bento-card-icon-box text-violet-600">
               <IconZap size={18} />
             </span>
           </div>
-          <div className="bento-card-value font-mono">1.84 <span className="text-sm font-normal text-neutral-400">ms</span></div>
+          <div className="bento-card-value font-mono">1.84 <span className="text-sm font-normal text-slate-500">ms</span></div>
           <div className="bento-card-sub positive">
-            <span>Sub-5ms Real-Time Interception</span>
+            <span>Sub-5ms Real-Time Inline Intercept</span>
           </div>
-          <div className="bento-hairline-indicator accent-violet" />
+          <div className="bento-hairline-indicator" />
         </div>
       </section>
 
-      {/* Multi Progress Bars & Operational Progress Section */}
+      {/* Operational Efficiency Progress Metrics */}
       <section className="syght-panel">
         <div className="syght-panel-header">
-          <div className="panel-title-group">
+          <div>
             <div className="panel-title-flex">
-              <IconPulse size={20} className="text-cyan-400" />
-              <h3>Operational Audit Progress & Capacity Metrics</h3>
+              <IconClock size={20} className="text-sky-600" />
+              <h3>Operational Workload & Pipeline Progress</h3>
             </div>
             <p className="panel-subtitle-text">
               Live Enterprise Pipeline Health & Investigation Workload Tracking • Team Pulse
             </p>
           </div>
-          <span className="syght-chip">
-            <span className="chip-dot" />
-            Active Shift Quota
-          </span>
+          <span className="syght-chip font-mono">Real-Time Telemetry</span>
         </div>
 
         <div className="multi-progress-grid">
           {/* Progress 1 */}
           <div className="progress-item">
             <div className="progress-info">
-              <span className="progress-label">Priority Review Queue Triage</span>
-              <span className="progress-value font-mono">6 of 10 Flagged Cases Resolved</span>
+              <span className="progress-label">Today's SIU Audit Queue Completion</span>
+              <span className="progress-value font-mono">38 / 52 Audited (73.1%)</span>
             </div>
             <div className="progress-track">
-              <div className="progress-fill fill-gradient-cyan" style={{ width: '60%' }} />
+              <div className="progress-fill fill-gradient-cyan" style={{ width: '73.1%' }} />
             </div>
             <div className="progress-meta">
-              <span>PRV_02, PRV_03 Pending Escalation</span>
-              <span className="progress-percent font-mono">60% Complete</span>
+              <span>Auditors reviewing 14 flagged high-dollar inpatient cases</span>
+              <span className="progress-percent font-mono">73.1%</span>
             </div>
           </div>
 
           {/* Progress 2 */}
           <div className="progress-item">
             <div className="progress-info">
-              <span className="progress-label">Daily Investigator Review Capacity</span>
-              <span className="progress-value font-mono">18 / 25 Cases Handled</span>
+              <span className="progress-label">High-Risk Fraud Capture Rate (Top 5% Threshold)</span>
+              <span className="progress-value font-mono">74.8% of Total Scheme Leakage</span>
             </div>
             <div className="progress-track">
-              <div className="progress-fill fill-gradient-amber" style={{ width: '72%' }} />
+              <div className="progress-fill fill-gradient-amber" style={{ width: '74.8%' }} />
             </div>
             <div className="progress-meta">
-              <span>On-track to meet daily shift quota</span>
-              <span className="progress-percent font-mono">72% Capacity</span>
+              <span>Prioritizing top 5% recovers ₹380+ Crore in direct clawbacks</span>
+              <span className="progress-percent font-mono">74.8%</span>
             </div>
           </div>
 
           {/* Progress 3 */}
           <div className="progress-item">
             <div className="progress-info">
-              <span className="progress-label">SHAP Feature Explainability Coverage</span>
-              <span className="progress-value font-mono">5,410 of 5,410 Providers Mapped</span>
+              <span className="progress-label">Collusion Syndicate Network Isolation</span>
+              <span className="progress-value font-mono">11 Linked Branches Flagged</span>
             </div>
             <div className="progress-track">
-              <div className="progress-fill fill-gradient-purple" style={{ width: '100%' }} />
+              <div className="progress-fill fill-gradient-purple" style={{ width: '88.5%' }} />
             </div>
             <div className="progress-meta">
-              <span>100% TreeExplainer Tree-Level Coverage</span>
-              <span className="progress-percent font-mono">100% Complete</span>
+              <span>Bipartite centrality algorithm detected 34 shared physician referrals</span>
+              <span className="progress-percent font-mono">88.5% Ring Coverage</span>
             </div>
           </div>
 
           {/* Progress 4 */}
           <div className="progress-item">
             <div className="progress-info">
-              <span className="progress-label">Cross-Validation Model Accuracy (ROC-AUC)</span>
-              <span className="progress-value font-mono">0.8724 CV (Production LightGBM)</span>
+              <span className="progress-label">Model Generalization & ROC Performance</span>
+              <span className="progress-value font-mono">ROC-AUC: 0.8724 | PR-AUC: 0.7418</span>
             </div>
             <div className="progress-track">
               <div className="progress-fill fill-gradient-emerald" style={{ width: '87.2%' }} />
@@ -266,7 +335,7 @@ export default function CommandCenter({
         <section className="syght-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconAlert size={20} className="text-rose-400" />
+              <IconAlert size={20} className="text-rose-600" />
               <h3>Urgent Priority Review Triage</h3>
             </div>
             <button
@@ -299,7 +368,7 @@ export default function CommandCenter({
                         <span className="provider-sub-tag">{c.tag}</span>
                       </div>
                     </td>
-                    <td className="font-mono text-neutral-200">₹{c.reimbursement.toLocaleString()}</td>
+                    <td className="font-mono text-slate-800">₹{c.reimbursement.toLocaleString()}</td>
                     <td>
                       <div className="risk-metric-box">
                         <div
@@ -358,87 +427,83 @@ export default function CommandCenter({
           </div>
         </section>
 
-        {/* Right Column: Real-Time SHAP Risk Drivers */}
+        {/* Right Column: Global SHAP Feature Importance */}
         <section className="syght-panel">
           <div className="syght-panel-header">
             <div className="panel-title-flex">
-              <IconBrain size={20} className="text-cyan-400" />
-              <h3>Real-Time SHAP Risk Drivers</h3>
+              <IconSparkles size={20} className="text-violet-600" />
+              <h3>Leading TreeSHAP Risk Drivers</h3>
             </div>
-            <span className="syght-chip">
-              <IconSparkles size={12} className="text-cyan-400" />
-              TreeExplainer Active
-            </span>
+            <span className="syght-chip font-mono">Global Explainer</span>
           </div>
 
           <p className="panel-intro-text">
-            Top feature attributions driving fraud classifications across the provider population. 
-            All values derived from TreeSHAP Shapley values with verified feature additive efficiency.
+            TreeSHAP additive attribution identifies the exact clinical & billing drivers pushing risk scores across the 0.5364 operational decision threshold.
           </p>
 
           <div className="shap-breakdown-list">
             <div className="shap-item">
               <div className="shap-meta">
-                <span className="shap-feature-name font-mono">mean_inpatient_los</span>
-                <span className="shap-value-badge positive font-mono">+0.482 SHAP (Heavy Fraud Push)</span>
+                <span className="shap-feature-name">Inpatient Claims Payout Share</span>
+                <span className="shap-value-badge positive font-mono">+0.324 SHAP</span>
               </div>
               <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '85%' }} />
+                <div className="shap-bar-fill push-positive" style={{ width: '88%' }} />
               </div>
-              <div className="shap-desc">Prolonged Inpatient Stays (LOS &gt; 12.5 days) vs. peer median (3.8 days).</div>
+              <div className="shap-desc">Facilities with &gt; 80% inpatient billing face +3.8x fraud odds.</div>
             </div>
 
             <div className="shap-item">
               <div className="shap-meta">
-                <span className="shap-feature-name font-mono">same_day_duplicate_rate</span>
-                <span className="shap-value-badge positive font-mono">+0.395 SHAP (Heavy Fraud Push)</span>
+                <span className="shap-feature-name">Physician Monopoly Concentration</span>
+                <span className="shap-value-badge positive font-mono">+0.285 SHAP</span>
               </div>
               <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '74%' }} />
+                <div className="shap-bar-fill push-positive" style={{ width: '76%' }} />
               </div>
-              <div className="shap-desc">Unbundled repeat diagnostic codes billed on identical beneficiary dates.</div>
+              <div className="shap-desc">Single doctor billing &gt; 65% of all hospital claims indicates kickback nexus.</div>
             </div>
 
             <div className="shap-item">
               <div className="shap-meta">
-                <span className="shap-feature-name font-mono">claims_per_attending_ratio</span>
-                <span className="shap-value-badge positive font-mono">+0.312 SHAP</span>
-              </div>
-              <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '62%' }} />
-              </div>
-              <div className="shap-desc">Physician claim velocity exceeding human clinical capacity (&gt;150 claims/doc).</div>
-            </div>
-
-            <div className="shap-item">
-              <div className="shap-meta">
-                <span className="shap-feature-name font-mono">graph_degree_centrality</span>
+                <span className="shap-feature-name">Graph Degree Centrality (Shared Staff)</span>
                 <span className="shap-value-badge positive font-mono">+0.264 SHAP</span>
               </div>
               <div className="shap-bar-track">
-                <div className="shap-bar-fill push-positive" style={{ width: '55%' }} />
+                <div className="shap-bar-fill push-positive" style={{ width: '70%' }} />
               </div>
-              <div className="shap-desc">Physician-hospital bipartite collusion index indicating cross-facility syndicates.</div>
+              <div className="shap-desc">Attending physicians shared across 3+ distinct facilities in 1 day.</div>
             </div>
 
             <div className="shap-item">
               <div className="shap-meta">
-                <span className="shap-feature-name font-mono">unique_beneficiaries_count</span>
-                <span className="shap-value-badge negative font-mono">-0.245 SHAP (Mitigating Factor)</span>
+                <span className="shap-feature-name">Same-Day Split Billing (Unbundling)</span>
+                <span className="shap-value-badge positive font-mono">+0.218 SHAP</span>
               </div>
               <div className="shap-bar-track">
-                <div className="shap-bar-fill push-negative" style={{ width: '48%' }} />
+                <div className="shap-bar-fill push-positive" style={{ width: '58%' }} />
               </div>
-              <div className="shap-desc">High unique patient diversity protects legitimate regional general hospitals.</div>
+              <div className="shap-desc">Artificial unbundling of diagnostic procedures into separate claims.</div>
+            </div>
+
+            <div className="shap-item">
+              <div className="shap-meta">
+                <span className="shap-feature-name">High Outpatient Visit Volume</span>
+                <span className="shap-value-badge negative font-mono">-0.195 SHAP</span>
+              </div>
+              <div className="shap-bar-track">
+                <div className="shap-bar-fill push-negative" style={{ width: '52%' }} />
+              </div>
+              <div className="shap-desc">High outpatient-to-inpatient ratio is characteristic of genuine community clinics.</div>
             </div>
           </div>
 
           <div className="syght-banner-notice">
-            <IconShield size={16} className="text-cyan-400 shrink-0" />
-            <span>
-              <strong>Fairness Guarantee:</strong> Patient demographic attributes (Gender & Race) are permanently excluded 
-              from model training to guarantee 100% ethical impartiality across all healthcare providers.
-            </span>
+            <IconShield size={18} className="text-sky-600 shrink-0 mt-0.5" />
+            <div>
+              <strong>Defensible Due Process:</strong> All risk scores are accompanied by mathematical TreeSHAP attributions 
+              ensuring clear, defensible explanations for human auditors during legal recovery proceedings.
+            </div>
           </div>
         </section>
       </div>

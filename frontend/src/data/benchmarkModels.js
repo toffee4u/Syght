@@ -109,34 +109,3 @@ export const BENCHMARK_MODELS = [
     strengths: "Static threshold rules on length-of-stay and surgeries"
   }
 ];
-
-export const FIGURE_ARTIFACTS = [
-  {
-    id: "fig-benchmark",
-    title: "Multi-Model Benchmark Comparison",
-    sub: "ROC-AUC, PR-AUC, F1 & Inference Latency across 9 Estimators",
-    src: "/reports/figures/01_model_benchmark_comparison.png",
-    fallbackSrc: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"
-  },
-  {
-    id: "fig-dashboard",
-    title: "4-in-1 Evaluation Dashboard",
-    sub: "ROC Curve, Precision-Recall, Calibration Curve & Confusion Matrix",
-    src: "/reports/figures/02_comprehensive_evaluation_dashboard.png",
-    fallbackSrc: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1200&q=80"
-  },
-  {
-    id: "fig-collusion",
-    title: "Collusion Network Topology",
-    sub: "Bipartite Physician-Hospital Sharing Network & Syndicate Rings",
-    src: "/reports/figures/03_collusion_network_graph.png",
-    fallbackSrc: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80"
-  },
-  {
-    id: "fig-lift",
-    title: "Operational Recovery Lift",
-    sub: "Cumulative Claim Rupee Capture by Risk Decile (₹45.9M / ₹382.4 Cr Exposure)",
-    src: "/reports/figures/04_operational_recovery_lift.png",
-    fallbackSrc: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80"
-  }
-];

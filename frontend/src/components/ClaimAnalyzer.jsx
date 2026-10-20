@@ -302,7 +302,7 @@ export default function ClaimAnalyzer({
             </div>
 
             <div className="form-field">
-              <label className="field-label">Inpatient Deductible ($)</label>
+              <label className="field-label">Inpatient Deductible (₹)</label>
               <input
                 type="number"
                 className="syght-input font-mono"
