@@ -10,6 +10,7 @@ import {
   IconSparkles,
   IconFreeze,
   IconCheckCircle,
+  IconDatabase,
 } from './Icons';
 
 export default function CommandCenter({
@@ -17,6 +18,7 @@ export default function CommandCenter({
   onInspectCase,
   onTriageAction,
   onViewAllCases,
+  onOpenDatasetStudio,
 }) {
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditProgress, setAuditProgress] = useState(0);
@@ -93,6 +95,15 @@ export default function CommandCenter({
             >
               <IconSparkles size={16} />
               <span>Inspect Live Case PRV_02</span>
+            </button>
+            <button
+              type="button"
+              className="syght-btn-secondary"
+              onClick={onOpenDatasetStudio}
+              title="Upload Custom Healthcare Claims Dataset"
+            >
+              <IconDatabase size={15} />
+              <span>Upload Custom Dataset</span>
             </button>
           </div>
 

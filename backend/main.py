@@ -5,6 +5,8 @@ FastAPI Production Gateway with SHAP Explainability & Real-Time Pre-Auth.
 
 from __future__ import annotations
 
+import io
+import json
 import logging
 import os
 import sys
@@ -18,7 +20,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from fastapi import FastAPI, HTTPException, status
+import pandas as pd
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -384,6 +387,137 @@ async def run_ten_cases():
         "model": predictor.metadata.get("selected_model"),
         "decision_threshold": predictor.decision_threshold,
         "cases": results,
+    }
+
+
+@app.post(
+    "/api/v1/predict/dataset",
+    summary="Upload and Score Custom Healthcare Dataset (CSV or JSON)",
+    tags=["Prediction"],
+)
+async def predict_custom_dataset(request: Request):
+    """
+    Accepts custom tabular healthcare datasets via JSON payload or raw CSV text.
+    Executes full multi-feature inference through the LightGBM champion model,
+    calculates aggregate exposure and returns structured provider risk scores.
+    """
+    start_time = time.perf_counter()
+    ensure_model_loaded()
+
+    if predictor is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Syght model bundle is not loaded.",
+        )
+
+    content_type = request.headers.get("content-type", "")
+    body_bytes = await request.body()
+
+    records = []
+    # Try parsing json first
+    if "application/json" in content_type:
+        try:
+            payload = json.loads(body_bytes.decode("utf-8"))
+            if isinstance(payload, list):
+                records = payload
+            elif isinstance(payload, dict):
+                if "records" in payload and isinstance(payload["records"], list):
+                    records = payload["records"]
+                elif "csv_text" in payload:
+                    df = pd.read_csv(io.StringIO(payload["csv_text"]))
+                    records = df.to_dict(orient="records")
+                else:
+                    records = [payload]
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Failed to parse JSON body: {e}")
+    else:
+        # Try CSV text parse
+        try:
+            text = body_bytes.decode("utf-8")
+            df = pd.read_csv(io.StringIO(text))
+            records = df.to_dict(orient="records")
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Failed to parse CSV dataset: {e}")
+
+    if not records:
+        raise HTTPException(status_code=400, detail="Dataset contains 0 valid records.")
+
+    results = []
+    flagged_count = 0
+    cleared_count = 0
+    critical_count = 0
+    high_count = 0
+    total_exposure = 0.0
+    flagged_exposure = 0.0
+
+    for idx, row in enumerate(records):
+        t0 = time.perf_counter()
+        pid = str(row.get("provider_id", row.get("Provider", row.get("ProviderID", f"PRV_CUSTOM_{idx+1:03d}"))))
+        pname = str(row.get("name", row.get("HospitalName", row.get("facility_name", f"Facility {pid}"))))
+        archetype = str(row.get("archetype", row.get("tag", "Custom Uploaded Record")))
+
+        # Financial exposure
+        ip_reimb = float(row.get("inpatient_reimbursed_sum", row.get("InscClaimAmtReimbursed", 0)))
+        op_reimb = float(row.get("outpatient_reimbursed_sum", 0))
+        claim_amt = ip_reimb + op_reimb
+        total_exposure += claim_amt
+
+        pred = predictor.predict_provider(row, provider_id=pid)
+        lat = (time.perf_counter() - t0) * 1000.0
+
+        score = float(pred["fraud_risk_score"])
+        is_flagged = bool(pred["investigation_recommended"])
+        priority = pred["priority_level"]
+
+        if is_flagged:
+            flagged_count += 1
+            flagged_exposure += claim_amt
+            if priority == "CRITICAL":
+                critical_count += 1
+            else:
+                high_count += 1
+        else:
+            cleared_count += 1
+
+        drivers = pred.get("key_risk_drivers", [])
+        top_driver = drivers[0] if drivers else {
+            "feature": "Inpatient/Outpatient Ratio",
+            "description": "Standard operational baseline profile",
+            "shap_contribution": 0.012
+        }
+
+        results.append({
+            "provider_id": pid,
+            "name": pname,
+            "archetype": archetype,
+            "reimbursement": round(claim_amt, 2),
+            "surgeries": int(row.get("total_inpatient_surgeries", 0)),
+            "physicians": int(row.get("unique_attending_physicians", 1)),
+            "fraud_risk_score": round(score, 4),
+            "risk_percentage": f"{score:.1%}",
+            "decision": "FLAGGED FOR AUDIT" if is_flagged else "AUTO-CLEARED",
+            "priority": priority,
+            "top_driver": top_driver,
+            "latency_ms": round(lat, 2),
+        })
+
+    total_latency = (time.perf_counter() - start_time) * 1000.0
+    avg_score = sum(r["fraud_risk_score"] for r in results) / len(results) if results else 0
+
+    return {
+        "status": "success",
+        "total_evaluated": len(results),
+        "flagged_count": flagged_count,
+        "cleared_count": cleared_count,
+        "critical_count": critical_count,
+        "high_count": high_count,
+        "total_exposure": round(total_exposure, 2),
+        "flagged_exposure": round(flagged_exposure, 2),
+        "average_fraud_score": round(avg_score, 4),
+        "decision_threshold": predictor.decision_threshold,
+        "champion_model": predictor.metadata.get("selected_model", "LightGBM"),
+        "total_batch_latency_ms": round(total_latency, 2),
+        "results": results,
     }
 
 
