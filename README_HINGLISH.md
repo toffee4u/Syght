@@ -1,6 +1,7 @@
 # 🏥 Syght — Explainable Healthcare Fraud Detection System
 ### Enterprise Healthcare Fraud Detection Architecture Guide
 
+[![Team: Team Pulse](https://img.shields.io/badge/Team-Team%20Pulse-7928CA?style=for-the-badge)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-25%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
@@ -311,3 +312,9 @@ Syght/
 
 ## 📄 License
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+  <sub>Engineered with care by <strong>Team Pulse</strong> for healthcare fraud analysts and Special Investigation Units.</sub>
+</div>

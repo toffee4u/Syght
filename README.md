@@ -4,6 +4,7 @@
 
 **A transparent, high-precision machine learning system engineered for healthcare insurance teams to detect suspicious billing patterns, prioritize provider investigations, and protect healthcare funds.**
 
+[![Team: Team Pulse](https://img.shields.io/badge/Team-Team%20Pulse-7928CA?style=for-the-badge)](#)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-25%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
@@ -650,5 +651,5 @@ Syght incorporates established methodological insights from open-source research
 ---
 
 <div align="center">
-  <sub>Built with care for healthcare fraud analysts and Special Investigation Units.</sub>
+  <sub>Engineered with care by <strong>Team Pulse</strong> for healthcare fraud analysts and Special Investigation Units.</sub>
 </div>

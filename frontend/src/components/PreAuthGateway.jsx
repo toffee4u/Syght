@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  Clock, 
-  Zap, 
-  AlertCircle, 
-  CheckCircle2, 
-  ShieldCheck, 
-  ShieldAlert, 
-  ShieldBan, 
-  FileText 
-} from 'lucide-react';
+import {
+  HugeClock,
+  HugeZap,
+  HugeAlert,
+  HugeCheckCircle,
+  HugeShield,
+  HugeFreeze,
+  HugeBrain,
+} from './HugeIcons';
 
 export default function PreAuthGateway({ onShowToast }) {
   const [formData, setFormData] = useState({
@@ -19,7 +18,7 @@ export default function PreAuthGateway({ onShowToast }) {
     reimbursed_amount: 14500,
     length_of_stay: 14,
     diagnosis_codes: '4019, 25000, 4280, 5849',
-    procedure_codes: '9904, 3893, 8151'
+    procedure_codes: '9904, 3893, 8151',
   });
 
   const [decision, setDecision] = useState({
@@ -29,13 +28,13 @@ export default function PreAuthGateway({ onShowToast }) {
     flags: [
       'SUSPICIOUS_HIGH_REIMBURSEMENT_FOR_CLAIM_TYPE',
       'EXCESSIVE_LENGTH_OF_STAY_PROLONGATION',
-      'KNOWN_COLLUSIVE_PROVIDER_REGISTRY'
+      'KNOWN_COLLUSIVE_PROVIDER_REGISTRY',
     ],
     reasons: [
       'Claim amount ($14,500) exceeds 99th percentile for outpatient/general admitting category.',
       'Billed length of stay (14 days) conflicts with non-surgical primary diagnosis.',
-      'Provider is under active State Medical Anti-Fraud Taskforce freeze.'
-    ]
+      'Provider is under active Special Investigation Unit freeze.',
+    ],
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -53,13 +52,13 @@ export default function PreAuthGateway({ onShowToast }) {
         requested_amount: parseFloat(formData.reimbursed_amount) || 0,
         length_of_stay: parseInt(formData.length_of_stay, 10) || 0,
         diagnosis_codes: formData.diagnosis_codes.split(',').map(s => s.trim()).filter(Boolean),
-        procedure_codes: formData.procedure_codes.split(',').map(s => s.trim()).filter(Boolean)
+        procedure_codes: formData.procedure_codes.split(',').map(s => s.trim()).filter(Boolean),
       };
 
       const res = await fetch('/api/v1/preauth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       const elapsed = (performance.now() - start).toFixed(2);
@@ -71,7 +70,7 @@ export default function PreAuthGateway({ onShowToast }) {
           riskScore: data.risk_score,
           latencyMs: data.latency_ms || elapsed,
           flags: data.triggered_risk_flags || [],
-          reasons: data.policy_adjudication_reasons || []
+          reasons: data.policy_adjudication_reasons || [],
         });
 
         const isOk = data.adjudication_decision === 'APPROVED';
@@ -84,10 +83,10 @@ export default function PreAuthGateway({ onShowToast }) {
       } else {
         throw new Error('API unavailable, running client rule engine');
       }
-    } catch (err) {
+    } catch {
       const elapsed = (performance.now() - start).toFixed(2);
       const isHigh = formData.provider_id.includes('PHANTOM') || formData.reimbursed_amount > 5000 || formData.length_of_stay > 8;
-      
+
       setDecision({
         decision: isHigh ? 'REJECTED' : 'APPROVED',
         riskScore: isHigh ? 0.942 : 0.084,
@@ -97,7 +96,7 @@ export default function PreAuthGateway({ onShowToast }) {
           : ['POLICY_CRITERIA_SATISFIED'],
         reasons: isHigh
           ? ['Claim reimbursement exceeds peer thresholds.', 'Length of stay requires clinical justification notes.']
-          : ['All admitting diagnoses match allowable clinical protocols.', 'Provider maintains 0 active fraud flags.']
+          : ['All admitting diagnoses match allowable clinical protocols.', 'Provider maintains 0 active fraud flags.'],
       });
 
       onShowToast(
@@ -109,37 +108,43 @@ export default function PreAuthGateway({ onShowToast }) {
     }
   };
 
+  const isApproved = decision.decision === 'APPROVED';
+  const isRejected = decision.decision === 'REJECTED';
+
   return (
-    <div className="tab-view active">
-      <div className="page-header-flex">
-        <div>
-          <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Clock size={26} className="text-accent" strokeWidth={1.8} />
+    <div className="tab-view active superbrain-view">
+      <div className="superbrain-page-header">
+        <div className="page-header-title-box">
+          <div className="superbrain-chip">
+            <span className="chip-dot" />
+            Team Pulse Inline Interceptor
+          </div>
+          <h1 className="superbrain-page-title">
             Sub-5ms Real-Time Pre-Authorization Gateway
           </h1>
-          <p className="page-description">
+          <p className="superbrain-page-desc">
             Real-time inline claim interception at hospital admission. 
-            Prevents phantom surgeries and upcoding before discharge and payouts occur.
+            Prevents phantom surgeries and diagnostic upcoding before discharge and disbursements occur.
           </p>
         </div>
       </div>
 
-      <div className="analyzer-grid">
+      <div className="superbrain-split-grid analyzer-layout">
         {/* Left Column: Form */}
-        <section className="dashboard-card">
-          <div className="card-header-flex">
-            <h2 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Zap size={20} className="text-accent" />
-              Incoming Hospital Pre-Auth Request
-            </h2>
-            <span className="badge badge-cyan">Sub-5ms Interceptor</span>
+        <section className="superbrain-panel">
+          <div className="superbrain-panel-header">
+            <div className="panel-title-flex">
+              <HugeZap size={20} className="text-cyan-400" />
+              <h3>Incoming Hospital Pre-Auth Request</h3>
+            </div>
+            <span className="superbrain-chip">Sub-5ms Interceptor</span>
           </div>
 
-          <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label">Admitting Provider ID</label>
-              <select 
-                className="form-select"
+          <div className="form-grid-superbrain">
+            <div className="form-field full-col">
+              <label className="field-label">Admitting Provider ID</label>
+              <select
+                className="superbrain-select font-mono"
                 value={formData.provider_id}
                 onChange={e => setFormData({ ...formData, provider_id: e.target.value })}
               >
@@ -151,155 +156,157 @@ export default function PreAuthGateway({ onShowToast }) {
               </select>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Pre-Auth Claim ID</label>
-              <input 
-                type="text" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Pre-Auth Claim ID</label>
+              <input
+                type="text"
+                className="superbrain-input font-mono"
                 value={formData.claim_id}
                 onChange={e => setFormData({ ...formData, claim_id: e.target.value })}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Beneficiary ID</label>
-              <input 
-                type="text" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Beneficiary ID</label>
+              <input
+                type="text"
+                className="superbrain-input font-mono"
                 value={formData.bene_id}
                 onChange={e => setFormData({ ...formData, bene_id: e.target.value })}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Claim Type</label>
-              <select 
-                className="form-select"
+            <div className="form-field">
+              <label className="field-label">Claim Type</label>
+              <select
+                className="superbrain-select font-mono"
                 value={formData.claim_type}
                 onChange={e => setFormData({ ...formData, claim_type: e.target.value })}
               >
                 <option value="inpatient">Inpatient Admission</option>
-                <option value="outpatient">Outpatient Day Care</option>
+                <option value="outpatient">Outpatient Procedure</option>
               </select>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Estimated Reimbursed ($)</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Requested Amount ($)</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.reimbursed_amount}
                 onChange={e => setFormData({ ...formData, reimbursed_amount: e.target.value })}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Expected Length of Stay (Days)</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Length of Stay (Days)</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.length_of_stay}
                 onChange={e => setFormData({ ...formData, length_of_stay: e.target.value })}
               />
             </div>
 
-            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-              <label className="form-label">ICD-9 Diagnosis Codes</label>
-              <input 
-                type="text" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Diagnosis ICD-9 Codes</label>
+              <input
+                type="text"
+                className="superbrain-input font-mono"
                 value={formData.diagnosis_codes}
                 onChange={e => setFormData({ ...formData, diagnosis_codes: e.target.value })}
               />
             </div>
 
-            <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-              <label className="form-label">ICD-9 Procedure Codes</label>
-              <input 
-                type="text" 
-                className="form-input" 
+            <div className="form-field full-col">
+              <label className="field-label">Procedure ICD-9 Codes</label>
+              <input
+                type="text"
+                className="superbrain-input font-mono"
                 value={formData.procedure_codes}
                 onChange={e => setFormData({ ...formData, procedure_codes: e.target.value })}
               />
             </div>
           </div>
 
-          <button 
-            className="btn-primary" 
-            style={{ width: '100%', marginTop: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+          <button
+            type="button"
+            className="superbrain-btn-primary w-full mt-5"
             onClick={handleIntercept}
             disabled={isLoading}
           >
-            <Clock size={16} />
-            {isLoading ? 'Intercepting & Evaluating...' : 'Intercept & Adjudicate Admission (< 5ms)'}
+            <HugeClock size={16} />
+            <span>{isLoading ? 'Intercepting in Sub-5ms Pipeline...' : 'Simulate Real-Time Pre-Auth Interception'}</span>
           </button>
         </section>
 
-        {/* Right Column: Pre-Auth Interception Result */}
-        <section className="dashboard-card">
-          <div className="card-header-flex">
-            <h2 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ShieldAlert size={20} className="text-accent" />
-              Gateway Adjudication Result
-            </h2>
-            <div className="mono-text" style={{ color: '#00f2fe', fontSize: '0.85rem' }}>
-              Latency: <strong>{decision.latencyMs} ms</strong>
+        {/* Right Column: Pre-Auth Adjudication Decision */}
+        <section className="superbrain-panel">
+          <div className="superbrain-panel-header">
+            <div className="panel-title-flex">
+              <HugeShield size={20} className="text-cyan-400" />
+              <h3>Pre-Authorization Decision Card</h3>
+            </div>
+            <div className="superbrain-chip font-mono">
+              <HugeClock size={12} className="text-cyan-400" />
+              {decision.latencyMs} ms SLA
             </div>
           </div>
 
-          <div className="gauge-panel-card" style={{ marginTop: '0.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* Large Adjudication Banner */}
+          <div className={`preauth-decision-banner ${isApproved ? 'is-approved' : isRejected ? 'is-rejected' : 'is-review'}`}>
+            <div className="decision-banner-top">
+              <div className="decision-icon-large">
+                {isApproved ? (
+                  <HugeCheckCircle size={36} className="text-emerald-400" />
+                ) : isRejected ? (
+                  <HugeFreeze size={36} className="text-rose-400" />
+                ) : (
+                  <HugeAlert size={36} className="text-amber-400" />
+                )}
+              </div>
+              <div className="decision-title-group">
+                <span className="decision-sub-label">ADJUDICATION RESULT</span>
+                <span className="decision-main-title font-mono">{decision.decision}</span>
+              </div>
+            </div>
+
+            <div className="decision-metrics-strip font-mono">
               <div>
-                <span className="gauge-sub">Adjudication Decision</span>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {decision.decision === 'APPROVED' ? (
-                    <span className="text-success" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <CheckCircle2 size={24} /> APPROVED (CLEAN)
-                    </span>
-                  ) : decision.decision === 'REJECTED' ? (
-                    <span className="text-danger" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <ShieldBan size={24} /> ADMISSION REJECTED
-                    </span>
-                  ) : (
-                    <span className="text-warning" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <AlertCircle size={24} /> AUDIT FLAGGED
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="mono-text" style={{ textAlign: 'right' }}>
-                <span className="gauge-sub">Risk Score</span>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#f8fafc' }}>
+                <span className="strip-label">Calculated Risk:</span>
+                <span className={`strip-val ${decision.riskScore >= 0.5 ? 'text-rose-400' : 'text-emerald-400'}`}>
                   {(decision.riskScore * 100).toFixed(1)}%
-                </div>
+                </span>
+              </div>
+              <div>
+                <span className="strip-label">Interception Latency:</span>
+                <span className="strip-val text-neutral-100">{decision.latencyMs} ms</span>
               </div>
             </div>
           </div>
 
-          {/* Triggered Risk Flags */}
-          <div style={{ marginTop: '1.25rem' }}>
-            <h3 className="section-subtitle" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <AlertCircle size={16} className="text-danger" />
-              Automated Risk Flags Triggered:
-            </h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
+          {/* Triggered Policy Risk Flags */}
+          <div className="policy-flags-section">
+            <h4 className="policy-section-title">Triggered Operational Policy Flags</h4>
+            <div className="flag-pills-list">
               {decision.flags.map((flag, idx) => (
-                <span key={idx} className="badge badge-danger">
-                  {flag}
-                </span>
+                <div key={idx} className="superbrain-flag-pill font-mono">
+                  <HugeAlert size={14} className="text-rose-400 shrink-0" />
+                  <span>{flag}</span>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Policy & Clinical Adjudication Reasons */}
-          <div style={{ marginTop: '1.25rem' }}>
-            <h3 className="section-subtitle" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <FileText size={16} className="text-accent" />
-              Clinical & Policy Adjudication Reasons:
-            </h3>
-            <ul style={{ paddingLeft: '1.2rem', marginTop: '6px', color: '#cbd5e1', fontSize: '0.85rem', lineHeight: '1.6' }}>
-              {decision.reasons.map((r, idx) => (
-                <li key={idx}>{r}</li>
+          {/* Adjudication Policy Reasons */}
+          <div className="policy-reasons-section">
+            <h4 className="policy-section-title">Clinical Adjudication Rationales</h4>
+            <ul className="reasons-list">
+              {decision.reasons.map((reason, idx) => (
+                <li key={idx} className="reason-item">
+                  <span className="reason-bullet">›</span>
+                  <span>{reason}</span>
+                </li>
               ))}
             </ul>
           </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle, CheckCircle2, Info } from 'lucide-react';
+import { HugeAlert, HugeCheckCircle, HugeSparkles } from './HugeIcons';
 
 export default function Toast({ toast }) {
   if (!toast) return null;
@@ -8,16 +8,16 @@ export default function Toast({ toast }) {
   const isSuccess = toast.type === 'success';
 
   return (
-    <div className={`toast-notification ${toast.type}`}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div className={`toast-notification superbrain-toast ${toast.type}`}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         {isDanger ? (
-          <AlertCircle size={18} className="text-danger" />
+          <HugeAlert size={18} className="text-rose-400 shrink-0" />
         ) : isSuccess ? (
-          <CheckCircle2 size={18} className="text-success" />
+          <HugeCheckCircle size={18} className="text-emerald-400 shrink-0" />
         ) : (
-          <Info size={18} className="text-accent" />
+          <HugeSparkles size={18} className="text-cyan-400 shrink-0" />
         )}
-        <span dangerouslySetInnerHTML={{ __html: toast.message }}></span>
+        <span dangerouslySetInnerHTML={{ __html: toast.message }} />
       </div>
     </div>
   );

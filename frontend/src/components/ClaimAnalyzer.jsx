@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Sparkles, 
-  AlertCircle, 
-  CheckCircle2, 
-  ShieldAlert, 
-  Activity, 
-  FileText, 
-  HelpCircle, 
-  Zap, 
-  CheckSquare 
-} from 'lucide-react';
+import {
+  HugeSearch,
+  HugeSparkles,
+  HugeAlert,
+  HugeCheckCircle,
+  HugeShield,
+  HugePulse,
+  HugeZap,
+  HugeBrain,
+} from './HugeIcons';
 
-export default function ClaimAnalyzer({ 
-  benchmarkCases, 
-  selectedCaseId, 
-  onCaseSelected, 
-  onShowToast 
+export default function ClaimAnalyzer({
+  benchmarkCases,
+  selectedCaseId,
+  onCaseSelected,
+  onShowToast,
 }) {
   const currentCase = benchmarkCases.find(c => c.id === selectedCaseId) || benchmarkCases[0];
 
   const [formData, setFormData] = useState({
     provider_id: currentCase.id,
-    ...currentCase.features
+    ...currentCase.features,
   });
 
   const [predictionResult, setPredictionResult] = useState({
@@ -33,17 +31,16 @@ export default function ClaimAnalyzer({
     threshold: 0.5364,
     latency: 1.84,
     drivers: currentCase.drivers,
-    directive: currentCase.directive
+    directive: currentCase.directive,
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // When selectedCaseId changes from parent
   useEffect(() => {
     if (currentCase) {
       setFormData({
         provider_id: currentCase.id,
-        ...currentCase.features
+        ...currentCase.features,
       });
       setPredictionResult({
         score: currentCase.risk,
@@ -53,7 +50,7 @@ export default function ClaimAnalyzer({
         threshold: 0.5364,
         latency: 1.84,
         drivers: currentCase.drivers,
-        directive: currentCase.directive
+        directive: currentCase.directive,
       });
     }
   }, [selectedCaseId]);
@@ -61,7 +58,7 @@ export default function ClaimAnalyzer({
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      [field]: parseFloat(value) || 0
+      [field]: parseFloat(value) || 0,
     }));
   };
 
@@ -80,8 +77,8 @@ export default function ClaimAnalyzer({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           provider_id: formData.provider_id,
-          features: formData
-        })
+          features: formData,
+        }),
       });
 
       const elapsed = (performance.now() - startTime).toFixed(2);
@@ -98,11 +95,11 @@ export default function ClaimAnalyzer({
           drivers: data.key_risk_drivers.map(d => ({
             feature: d.feature,
             desc: d.description,
-            shap: `${d.shap_contribution >= 0 ? '+' : ''}${d.shap_contribution.toFixed(3)}`
+            shap: `${d.shap_contribution >= 0 ? '+' : ''}${d.shap_contribution.toFixed(3)}`,
           })),
           directive: data.decision.includes('FLAGGED')
             ? `Audit triggered. Model confidence ${(data.fraud_risk_score * 100).toFixed(1)}%. Review surgical records, nurse duty logs, and duplicate test frequencies.`
-            : `Provider cleared. Normal clinical operations verified. Expedited claim reimbursement recommended.`
+            : `Provider cleared. Normal clinical operations verified. Expedited claim reimbursement recommended.`,
         });
 
         onShowToast(
@@ -114,8 +111,7 @@ export default function ClaimAnalyzer({
       } else {
         throw new Error('API returned error, using internal calibrated inference');
       }
-    } catch (err) {
-      // Fallback calculation using current case calibrated model parameters
+    } catch {
       const elapsed = (performance.now() - startTime).toFixed(2);
       const isFlagged = currentCase.decision.includes('FLAGGED');
       setPredictionResult({
@@ -126,7 +122,7 @@ export default function ClaimAnalyzer({
         threshold: 0.5364,
         latency: elapsed,
         drivers: currentCase.drivers,
-        directive: currentCase.directive
+        directive: currentCase.directive,
       });
 
       onShowToast(
@@ -143,40 +139,44 @@ export default function ClaimAnalyzer({
   const isFlagged = predictionResult.decision.includes('FLAGGED');
 
   return (
-    <div className="tab-view active">
-      <div className="page-header-flex">
-        <div>
-          <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Search size={26} className="text-accent" strokeWidth={1.8} />
+    <div className="tab-view active superbrain-view">
+      {/* Header */}
+      <div className="superbrain-page-header">
+        <div className="page-header-title-box">
+          <div className="superbrain-chip">
+            <span className="chip-dot" />
+            TreeSHAP Attribution Engine
+          </div>
+          <h1 className="superbrain-page-title">
             Provider & Claim Risk Inspector
           </h1>
-          <p className="page-description">
+          <p className="superbrain-page-desc">
             Live interactive scoring with feature-level SHAP Waterfall attributions. 
-            Test real benchmark healthcare claims and inspect exact algorithmic decision boundaries.
+            Test benchmark healthcare claims and inspect exact algorithmic decision boundaries.
           </p>
         </div>
       </div>
 
-      <div className="analyzer-grid">
+      <div className="superbrain-split-grid analyzer-layout">
         {/* Left Column: Feature Form */}
-        <section className="dashboard-card">
-          <div className="card-header-flex">
-            <h2 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Activity size={20} className="text-accent" />
-              Claim & Operational Feature Inputs
-            </h2>
-            <span className="badge badge-cyan">61 Features Active</span>
+        <section className="superbrain-panel">
+          <div className="superbrain-panel-header">
+            <div className="panel-title-flex">
+              <HugePulse size={20} className="text-cyan-400" />
+              <h3>Claim & Operational Feature Inputs</h3>
+            </div>
+            <span className="superbrain-chip">61 Features Active</span>
           </div>
 
           {/* Quick Preset Selector */}
-          <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-            <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Zap size={14} className="text-accent" />
-              Load Benchmark Healthcare Scenario:
+          <div className="form-group-superbrain" style={{ marginBottom: '1.25rem' }}>
+            <label className="form-label-superbrain">
+              <HugeZap size={14} className="text-cyan-400" />
+              <span>Select Benchmark Provider Scenario:</span>
             </label>
-            <select 
-              className="form-select" 
-              value={selectedCaseId} 
+            <select
+              className="superbrain-select font-mono"
+              value={selectedCaseId}
               onChange={handleSelectPreset}
             >
               {benchmarkCases.map(c => (
@@ -187,198 +187,198 @@ export default function ClaimAnalyzer({
             </select>
           </div>
 
-          <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label">Total Claims Count</label>
-              <input 
-                type="number" 
-                className="form-input" 
+          <div className="form-grid-superbrain">
+            <div className="form-field">
+              <label className="field-label">Total Claims Count</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.total_claims_count}
                 onChange={e => handleInputChange('total_claims_count', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Inpatient Claims Count</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Inpatient Claims</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.inpatient_claims_count}
                 onChange={e => handleInputChange('inpatient_claims_count', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Inpatient Reimbursed ($)</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Inpatient Reimbursed ($)</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.inpatient_reimbursed_sum}
                 onChange={e => handleInputChange('inpatient_reimbursed_sum', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Outpatient Reimbursed ($)</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Outpatient Reimbursed ($)</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.outpatient_reimbursed_sum}
                 onChange={e => handleInputChange('outpatient_reimbursed_sum', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Mean Inpatient LOS (Days)</label>
-              <input 
-                type="number" 
-                step="0.1" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Mean Inpatient LOS (Days)</label>
+              <input
+                type="number"
+                step="0.1"
+                className="superbrain-input font-mono"
                 value={formData.mean_inpatient_los}
                 onChange={e => handleInputChange('mean_inpatient_los', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Max Inpatient LOS (Days)</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Max Inpatient LOS (Days)</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.max_inpatient_los}
                 onChange={e => handleInputChange('max_inpatient_los', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Inpatient Surgeries Count</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Inpatient Surgeries</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.total_inpatient_surgeries}
                 onChange={e => handleInputChange('total_inpatient_surgeries', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Attending Physicians</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Attending Physicians</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.unique_attending_physicians}
                 onChange={e => handleInputChange('unique_attending_physicians', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Unique Beneficiaries</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Unique Beneficiaries</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.unique_beneficiaries_count}
                 onChange={e => handleInputChange('unique_beneficiaries_count', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Same-Day Duplicate Rate</label>
-              <input 
-                type="number" 
-                step="0.01" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Same-Day Duplicate Rate</label>
+              <input
+                type="number"
+                step="0.01"
+                className="superbrain-input font-mono"
                 value={formData.same_day_duplicate_rate}
                 onChange={e => handleInputChange('same_day_duplicate_rate', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Graph Degree Centrality</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Graph Degree Centrality</label>
+              <input
+                type="number"
+                step="0.01"
+                className="superbrain-input font-mono"
                 value={formData.graph_degree_centrality}
                 onChange={e => handleInputChange('graph_degree_centrality', e.target.value)}
               />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Inpatient Deductible ($)</label>
-              <input 
-                type="number" 
-                className="form-input" 
+            <div className="form-field">
+              <label className="field-label">Inpatient Deductible ($)</label>
+              <input
+                type="number"
+                className="superbrain-input font-mono"
                 value={formData.inpatient_deductible_sum}
                 onChange={e => handleInputChange('inpatient_deductible_sum', e.target.value)}
               />
             </div>
           </div>
 
-          <button 
-            className="btn-primary" 
-            style={{ width: '100%', marginTop: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+          <button
+            type="button"
+            className="superbrain-btn-primary w-full mt-5"
             onClick={runPrediction}
             disabled={isLoading}
           >
-            <Zap size={16} />
-            {isLoading ? 'Evaluating 61 Features via LightGBM...' : 'Run Live AI Fraud Prediction'}
+            <HugeZap size={16} />
+            <span>{isLoading ? 'Evaluating 61 Features via LightGBM...' : 'Run Live AI Fraud Prediction'}</span>
           </button>
         </section>
 
         {/* Right Column: Scoring & SHAP Attribution Output */}
-        <section className="dashboard-card">
-          <div className="card-header-flex">
-            <h2 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ShieldAlert size={20} className="text-accent" />
-              AI Risk Scoring & Attributions
-            </h2>
-            <span className="badge badge-purple">{predictionResult.priority} TIER</span>
+        <section className="superbrain-panel">
+          <div className="superbrain-panel-header">
+            <div className="panel-title-flex">
+              <HugeShield size={20} className="text-cyan-400" />
+              <h3>AI Risk Scoring & Attributions</h3>
+            </div>
+            <span className="superbrain-chip priority-chip">{predictionResult.priority} TIER</span>
           </div>
 
           {/* Radial Score Gauge Card */}
-          <div className="gauge-panel-card">
+          <div className="gauge-panel-superbrain">
             <div className="gauge-display-flex">
               <div className="radial-score-box">
-                <span className={`gauge-percentage ${isFlagged ? 'danger' : 'clean'}`}>
+                <span className={`gauge-percentage font-mono ${isFlagged ? 'danger' : 'clean'}`}>
                   {predictionResult.percentage}
                 </span>
                 <span className="gauge-sub">Fraud Probability</span>
               </div>
               <div className="gauge-meta-details">
-                <div className={`gauge-status-title ${isFlagged ? 'text-danger' : 'text-success'}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  {isFlagged ? <AlertCircle size={20} /> : <CheckCircle2 size={20} />}
-                  {predictionResult.decision}
+                <div className={`gauge-status-title ${isFlagged ? 'text-rose-400' : 'text-emerald-400'}`}>
+                  {isFlagged ? <HugeAlert size={18} /> : <HugeCheckCircle size={18} />}
+                  <span>{predictionResult.decision}</span>
                 </div>
-                <div className="gauge-threshold-note">
-                  Operating Decision Threshold: <strong>{predictionResult.threshold}</strong>
-                </div>
-                <div className="gauge-latency-note">
-                  Evaluation Latency: <strong>{predictionResult.latency} ms</strong>
+                <div className="gauge-meta-row font-mono">
+                  <span>Threshold: <strong>{predictionResult.threshold}</strong></span>
+                  <span>•</span>
+                  <span>Latency: <strong>{predictionResult.latency} ms</strong></span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* SHAP Feature Waterfall */}
-          <div className="waterfall-section" style={{ marginTop: '1.5rem' }}>
-            <h3 className="section-subtitle" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Sparkles size={16} className="text-accent" />
-              Explainable AI Feature Waterfall (SHAP Attributions)
-            </h3>
-            
+          <div className="waterfall-superbrain-container">
+            <div className="waterfall-header">
+              <HugeSparkles size={16} className="text-cyan-400" />
+              <h4>Explainable AI Feature Waterfall (SHAP Attributions)</h4>
+            </div>
+
             <div className="shap-breakdown-list">
               {predictionResult.drivers.map((d, i) => {
                 const isPositive = d.shap.startsWith('+');
                 return (
                   <div className="shap-item" key={i}>
                     <div className="shap-meta">
-                      <span className="shap-feature-name">{d.feature}</span>
-                      <span className={`shap-value-badge ${isPositive ? 'positive' : 'negative'}`}>
+                      <span className="shap-feature-name font-mono">{d.feature}</span>
+                      <span className={`shap-value-badge font-mono ${isPositive ? 'positive' : 'negative'}`}>
                         {d.shap} SHAP
                       </span>
                     </div>
                     <div className="shap-bar-track">
-                      <div 
-                        className={`shap-bar-fill ${isPositive ? 'push-positive' : 'push-negative'}`} 
+                      <div
+                        className={`shap-bar-fill ${isPositive ? 'push-positive' : 'push-negative'}`}
                         style={{ width: `${Math.min(100, Math.abs(parseFloat(d.shap)) * 180)}%` }}
-                      ></div>
+                      />
                     </div>
                     <div className="shap-desc">{d.desc}</div>
                   </div>
@@ -388,25 +388,25 @@ export default function ClaimAnalyzer({
           </div>
 
           {/* Clinical & Legal Audit Directive Checklist */}
-          <div className="directive-box" style={{ marginTop: '1.5rem' }}>
-            <div className="directive-title" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <FileText size={16} className="text-accent" />
-              Recommended Audit Protocol:
+          <div className="directive-superbrain-card">
+            <div className="directive-title">
+              <HugeBrain size={16} className="text-cyan-400" />
+              <span>Recommended Special Investigation Unit Protocol:</span>
             </div>
             <p className="directive-text">{predictionResult.directive}</p>
-            
-            <div className="protocol-checklist" style={{ marginTop: '10px' }}>
-              <div className="protocol-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckSquare size={14} className="text-accent" />
-                <span>Verify biometric attendance logs of operating physicians</span>
+
+            <div className="protocol-checklist">
+              <div className="protocol-item">
+                <HugeCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <span>Verify biometric attendance logs of operating physicians against surgery timestamp</span>
               </div>
-              <div className="protocol-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckSquare size={14} className="text-accent" />
-                <span>Compare billed LOS against emergency triage vitals</span>
+              <div className="protocol-item">
+                <HugeCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <span>Compare billed LOS against emergency triage vitals and discharge summaries</span>
               </div>
-              <div className="protocol-item" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckSquare size={14} className="text-accent" />
-                <span>Check for duplicate test submissions within 24 hours</span>
+              <div className="protocol-item">
+                <HugeCheckCircle size={14} className="text-cyan-400 shrink-0" />
+                <span>Examine cross-facility duplicate test code submissions within rolling 24 hours</span>
               </div>
             </div>
           </div>

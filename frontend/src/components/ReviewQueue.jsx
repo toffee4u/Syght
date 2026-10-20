@@ -1,34 +1,32 @@
 import React, { useState } from 'react';
-import { 
-  ClipboardList, 
-  AlertCircle, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Search, 
-  Check, 
-  ShieldBan, 
-  Filter 
-} from 'lucide-react';
+import {
+  HugeClipboardList,
+  HugeAlert,
+  HugeCheckCircle,
+  HugeSearch,
+  HugeFreeze,
+  HugeFilter,
+  HugeArrowRight,
+  HugeSparkles,
+} from './HugeIcons';
 
-export default function ReviewQueue({ 
-  cases, 
-  onInspectCase, 
-  onTriageAction 
+export default function ReviewQueue({
+  cases,
+  onInspectCase,
+  onTriageAction,
 }) {
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredCases = cases.filter((c) => {
-    // Search match
     const q = searchQuery.toLowerCase();
-    const matchesSearch = 
-      c.id.toLowerCase().includes(q) || 
-      c.name.toLowerCase().includes(q) || 
+    const matchesSearch =
+      c.id.toLowerCase().includes(q) ||
+      c.name.toLowerCase().includes(q) ||
       c.tag.toLowerCase().includes(q);
 
     if (!matchesSearch) return false;
 
-    // Filter match
     if (filter === 'all') return true;
     if (filter === 'critical') return c.category === 'critical';
     if (filter === 'high') return c.category === 'high';
@@ -49,102 +47,134 @@ export default function ReviewQueue({
     .reduce((acc, c) => acc + c.reimbursement, 0);
 
   return (
-    <div className="tab-view active">
-      <div className="page-header-flex">
-        <div>
-          <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ClipboardList size={26} className="text-accent" strokeWidth={1.8} />
-            Priority Review Queue & Investigator Worklist
+    <div className="tab-view active superbrain-view">
+      {/* Header section */}
+      <div className="superbrain-page-header">
+        <div className="page-header-title-box">
+          <div className="superbrain-chip">
+            <span className="chip-dot" />
+            Team Pulse Worklist
+          </div>
+          <h1 className="superbrain-page-title">
+            Priority Review Queue & Auditor Worklist
           </h1>
-          <p className="page-description">
+          <p className="superbrain-page-desc">
             Calibrated risk rankings based on LightGBM probability scores and SHAP impact. 
-            Auditors can score, freeze disbursements, or fast-track clean reimbursements.
+            Auditors can inspect feature attributions, freeze disbursements, or fast-track clean claims.
           </p>
         </div>
       </div>
 
-      {/* Summary KPI Strip for Queue */}
-      <div className="kpi-grid" style={{ marginBottom: '1.25rem' }}>
-        <div className="kpi-card">
-          <div className="kpi-header">
-            <span className="kpi-title">TOTAL FLAGGED EXPOSURE</span>
-            <span className="kpi-icon"><AlertCircle size={18} className="text-danger" /></span>
+      {/* Summary KPI Strip (Superbrain Bento Cards) */}
+      <div className="bento-kpi-grid queue-kpis">
+        <div className="bento-card group">
+          <div className="bento-watermark">01</div>
+          <div className="bento-card-header">
+            <span className="bento-card-label">TOTAL FLAGGED EXPOSURE</span>
+            <span className="bento-card-icon-box text-rose-400">
+              <HugeAlert size={18} />
+            </span>
           </div>
-          <div className="kpi-value danger-text">${(totalExposure / 1000000).toFixed(2)}M</div>
-          <div className="kpi-sub danger">Direct Financial Clawback Target</div>
+          <div className="bento-card-value text-rose-400 font-mono">
+            ${(totalExposure / 1000000).toFixed(2)}M
+          </div>
+          <div className="bento-card-sub danger">
+            <span>Direct Financial Clawback Target</span>
+          </div>
+          <div className="bento-hairline-indicator accent-rose" />
         </div>
 
-        <div className="kpi-card">
-          <div className="kpi-header">
-            <span className="kpi-title">PENDING INVESTIGATION</span>
-            <span className="kpi-icon"><Search size={18} className="text-accent" /></span>
+        <div className="bento-card group">
+          <div className="bento-watermark">02</div>
+          <div className="bento-card-header">
+            <span className="bento-card-label">PENDING AUDIT</span>
+            <span className="bento-card-icon-box text-amber-400">
+              <HugeSearch size={18} />
+            </span>
           </div>
-          <div className="kpi-value highlight-text">{investigatingCount}</div>
-          <div className="kpi-sub warning">Active Audit Files Under Review</div>
+          <div className="bento-card-value text-amber-400 font-mono">
+            {investigatingCount}
+          </div>
+          <div className="bento-card-sub warning">
+            <span>Active Audit Files Under Review</span>
+          </div>
+          <div className="bento-hairline-indicator accent-amber" />
         </div>
 
-        <div className="kpi-card">
-          <div className="kpi-header">
-            <span className="kpi-title">ACTIONED TODAY</span>
-            <span className="kpi-icon"><CheckCircle2 size={18} className="text-success" /></span>
+        <div className="bento-card group">
+          <div className="bento-watermark">03</div>
+          <div className="bento-card-header">
+            <span className="bento-card-label">ACTIONED TODAY</span>
+            <span className="bento-card-icon-box text-emerald-400">
+              <HugeCheckCircle size={18} />
+            </span>
           </div>
-          <div className="kpi-value">{reviewedCount}</div>
-          <div className="kpi-sub positive">Frozen or Expedited Authorizations</div>
+          <div className="bento-card-value text-emerald-400 font-mono">
+            {reviewedCount}
+          </div>
+          <div className="bento-card-sub positive">
+            <span>Frozen or Expedited Authorizations</span>
+          </div>
+          <div className="bento-hairline-indicator accent-emerald" />
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="queue-controls-bar">
-        <div className="queue-filter-buttons">
-          <button 
-            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+      <div className="superbrain-controls-panel">
+        <div className="superbrain-filter-pills">
+          <button
+            type="button"
+            className={`superbrain-filter-pill ${filter === 'all' ? 'active' : ''}`}
             onClick={() => setFilter('all')}
           >
             All Cases ({cases.length})
           </button>
-          <button 
-            className={`filter-btn ${filter === 'critical' ? 'active' : ''}`}
+          <button
+            type="button"
+            className={`superbrain-filter-pill ${filter === 'critical' ? 'active' : ''}`}
             onClick={() => setFilter('critical')}
           >
-            <AlertCircle size={14} className="text-danger" style={{ marginRight: '4px' }} />
-            Critical Risk ({criticalCount})
+            <span className="status-dot-sm text-rose-400">●</span>
+            Critical ({criticalCount})
           </button>
-          <button 
-            className={`filter-btn ${filter === 'high' ? 'active' : ''}`}
+          <button
+            type="button"
+            className={`superbrain-filter-pill ${filter === 'high' ? 'active' : ''}`}
             onClick={() => setFilter('high')}
           >
-            <AlertTriangle size={14} className="text-warning" style={{ marginRight: '4px' }} />
+            <span className="status-dot-sm text-amber-400">●</span>
             High Risk ({highCount})
           </button>
-          <button 
-            className={`filter-btn ${filter === 'clean' ? 'active' : ''}`}
+          <button
+            type="button"
+            className={`superbrain-filter-pill ${filter === 'clean' ? 'active' : ''}`}
             onClick={() => setFilter('clean')}
           >
-            <CheckCircle2 size={14} className="text-success" style={{ marginRight: '4px' }} />
-            Auto-Cleared ({cleanCount})
+            <span className="status-dot-sm text-emerald-400">●</span>
+            Cleared ({cleanCount})
           </button>
-          <button 
-            className={`filter-btn ${filter === 'investigating' ? 'active' : ''}`}
+          <button
+            type="button"
+            className={`superbrain-filter-pill ${filter === 'investigating' ? 'active' : ''}`}
             onClick={() => setFilter('investigating')}
           >
-            <Search size={14} className="text-accent" style={{ marginRight: '4px' }} />
-            Under Investigation
+            Under Review
           </button>
-          <button 
-            className={`filter-btn ${filter === 'reviewed' ? 'active' : ''}`}
+          <button
+            type="button"
+            className={`superbrain-filter-pill ${filter === 'reviewed' ? 'active' : ''}`}
             onClick={() => setFilter('reviewed')}
           >
-            <Check size={14} className="text-success" style={{ marginRight: '4px' }} />
             Reviewed Today
           </button>
         </div>
 
-        <div className="queue-search-input-wrapper">
-          <Search size={16} className="search-icon-inside" />
-          <input 
-            type="text" 
-            placeholder="Search provider, claim ID, or archetype..." 
-            className="queue-search-input"
+        <div className="superbrain-search-wrapper">
+          <HugeSearch size={16} className="superbrain-search-icon" />
+          <input
+            type="text"
+            placeholder="Search provider ID, name, archetype..."
+            className="superbrain-search-input font-mono"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -152,18 +182,18 @@ export default function ReviewQueue({
       </div>
 
       {/* Main Review Queue Table */}
-      <section className="dashboard-card" style={{ marginTop: '1rem' }}>
-        <div className="table-responsive">
-          <table className="data-table">
+      <section className="superbrain-panel" style={{ marginTop: '1rem' }}>
+        <div className="table-responsive-wrapper">
+          <table className="superbrain-table">
             <thead>
               <tr>
-                <th>Provider ID & Name</th>
+                <th>Provider ID & Facility</th>
                 <th>Clinical / Fraud Archetype</th>
-                <th>Inpatient Surgeries</th>
-                <th>Total Payout</th>
-                <th>Fraud Risk</th>
-                <th>Status</th>
-                <th>Audit Actions</th>
+                <th>Surgeries & Staff</th>
+                <th>Reimbursement</th>
+                <th>Calibrated Risk</th>
+                <th>Triage State</th>
+                <th>SIU Adjudication</th>
               </tr>
             </thead>
             <tbody>
@@ -171,63 +201,70 @@ export default function ReviewQueue({
                 <tr key={c.id}>
                   <td>
                     <div className="provider-cell">
-                      <span className="provider-id">{c.id}</span>
-                      <span className="provider-type">{c.name}</span>
+                      <span className="provider-id-tag font-mono">{c.id}</span>
+                      <span className="provider-sub-tag">{c.name}</span>
                     </div>
                   </td>
                   <td>
-                    <span className="archetype-tag">{c.tag}</span>
+                    <span className="archetype-pill font-mono">{c.tag}</span>
                   </td>
-                  <td className="mono-text">{c.surgeries} Surgeries ({c.physicians} docs)</td>
-                  <td className="mono-text font-bold">${c.reimbursement.toLocaleString()}</td>
+                  <td className="font-mono text-neutral-300">
+                    {c.surgeries} Surgeries ({c.physicians} MDs)
+                  </td>
+                  <td className="font-mono font-semibold text-neutral-100">
+                    ${c.reimbursement.toLocaleString()}
+                  </td>
                   <td>
-                    <div className="risk-pill-container">
-                      <div 
-                        className="risk-bar-mini" 
+                    <div className="risk-metric-box">
+                      <div
+                        className="risk-bar-indicator"
                         style={{ width: `${Math.round(c.risk * 100)}%` }}
-                      ></div>
-                      <span className={`risk-text ${c.risk >= 0.8 ? 'danger' : c.risk >= 0.5 ? 'warning' : 'clean'}`}>
+                      />
+                      <span className={`risk-number-badge font-mono ${c.risk >= 0.8 ? 'is-danger' : c.risk >= 0.5 ? 'is-warning' : 'is-clean'}`}>
                         {(c.risk * 100).toFixed(1)}%
                       </span>
                     </div>
                   </td>
                   <td>
                     {c.status === 'frozen' ? (
-                      <span className="badge badge-danger">PAYOUTS FROZEN</span>
+                      <span className="status-tag tag-frozen">PAYOUTS FROZEN</span>
                     ) : c.status === 'cleared' ? (
-                      <span className="badge badge-success">EXPEDITED CLEAR</span>
+                      <span className="status-tag tag-cleared">EXPEDITED CLEAR</span>
                     ) : (
-                      <span className="badge badge-cyan">UNDER REVIEW</span>
+                      <span className="status-tag tag-review">UNDER REVIEW</span>
                     )}
                   </td>
                   <td>
-                    <div className="action-buttons-flex">
-                      <button 
-                        className="btn-table-action"
+                    <div className="action-button-cluster">
+                      <button
+                        type="button"
+                        className="action-btn-inspect"
                         onClick={() => onInspectCase(c.id)}
                         title="Load into SHAP Analyzer"
-                        style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                       >
-                        <Search size={13} /> Inspect
+                        <HugeSearch size={13} />
+                        <span>Inspect</span>
                       </button>
                       {c.status !== 'frozen' && c.decision.includes('FLAGGED') && (
-                        <button 
-                          className="btn-table-action btn-freeze"
+                        <button
+                          type="button"
+                          className="action-btn-freeze"
                           onClick={() => onTriageAction(c.id, 'FREEZE')}
                           title="Freeze Disbursements Immediately"
-                          style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                         >
-                          <ShieldBan size={13} /> Freeze
+                          <HugeFreeze size={13} />
+                          <span>Freeze</span>
                         </button>
                       )}
                       {c.status !== 'cleared' && !c.decision.includes('FLAGGED') && (
-                        <button 
-                          className="btn-table-action btn-clear"
+                        <button
+                          type="button"
+                          className="action-btn-clear"
                           onClick={() => onTriageAction(c.id, 'CLEAR')}
                           title="Authorize Payment"
-                          style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                         >
-                          <CheckCircle2 size={13} /> Clear
+                          <HugeCheckCircle size={13} />
+                          <span>Clear</span>
                         </button>
                       )}
                     </div>

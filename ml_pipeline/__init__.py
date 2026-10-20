@@ -7,7 +7,7 @@ workloads, and explaining risk predictions for human review.
 """
 
 __version__ = "1.0.0"
-__author__ = "Syght ML Engineering"
+__author__ = "Team Pulse"
 
 from ml_pipeline.config import SyghtConfig
 from ml_pipeline.predict import SyghtPredictor
