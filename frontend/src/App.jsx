@@ -197,6 +197,7 @@ export default function App() {
             <BatchAuditResults
               resultsData={batchResults}
               pipelineExecutionTrigger={pipelineExecutionTrigger}
+              onClearExecutionTrigger={() => setPipelineExecutionTrigger(null)}
               onInspectCase={handleInspectCase}
               onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
               onRunAuditWithSample={handleRunAuditWithSample}
