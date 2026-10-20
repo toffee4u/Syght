@@ -1351,28 +1351,39 @@ export default function BatchAuditResults({
             {/* WHAT TO DO NOW: DYNAMIC ACTION PLAN */}
             <div className="summary-action-box">
               <div className="action-box-title">
-                <HugeiconsIcon icon={Shield01Icon} size={20} className="text-sky-600" />
+                <HugeiconsIcon icon={Shield01Icon} size={20} className="text-sky-600 shrink-0" />
                 <span>What Should You Do Now? (Immediate Action Plan)</span>
               </div>
               <div className="action-steps-list">
                 <div className="action-step">
                   <span className="step-badge font-mono">Action 1</span>
-                  <span>
+                  <div className="action-step-body">
                     <strong>Freeze Payments Now:</strong> Place an immediate financial freeze on the ₹{flaggedExposureCr} Crore pending for the {flaggedCount} flagged facilities
-                    {flaggedItems.length > 0 ? ` (${flaggedItems.map(c => c.provider_id).slice(0, 3).join(', ')}${flaggedItems.length > 3 ? ` +${flaggedItems.length - 3} more` : ''})` : ''}.
-                  </span>
+                    {flaggedItems.length > 0 ? (
+                      <span className="action-facility-chips">
+                        {' ('}
+                        {flaggedItems.slice(0, 2).map((c, i) => (
+                          <span key={c.provider_id || i} className="action-facility-tag font-mono">
+                            {c.name ? c.name.split(' ').slice(0, 2).join(' ') : (c.hospital_id || c.provider_id)}
+                          </span>
+                        ))}
+                        {flaggedItems.length > 2 ? ` +${flaggedItems.length - 2} more` : ''}
+                        {')'}
+                      </span>
+                    ) : ''}.
+                  </div>
                 </div>
                 <div className="action-step">
                   <span className="step-badge font-mono">Action 2</span>
-                  <span>
+                  <div className="action-step-body">
                     <strong>Release Honest Claims Fast:</strong> Expedite ₹{cleanExposureCr} Crore to the {clearedCount} honest rural community clinics without administrative delay.
-                  </span>
+                  </div>
                 </div>
                 <div className="action-step">
                   <span className="step-badge font-mono">Action 3</span>
-                  <span>
+                  <div className="action-step-body">
                     <strong>Audit Root Cause ({topDriverName}):</strong> Subpoena hospital operation logs, biometric attendance, and nurse charts to verify {topDriverName.toLowerCase()}.
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
