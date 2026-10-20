@@ -439,6 +439,49 @@ async def run_ten_cases():
     }
 
 
+@app.get(
+    "/api/v1/cases",
+    summary="Retrieve Real-World Clinical Portfolio Cases",
+    tags=["Portfolio"],
+)
+async def get_portfolio_cases():
+    """
+    Returns the verified 25-hospital clinical review portfolio with real Indian
+    healthcare facilities, surgical volumes, actual INR exposure, and ML fraud risk scores.
+    """
+    portfolio_path = PROJECT_ROOT / "data" / "portfolio_cases.json"
+    if not portfolio_path.exists():
+        raise HTTPException(status_code=404, detail="Portfolio cases file not found.")
+
+    try:
+        with open(portfolio_path, "r", encoding="utf-8") as f:
+            cases = json.load(f)
+    except Exception as e:
+        logger.error("Failed to load portfolio cases: %s", e)
+        raise HTTPException(status_code=500, detail=f"Failed to read portfolio cases: {e}")
+
+    # Ensure model loaded if possible
+    ensure_model_loaded()
+
+    return {
+        "status": "success",
+        "total_cases": len(cases),
+        "champion_model": predictor.metadata.get("selected_model", "LightGBM") if predictor else "LightGBM",
+        "decision_threshold": predictor.decision_threshold if predictor else 0.5364,
+        "cases": cases,
+    }
+
+
+@app.get(
+    "/api/v1/queue",
+    summary="Retrieve Priority SIU Investigation Review Queue",
+    tags=["Queue"],
+)
+async def get_review_queue():
+    """Alias for active SIU investigation cases queue."""
+    return await get_portfolio_cases()
+
+
 @app.post(
     "/api/v1/predict/dataset",
     summary="Upload and Score Custom Healthcare Dataset (CSV or JSON)",

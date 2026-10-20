@@ -15,7 +15,7 @@ export default function PreAuthGateway({ onShowToast }) {
     claim_id: 'CLM_PREAUTH_2026_091',
     bene_id: 'BENE_99412',
     claim_type: 'inpatient',
-    reimbursed_amount: 14500,
+    reimbursed_amount: 145000,
     length_of_stay: 14,
     diagnosis_codes: '4019, 25000, 4280, 5849',
     procedure_codes: '9904, 3893, 8151',
@@ -31,7 +31,7 @@ export default function PreAuthGateway({ onShowToast }) {
       'KNOWN_COLLUSIVE_PROVIDER_REGISTRY',
     ],
     reasons: [
-      'Claim amount (₹14,500) exceeds 99th percentile for outpatient/general admitting category.',
+      'Claim amount (₹1,45,000) exceeds 99th percentile for outpatient/general admitting category.',
       'Billed length of stay (14 days) conflicts with non-surgical primary diagnosis.',
       'Provider is under active Special Investigation Unit freeze.',
     ],
@@ -148,11 +148,11 @@ export default function PreAuthGateway({ onShowToast }) {
                 value={formData.provider_id}
                 onChange={e => setFormData({ ...formData, provider_id: e.target.value })}
               >
-                <option value="PRV_02_PHANTOM_SURGERY_MILL">PRV_02_PHANTOM_SURGERY_MILL (Critical Risk)</option>
-                <option value="PRV_03_KICKBACK_COLLUSION_RING">PRV_03_KICKBACK_COLLUSION_RING (Collusion Ring)</option>
-                <option value="PRV_08_ICU_LENGTH_OF_STAY_UPCODING">PRV_08_ICU_LENGTH_OF_STAY_UPCODING (Upcoding)</option>
-                <option value="PRV_01_RURAL_PRIMARY_CLINIC">PRV_01_RURAL_PRIMARY_CLINIC (Clean Clinic)</option>
-                <option value="PRV_04_COMMUNITY_DISTRICT_HOSPITAL">PRV_04_COMMUNITY_DISTRICT_HOSPITAL (Clean Hospital)</option>
+                <option value="PRV_02_PHANTOM_SURGERY_MILL">Apex Life Surgical Specialty Care (Mumbai, MH) — PRV_02</option>
+                <option value="PRV_03_KICKBACK_COLLUSION_RING">Metro Health Bipartite Syndicate (Delhi NCR) — PRV_03</option>
+                <option value="PRV_08_ICU_LENGTH_OF_STAY_UPCODING">St. Jude Critical Care & Trauma (Bengaluru, KA) — PRV_08</option>
+                <option value="PRV_01_RURAL_PRIMARY_CLINIC">Shanti Gramin Community Health Clinic (Raebareli, UP) — PRV_01</option>
+                <option value="PRV_04_COMMUNITY_DISTRICT_HOSPITAL">Galaxy Diagnostic & Clinical Pathology (Pune, MH) — PRV_04</option>
               </select>
             </div>
 

@@ -8,13 +8,13 @@ export default function ClaimAnalyzerPage({
   onShowToast,
 }) {
   return (
-    <main className="syght-page page-claim-analyzer" id="page-analyzer">
+    <div className="syght-page page-claim-analyzer" id="page-analyzer">
       <ClaimAnalyzer
         benchmarkCases={benchmarkCases}
         selectedCaseId={selectedCaseId}
         onCaseSelected={onCaseSelected}
         onShowToast={onShowToast}
       />
-    </main>
+    </div>
   );
 }

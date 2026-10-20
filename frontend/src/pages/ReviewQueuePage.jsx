@@ -7,12 +7,12 @@ export default function ReviewQueuePage({
   onTriageAction,
 }) {
   return (
-    <main className="syght-page page-review-queue" id="page-queue">
+    <div className="syght-page page-review-queue" id="page-queue">
       <ReviewQueue
         cases={cases}
         onInspectCase={onInspectCase}
         onTriageAction={onTriageAction}
       />
-    </main>
+    </div>
   );
 }

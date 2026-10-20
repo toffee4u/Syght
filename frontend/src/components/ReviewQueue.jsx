@@ -23,7 +23,8 @@ export default function ReviewQueue({
     const matchesSearch =
       c.id.toLowerCase().includes(q) ||
       c.name.toLowerCase().includes(q) ||
-      c.tag.toLowerCase().includes(q);
+      c.tag.toLowerCase().includes(q) ||
+      (c.city && c.city.toLowerCase().includes(q));
 
     if (!matchesSearch) return false;
 
@@ -45,6 +46,10 @@ export default function ReviewQueue({
   const totalExposure = cases
     .filter(c => c.decision.includes('FLAGGED'))
     .reduce((acc, c) => acc + c.reimbursement, 0);
+
+  const formattedExposure = totalExposure >= 10000000
+    ? `₹${(totalExposure / 10000000).toFixed(2)} Cr`
+    : `₹${(totalExposure / 100000).toFixed(2)} Lakhs`;
 
   return (
     <div className="tab-view active syght-view">
@@ -76,7 +81,7 @@ export default function ReviewQueue({
             </span>
           </div>
           <div className="bento-card-value text-rose-400 font-mono">
-            ₹{(totalExposure / 1000000).toFixed(2)}M
+            {formattedExposure}
           </div>
           <div className="bento-card-sub danger">
             <span>Direct Financial Clawback Target</span>
@@ -202,7 +207,7 @@ export default function ReviewQueue({
                   <td>
                     <div className="provider-cell">
                       <span className="provider-id-tag font-mono">{c.id}</span>
-                      <span className="provider-sub-tag">{c.name}</span>
+                      <span className="provider-sub-tag">{c.name}{c.city ? ` • ${c.city}` : ''}</span>
                     </div>
                   </td>
                   <td>
@@ -212,7 +217,7 @@ export default function ReviewQueue({
                     {c.surgeries} Surgeries ({c.physicians} MDs)
                   </td>
                   <td className="font-mono font-semibold text-slate-900">
-                    ₹{c.reimbursement.toLocaleString()}
+                    ₹{c.reimbursement.toLocaleString('en-IN')}
                   </td>
                   <td>
                     <div className="risk-metric-box">

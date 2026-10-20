@@ -20,12 +20,12 @@ export default function CollusionNetwork() {
 
   // Network Topology Data
   const initialNodes = useMemo(() => [
-    { id: 'HOSP_03', label: 'PRV_03 (Syndicate Hub)', type: 'hospital', x: 0.38, y: 0.36, r: 24, isSyndicate: true, centrality: 0.94, claims: 3410, payout: '₹38.2M', doctors: 34 },
-    { id: 'HOSP_05', label: 'PRV_05 (Unbundling Hub)', type: 'hospital', x: 0.62, y: 0.24, r: 20, isSyndicate: true, centrality: 0.78, claims: 1890, payout: '₹19.4M', doctors: 18 },
-    { id: 'HOSP_02', label: 'PRV_02 (Phantom Surgery Mill)', type: 'hospital', x: 0.18, y: 0.68, r: 22, isSyndicate: false, centrality: 0.65, claims: 1420, payout: '₹14.5M', doctors: 8 },
-    { id: 'HOSP_08', label: 'PRV_08 (ICU Upcoding Center)', type: 'hospital', x: 0.82, y: 0.32, r: 20, isSyndicate: false, centrality: 0.58, claims: 980, payout: '₹11.2M', doctors: 6 },
-    { id: 'HOSP_01', label: 'PRV_01 (Rural Primary Clinic)', type: 'hospital', x: 0.84, y: 0.72, r: 18, isSyndicate: false, centrality: 0.22, claims: 410, payout: '₹3.4M', doctors: 3 },
-    { id: 'HOSP_04', label: 'PRV_04 (District General Hospital)', type: 'hospital', x: 0.48, y: 0.78, r: 20, isSyndicate: false, centrality: 0.35, claims: 820, payout: '₹7.1M', doctors: 9 },
+    { id: 'HOSP_03', label: 'Metro Health Syndicate (PRV_03)', type: 'hospital', x: 0.38, y: 0.36, r: 24, isSyndicate: true, centrality: 0.94, claims: 3410, payout: '₹9.8M', doctors: 34 },
+    { id: 'HOSP_05', label: 'Silverline Diagnostic Hub (PRV_05)', type: 'hospital', x: 0.62, y: 0.24, r: 20, isSyndicate: true, centrality: 0.78, claims: 1890, payout: '₹4.9M', doctors: 18 },
+    { id: 'HOSP_02', label: 'Apex Life Specialty (PRV_02)', type: 'hospital', x: 0.18, y: 0.68, r: 22, isSyndicate: false, centrality: 0.65, claims: 1420, payout: '₹5.1M', doctors: 2 },
+    { id: 'HOSP_08', label: 'St. Jude Critical Care (PRV_08)', type: 'hospital', x: 0.82, y: 0.32, r: 20, isSyndicate: false, centrality: 0.58, claims: 980, payout: '₹6.4M', doctors: 6 },
+    { id: 'HOSP_01', label: 'Shanti Gramin Clinic (PRV_01)', type: 'hospital', x: 0.84, y: 0.72, r: 18, isSyndicate: false, centrality: 0.22, claims: 410, payout: '₹1.2M', doctors: 3 },
+    { id: 'HOSP_04', label: 'Galaxy Diagnostics (PRV_04)', type: 'hospital', x: 0.48, y: 0.78, r: 20, isSyndicate: false, centrality: 0.35, claims: 820, payout: '₹3.9M', doctors: 9 },
 
     // Syndicate Shared Doctors
     { id: 'DOC_01', label: 'Dr. Sharma (Rotating Surgeon)', type: 'doctor', x: 0.32, y: 0.48, r: 14, isSyndicate: true, centrality: 0.89, claims: 640, payout: '₹6.8M', affiliations: 'PRV_03, PRV_05' },
@@ -84,12 +84,22 @@ export default function CollusionNetwork() {
   const draggedNodeRef = useRef(null);
   const dragOffsetRef = useRef({ x: 0, y: 0 });
 
+  const getCanvasHeight = () => {
+    if (typeof window === 'undefined') return 560;
+    if (window.innerWidth <= 480) return 360;
+    if (window.innerWidth <= 768) return 400;
+    if (window.innerWidth <= 1024) return 460;
+    return 560;
+  };
+
+  const [canvasHeight, setCanvasHeight] = useState(getCanvasHeight);
+
   // Initialize or reset positions
   const resetLayout = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const w = canvas.clientWidth || 900;
-    const h = canvas.clientHeight || 560;
+    const w = canvas.parentElement?.clientWidth || canvas.clientWidth || 900;
+    const h = getCanvasHeight();
 
     nodesRef.current = initialNodes.map(n => ({
       ...n,
@@ -118,8 +128,9 @@ export default function CollusionNetwork() {
 
     const handleResize = () => {
       const dpr = window.devicePixelRatio || 1;
-      const width = canvas.parentElement.clientWidth;
-      const height = 560;
+      const width = canvas.parentElement?.clientWidth || canvas.clientWidth || 360;
+      const height = getCanvasHeight();
+      setCanvasHeight(height);
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -270,19 +281,21 @@ export default function CollusionNetwork() {
         ctx.save();
         ctx.globalAlpha = nodeAlpha;
 
-        const pulseScale = node.isSyndicate ? Math.sin(angle * 1.5) * 2.5 : 0;
-        const baseRadius = node.r + (isHovered || isSelected ? 4 : 0);
+        const isMobileScreen = width < 640;
+        const radiusScale = isMobileScreen ? 0.78 : 1;
+        const pulseScale = node.isSyndicate ? Math.sin(angle * 1.5) * (isMobileScreen ? 1.8 : 2.5) : 0;
+        const baseRadius = (node.r * radiusScale) + (isHovered || isSelected ? (isMobileScreen ? 3 : 4) : 0);
 
         // Expanding radar rings for Syndicate Epicenter (PRV_03)
         if (node.id === 'HOSP_03' && visible) {
           const rippleCount = 2;
           for (let r = 1; r <= rippleCount; r++) {
-            const rippleR = baseRadius + ((angle * 14 + r * 16) % 36);
-            const rippleAlpha = Math.max(0, 0.4 - (rippleR / 55));
+            const rippleR = baseRadius + ((angle * 14 + r * 16) % (isMobileScreen ? 28 : 36));
+            const rippleAlpha = Math.max(0, 0.4 - (rippleR / (isMobileScreen ? 42 : 55)));
             ctx.beginPath();
             ctx.arc(node.currentX, node.currentY, rippleR, 0, Math.PI * 2);
             ctx.strokeStyle = `rgba(225, 29, 72, ${rippleAlpha})`;
-            ctx.lineWidth = 1.8;
+            ctx.lineWidth = isMobileScreen ? 1.4 : 1.8;
             ctx.stroke();
           }
         }
@@ -290,7 +303,7 @@ export default function CollusionNetwork() {
         // Outer glow on hover or syndicate
         if (isHovered || isSelected) {
           ctx.beginPath();
-          ctx.arc(node.currentX, node.currentY, baseRadius + 7, 0, Math.PI * 2);
+          ctx.arc(node.currentX, node.currentY, baseRadius + (isMobileScreen ? 5 : 7), 0, Math.PI * 2);
           ctx.fillStyle = node.isSyndicate ? 'rgba(225, 29, 72, 0.15)' : 'rgba(2, 132, 199, 0.15)';
           ctx.fill();
         }
@@ -333,47 +346,59 @@ export default function CollusionNetwork() {
 
         ctx.fillStyle = fillGradient;
         ctx.shadowColor = node.isSyndicate ? 'rgba(225, 29, 72, 0.35)' : 'rgba(0, 0, 0, 0.12)';
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetY = 3;
+        ctx.shadowBlur = isMobileScreen ? 6 : 10;
+        ctx.shadowOffsetY = isMobileScreen ? 2 : 3;
         ctx.fill();
 
         // Node Crisp White Border
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = isMobileScreen ? 2 : 2.5;
         ctx.shadowBlur = 0;
         ctx.stroke();
 
         // Inner Glyph / Symbol
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 10px JetBrains Mono, monospace';
+        ctx.font = isMobileScreen ? '700 8.5px JetBrains Mono, monospace' : '700 10px JetBrains Mono, monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const glyph = node.isSyndicate ? '!' : node.type === 'hospital' ? 'H' : node.type === 'doctor' ? 'MD' : 'B';
         ctx.fillText(glyph, node.currentX, node.currentY);
 
         // 5. Node Labels with High-Contrast White Outline
-        const labelY = node.currentY + baseRadius + 14;
-        ctx.font = '600 11px Inter, system-ui, -apple-system, sans-serif';
+        const displayLabel = isMobileScreen
+          ? (node.type === 'hospital'
+              ? node.id.replace('HOSP_', 'PRV_')
+              : node.type === 'doctor'
+              ? node.label.split(' (')[0]
+              : node.label.replace('Beneficiary ', '').split(' (')[0])
+          : node.label;
+
+        const labelY = node.currentY + baseRadius + (isMobileScreen ? 11 : 14);
+        ctx.font = isMobileScreen
+          ? '600 9.5px Inter, system-ui, -apple-system, sans-serif'
+          : '600 11px Inter, system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'alphabetic';
 
         // White halo stroke for 100% legibility
-        ctx.lineWidth = 3.5;
+        ctx.lineWidth = isMobileScreen ? 2.5 : 3.5;
         ctx.strokeStyle = '#ffffff';
-        ctx.strokeText(node.label, node.currentX, labelY);
+        ctx.strokeText(displayLabel, node.currentX, labelY);
 
         // Dark slate text fill
         ctx.fillStyle = node.isSyndicate ? '#be123c' : '#0f172a';
-        ctx.fillText(node.label, node.currentX, labelY);
+        ctx.fillText(displayLabel, node.currentX, labelY);
 
-        // Subtitle archetype tag
-        ctx.font = '500 8.5px JetBrains Mono, monospace';
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = '#ffffff';
-        ctx.strokeText(node.type.toUpperCase(), node.currentX, labelY + 11);
+        // Subtitle archetype tag (show on desktop, or for syndicate hubs on mobile)
+        if (!isMobileScreen || node.isSyndicate) {
+          ctx.font = isMobileScreen ? '500 7.5px JetBrains Mono, monospace' : '500 8.5px JetBrains Mono, monospace';
+          ctx.lineWidth = 2.5;
+          ctx.strokeStyle = '#ffffff';
+          ctx.strokeText(node.type.toUpperCase(), node.currentX, labelY + (isMobileScreen ? 9 : 11));
 
-        ctx.fillStyle = '#64748b';
-        ctx.fillText(node.type.toUpperCase(), node.currentX, labelY + 11);
+          ctx.fillStyle = '#64748b';
+          ctx.fillText(node.type.toUpperCase(), node.currentX, labelY + (isMobileScreen ? 9 : 11));
+        }
 
         ctx.restore();
       });
@@ -414,6 +439,13 @@ export default function CollusionNetwork() {
         y: node.currentY - (e.clientY - rect.top),
       };
       setSelectedNode(node);
+      if (e.target?.setPointerCapture && e.pointerId !== undefined) {
+        try {
+          e.target.setPointerCapture(e.pointerId);
+        } catch {
+          // ignore
+        }
+      }
     } else {
       setSelectedNode(null);
     }
@@ -436,7 +468,14 @@ export default function CollusionNetwork() {
     setHoveredNode(hover || null);
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (e) => {
+    if (draggedNodeRef.current && e?.target?.releasePointerCapture && e?.pointerId !== undefined) {
+      try {
+        e.target.releasePointerCapture(e.pointerId);
+      } catch {
+        // ignore
+      }
+    }
     draggedNodeRef.current = null;
   };
 
@@ -544,7 +583,7 @@ export default function CollusionNetwork() {
         </div>
 
         {/* Canvas Display */}
-        <div className="canvas-wrapper" style={{ position: 'relative', marginTop: '0.75rem' }}>
+        <div className="canvas-wrapper" style={{ position: 'relative', marginTop: '0.75rem', width: '100%', overflow: 'hidden' }}>
           <canvas
             ref={canvasRef}
             className="network-canvas"
@@ -553,12 +592,13 @@ export default function CollusionNetwork() {
             onPointerUp={handlePointerUp}
             style={{
               width: '100%',
-              height: '560px',
+              height: `${canvasHeight}px`,
               display: 'block',
               cursor: draggedNodeRef.current ? 'grabbing' : 'grab',
               borderRadius: '16px',
               border: '1px solid rgba(0, 0, 0, 0.08)',
               backgroundColor: '#ffffff',
+              touchAction: 'pan-y',
             }}
           />
 
@@ -568,8 +608,8 @@ export default function CollusionNetwork() {
               className="canvas-hover-tooltip font-mono"
               style={{
                 position: 'absolute',
-                left: `${hoveredNode.currentX + 16}px`,
-                top: `${hoveredNode.currentY - 24}px`,
+                left: `${Math.max(8, Math.min(hoveredNode.currentX + 16, (canvasRef.current?.clientWidth || 340) - 235))}px`,
+                top: `${Math.max(8, Math.min(hoveredNode.currentY - 24, canvasHeight - 110))}px`,
                 pointerEvents: 'none',
                 zIndex: 30,
               }}

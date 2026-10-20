@@ -13,7 +13,7 @@ export default function BatchAuditResultsPage({
   onShowToast,
 }) {
   return (
-    <main className="syght-page page-batch-results" id="page-results">
+    <div className="syght-page page-batch-results" id="page-results">
       <BatchAuditResults
         resultsData={resultsData}
         pipelineExecutionTrigger={pipelineExecutionTrigger}
@@ -25,6 +25,6 @@ export default function BatchAuditResultsPage({
         onSaveAuditResults={onSaveAuditResults}
         onShowToast={onShowToast}
       />
-    </main>
+    </div>
   );
 }

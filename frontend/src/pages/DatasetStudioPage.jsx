@@ -7,12 +7,12 @@ export default function DatasetStudioPage({
   onRunComplete,
 }) {
   return (
-    <main className="syght-page page-dataset-studio" id="page-dataset">
+    <div className="syght-page page-dataset-studio" id="page-dataset">
       <DatasetStudio
         onInspectCase={onInspectCase}
         onShowToast={onShowToast}
         onRunComplete={onRunComplete}
       />
-    </main>
+    </div>
   );
 }
