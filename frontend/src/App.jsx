@@ -15,14 +15,110 @@ import Toast from './components/Toast';
 import { BENCHMARK_CASES } from './data/benchmarkCases';
 import { BENCHMARK_MODELS } from './data/benchmarkModels';
 
+const ROUTE_TO_TAB = {
+  '': 'tab-dashboard',
+  '/': 'tab-dashboard',
+  '#/': 'tab-dashboard',
+  '#': 'tab-dashboard',
+  '/command': 'tab-dashboard',
+  '#command': 'tab-dashboard',
+  '#/command': 'tab-dashboard',
+  '/dashboard': 'tab-dashboard',
+  '#dashboard': 'tab-dashboard',
+  '#/dashboard': 'tab-dashboard',
+  '/queue': 'tab-queue',
+  '#queue': 'tab-queue',
+  '#/queue': 'tab-queue',
+  '/dataset': 'tab-dataset',
+  '#dataset': 'tab-dataset',
+  '#/dataset': 'tab-dataset',
+  '/results': 'tab-results',
+  '#results': 'tab-results',
+  '#/results': 'tab-results',
+  '/analyzer': 'tab-analyzer',
+  '#analyzer': 'tab-analyzer',
+  '#/analyzer': 'tab-analyzer',
+  '/benchmarks': 'tab-performance',
+  '#benchmarks': 'tab-performance',
+  '#/benchmarks': 'tab-performance',
+  '/network': 'tab-network',
+  '#network': 'tab-network',
+  '#/network': 'tab-network',
+  '/preauth': 'tab-preauth',
+  '#preauth': 'tab-preauth',
+  '#/preauth': 'tab-preauth',
+};
+
+const TAB_TO_ROUTE = {
+  'tab-dashboard': '#/command',
+  'tab-queue': '#/queue',
+  'tab-dataset': '#/dataset',
+  'tab-results': '#/results',
+  'tab-analyzer': '#/analyzer',
+  'tab-performance': '#/benchmarks',
+  'tab-network': '#/network',
+  'tab-preauth': '#/preauth',
+};
+
+const TAB_PAGE_TITLES = {
+  'tab-dashboard': 'Executive Command Center — Syght Healthcare Fraud Intelligence',
+  'tab-queue': 'SIU Priority Review Queue — Syght',
+  'tab-dataset': 'Dataset Studio & Batch Pipeline — Syght',
+  'tab-results': 'Model Run & Intelligence Results — Syght',
+  'tab-analyzer': 'TreeSHAP Waterfall Claim Analyzer — Syght',
+  'tab-performance': 'Benchmarks & Candidate ROC-AUC — Syght',
+  'tab-network': 'Collusion Graph Network Engine — Syght',
+  'tab-preauth': 'Real-Time Pre-Auth Gateway (<5ms) — Syght',
+};
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState('tab-dashboard');
+  const getTabFromLocation = () => {
+    const hash = window.location.hash || '';
+    if (hash && ROUTE_TO_TAB[hash]) {
+      return ROUTE_TO_TAB[hash];
+    }
+    const path = window.location.pathname || '';
+    if (path && ROUTE_TO_TAB[path]) {
+      return ROUTE_TO_TAB[path];
+    }
+    return 'tab-dashboard';
+  };
+
+  const [activeTab, setActiveTabState] = useState(getTabFromLocation);
   const [cases, setCases] = useState(BENCHMARK_CASES);
   const [selectedCaseId, setSelectedCaseId] = useState(BENCHMARK_CASES[0].id);
   const [batchResults, setBatchResults] = useState(null);
   const [healthData, setHealthData] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [toast, setToast] = useState(null);
+
+  const setActiveTab = (tabId) => {
+    setActiveTabState(tabId);
+    const targetRoute = TAB_TO_ROUTE[tabId] || '#/command';
+    if (window.location.hash !== targetRoute) {
+      window.location.hash = targetRoute;
+    }
+    document.title = TAB_PAGE_TITLES[tabId] || 'Syght — Healthcare Fraud Prevention';
+  };
+
+  // Synchronize browser history, direct path, and hash navigation
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const tab = getTabFromLocation();
+      setActiveTabState(tab);
+      document.title = TAB_PAGE_TITLES[tab] || 'Syght — Healthcare Fraud Prevention';
+    };
+
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+    const currentTab = getTabFromLocation();
+    document.title = TAB_PAGE_TITLES[currentTab] || 'Syght — Healthcare Fraud Prevention';
+
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
 
   // Fetch API Health on boot
   useEffect(() => {

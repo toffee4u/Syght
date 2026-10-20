@@ -23,10 +23,17 @@ if str(PROJECT_ROOT) not in sys.path:
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse, HTMLResponse, Response, FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from backend.docs_ui import get_custom_docs_html, get_custom_redoc_html
+from backend.docs_ui import (
+    get_custom_docs_html,
+    get_custom_redoc_html,
+    get_docs_architecture_html,
+    get_docs_archetypes_html,
+    get_docs_benchmark_html,
+    SYGHT_FAVICON_SVG,
+)
 
 from backend.preauth_gateway import PreAuthFraudGateway, PreAuthRequest
 from backend.schemas import (
@@ -148,10 +155,35 @@ app.add_middleware(
 )
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+@app.get("/favicon.svg", include_in_schema=False)
+async def get_favicon():
+    """Serves the attractive Syght cyber shield and radar SVG favicon."""
+    return Response(content=SYGHT_FAVICON_SVG, media_type="image/svg+xml")
+
+
 @app.get("/docs", include_in_schema=False)
 async def custom_swagger_ui():
     """Serves the custom-styled, ultra-premium Syght Swagger UI developer portal."""
     return HTMLResponse(get_custom_docs_html(openapi_url=app.openapi_url or "/openapi.json"))
+
+
+@app.get("/docs/architecture", include_in_schema=False)
+async def docs_architecture():
+    """Dedicated separate documentation page for Pipeline Architecture & 1-SE Decision Rules."""
+    return HTMLResponse(get_docs_architecture_html())
+
+
+@app.get("/docs/archetypes", include_in_schema=False)
+async def docs_archetypes():
+    """Dedicated separate documentation page for Clinical Healthcare Fraud Archetypes."""
+    return HTMLResponse(get_docs_archetypes_html())
+
+
+@app.get("/docs/benchmark", include_in_schema=False)
+async def docs_benchmark():
+    """Dedicated separate documentation page for Multi-Model Benchmark & TreeSHAP Attribution."""
+    return HTMLResponse(get_docs_benchmark_html())
 
 
 @app.get("/redoc", include_in_schema=False)
@@ -545,6 +577,29 @@ if figures_dir.exists():
 # Mount frontend directory for SPA (built React production bundle)
 frontend_dist = PROJECT_ROOT / "frontend" / "dist"
 frontend_dir = PROJECT_ROOT / "frontend"
+
+# Direct SPA page routes for deep-linking
+spa_paths = [
+    "/command",
+    "/queue",
+    "/dataset",
+    "/results",
+    "/analyzer",
+    "/benchmarks",
+    "/network",
+    "/preauth",
+]
+
+for p in spa_paths:
+    def _create_spa_handler():
+        async def _spa_view():
+            target_file = frontend_dist / "index.html" if (frontend_dist / "index.html").exists() else (frontend_dir / "index.html")
+            if target_file.exists():
+                return FileResponse(str(target_file))
+            return HTMLResponse("<h1>Syght Engine Loading...</h1>")
+        return _spa_view
+
+    app.add_api_route(p, _create_spa_handler(), methods=["GET"], include_in_schema=False)
 
 if frontend_dist.exists() and (frontend_dist / "index.html").exists():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
