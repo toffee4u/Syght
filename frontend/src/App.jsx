@@ -114,6 +114,40 @@ export default function App() {
     }
   };
 
+  const [pipelineExecutionTrigger, setPipelineExecutionTrigger] = useState(null);
+
+  const handleRunAuditWithSample = () => {
+    setPipelineExecutionTrigger({
+      source: 'sample-10',
+      datasetName: '10_Verified_Benchmark_Claims.csv',
+      timestamp: Date.now(),
+    });
+    setActiveTab('tab-results');
+    showToast('Launched <strong>Real-Time Multi-Model Engine</strong> on 10 Benchmark Claims', 'info');
+  };
+
+  const handleRunAuditWithPortfolio = () => {
+    setPipelineExecutionTrigger({
+      source: 'benchmark-25',
+      datasetName: 'PMJAY_Benchmark_Portfolio_25_Providers.csv',
+      timestamp: Date.now(),
+    });
+    setActiveTab('tab-results');
+    showToast('Launched <strong>Real-Time Multi-Model Engine</strong> on 25 Portfolio Facilities', 'info');
+  };
+
+  const handleRunCustomDataset = (datasetData) => {
+    setBatchResults(datasetData);
+    setPipelineExecutionTrigger({
+      source: 'custom',
+      datasetName: datasetData?.dataset_name || 'Custom_Healthcare_Claims.csv',
+      data: datasetData,
+      timestamp: Date.now(),
+    });
+    setActiveTab('tab-results');
+    showToast(`Launched <strong>Real-Time Multi-Model Engine</strong> on ${datasetData?.dataset_name || 'Dataset'}`, 'info');
+  };
+
   return (
     <div className="app-container">
       {/* Top Header */}
@@ -137,6 +171,7 @@ export default function App() {
             onTriageAction={handleTriageAction}
             onViewAllCases={() => setActiveTab('tab-queue')}
             onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
+            onRunAuditWithSample={handleRunAuditWithSample}
           />
         )}
 
@@ -152,18 +187,18 @@ export default function App() {
           <DatasetStudio
             onInspectCase={handleInspectCase}
             onShowToast={showToast}
-            onRunComplete={(results) => {
-              setBatchResults(results);
-              setActiveTab('tab-results');
-            }}
+            onRunComplete={handleRunCustomDataset}
           />
         )}
 
         {activeTab === 'tab-results' && (
           <BatchAuditResults
             resultsData={batchResults}
+            pipelineExecutionTrigger={pipelineExecutionTrigger}
             onInspectCase={handleInspectCase}
             onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
+            onRunAuditWithSample={handleRunAuditWithSample}
+            onRunAuditWithPortfolio={handleRunAuditWithPortfolio}
             onShowToast={showToast}
           />
         )}

@@ -19,6 +19,7 @@ export default function CommandCenter({
   onTriageAction,
   onViewAllCases,
   onOpenDatasetStudio,
+  onRunAuditWithSample,
 }) {
   const [isAuditing, setIsAuditing] = useState(false);
   const [auditProgress, setAuditProgress] = useState(0);
@@ -27,6 +28,10 @@ export default function CommandCenter({
   const urgentCases = cases.slice(0, 5);
 
   const handleRunAudit = () => {
+    if (onRunAuditWithSample) {
+      onRunAuditWithSample();
+      return;
+    }
     setIsAuditing(true);
     setAuditProgress(15);
     setAuditSummary(null);
