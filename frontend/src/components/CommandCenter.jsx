@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import { HugeiconsIcon } from '@hugeicons/react';
+import {
+  GlobeIcon,
+  Scissor01Icon,
+  GitForkIcon,
+  Hospital01Icon,
+  Shield01Icon,
+  SparklesIcon,
+  FlashIcon,
+} from '@hugeicons/core-free-icons';
 import {
   IconZap,
   IconAlert,
@@ -633,35 +643,40 @@ export default function CommandCenter({
               className={`shap-pill-btn ${activeShapKey === 'global' ? 'active' : ''}`}
               onClick={() => setActiveShapKey('global')}
             >
-              🌐 Global Portfolio Baseline
+              <HugeiconsIcon icon={GlobeIcon} size={15} />
+              <span>Global Portfolio Baseline</span>
             </button>
             <button
               type="button"
               className={`shap-pill-btn ${activeShapKey === 'prv02' ? 'active' : ''}`}
               onClick={() => setActiveShapKey('prv02')}
             >
-              🔪 Ghost Surgery Mill (PRV_02)
+              <HugeiconsIcon icon={Scissor01Icon} size={15} />
+              <span>Ghost Surgery Mill (PRV_02)</span>
             </button>
             <button
               type="button"
               className={`shap-pill-btn ${activeShapKey === 'prv03' ? 'active' : ''}`}
               onClick={() => setActiveShapKey('prv03')}
             >
-              🔄 Kickback Syndicate (PRV_03)
+              <HugeiconsIcon icon={GitForkIcon} size={15} />
+              <span>Kickback Syndicate (PRV_03)</span>
             </button>
             <button
               type="button"
               className={`shap-pill-btn ${activeShapKey === 'prv08' ? 'active' : ''}`}
               onClick={() => setActiveShapKey('prv08')}
             >
-              🏥 ICU Stay Upcoding (PRV_08)
+              <HugeiconsIcon icon={Hospital01Icon} size={15} />
+              <span>ICU Stay Upcoding (PRV_08)</span>
             </button>
             <button
               type="button"
               className={`shap-pill-btn ${activeShapKey === 'prv04' ? 'active' : ''}`}
               onClick={() => setActiveShapKey('prv04')}
             >
-              🛡️ Clean Rural Kendra (PRV_04)
+              <HugeiconsIcon icon={Shield01Icon} size={15} />
+              <span>Clean Rural Kendra (PRV_04)</span>
             </button>
           </div>
         </div>

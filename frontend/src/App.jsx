@@ -9,6 +9,7 @@ import CollusionNetwork from './components/CollusionNetwork';
 import PreAuthGateway from './components/PreAuthGateway';
 import DatasetStudio from './components/DatasetStudio';
 import BatchAuditResults from './components/BatchAuditResults';
+import ErrorBoundary from './components/ErrorBoundary';
 import Toast from './components/Toast';
 
 import { BENCHMARK_CASES } from './data/benchmarkCases';
@@ -164,67 +165,69 @@ export default function App() {
 
       {/* Main Container */}
       <main className="main-layout">
-        {activeTab === 'tab-dashboard' && (
-          <CommandCenter
-            cases={cases}
-            onInspectCase={handleInspectCase}
-            onTriageAction={handleTriageAction}
-            onViewAllCases={() => setActiveTab('tab-queue')}
-            onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
-            onRunAuditWithSample={handleRunAuditWithSample}
-          />
-        )}
+        <ErrorBoundary>
+          {activeTab === 'tab-dashboard' && (
+            <CommandCenter
+              cases={cases}
+              onInspectCase={handleInspectCase}
+              onTriageAction={handleTriageAction}
+              onViewAllCases={() => setActiveTab('tab-queue')}
+              onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
+              onRunAuditWithSample={handleRunAuditWithSample}
+            />
+          )}
 
-        {activeTab === 'tab-queue' && (
-          <ReviewQueue
-            cases={cases}
-            onInspectCase={handleInspectCase}
-            onTriageAction={handleTriageAction}
-          />
-        )}
+          {activeTab === 'tab-queue' && (
+            <ReviewQueue
+              cases={cases}
+              onInspectCase={handleInspectCase}
+              onTriageAction={handleTriageAction}
+            />
+          )}
 
-        {activeTab === 'tab-dataset' && (
-          <DatasetStudio
-            onInspectCase={handleInspectCase}
-            onShowToast={showToast}
-            onRunComplete={handleRunCustomDataset}
-          />
-        )}
+          {activeTab === 'tab-dataset' && (
+            <DatasetStudio
+              onInspectCase={handleInspectCase}
+              onShowToast={showToast}
+              onRunComplete={handleRunCustomDataset}
+            />
+          )}
 
-        {activeTab === 'tab-results' && (
-          <BatchAuditResults
-            resultsData={batchResults}
-            pipelineExecutionTrigger={pipelineExecutionTrigger}
-            onInspectCase={handleInspectCase}
-            onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
-            onRunAuditWithSample={handleRunAuditWithSample}
-            onRunAuditWithPortfolio={handleRunAuditWithPortfolio}
-            onShowToast={showToast}
-          />
-        )}
+          {activeTab === 'tab-results' && (
+            <BatchAuditResults
+              resultsData={batchResults}
+              pipelineExecutionTrigger={pipelineExecutionTrigger}
+              onInspectCase={handleInspectCase}
+              onOpenDatasetStudio={() => setActiveTab('tab-dataset')}
+              onRunAuditWithSample={handleRunAuditWithSample}
+              onRunAuditWithPortfolio={handleRunAuditWithPortfolio}
+              onShowToast={showToast}
+            />
+          )}
 
-        {activeTab === 'tab-analyzer' && (
-          <ClaimAnalyzer
-            benchmarkCases={cases}
-            selectedCaseId={selectedCaseId}
-            onCaseSelected={setSelectedCaseId}
-            onShowToast={showToast}
-          />
-        )}
+          {activeTab === 'tab-analyzer' && (
+            <ClaimAnalyzer
+              benchmarkCases={cases}
+              selectedCaseId={selectedCaseId}
+              onCaseSelected={setSelectedCaseId}
+              onShowToast={showToast}
+            />
+          )}
 
-        {activeTab === 'tab-performance' && (
-          <ModelPerformance
-            models={BENCHMARK_MODELS}
-          />
-        )}
+          {activeTab === 'tab-performance' && (
+            <ModelPerformance
+              models={BENCHMARK_MODELS}
+            />
+          )}
 
-        {activeTab === 'tab-network' && (
-          <CollusionNetwork />
-        )}
+          {activeTab === 'tab-network' && (
+            <CollusionNetwork />
+          )}
 
-        {activeTab === 'tab-preauth' && (
-          <PreAuthGateway onShowToast={showToast} />
-        )}
+          {activeTab === 'tab-preauth' && (
+            <PreAuthGateway onShowToast={showToast} />
+          )}
+        </ErrorBoundary>
       </main>
 
       {/* Syght Inspired High-Tech Footer */}

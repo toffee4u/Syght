@@ -4690,3 +4690,207 @@ a {
 .shap-bar-fill.push-negative {
   background: linear-gradient(90deg, #10b981 0%, #059669 100%);
 }
+
+/* ==============================================================================
+   Forensic Audit Findings Cards (Replaces raw data table)
+   ============================================================================== */
+
+.forensic-findings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.forensic-finding-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--syght-radius-lg);
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.forensic-finding-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.forensic-finding-card.is-flagged {
+  border-left: 4px solid #e11d48;
+}
+
+.forensic-finding-card.is-cleared {
+  border-left: 4px solid #059669;
+}
+
+.finding-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.finding-provider-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.finding-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: #334155;
+  flex-shrink: 0;
+}
+
+.forensic-finding-card.is-flagged .finding-icon-wrap {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.forensic-finding-card.is-cleared .finding-icon-wrap {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.finding-provider-name {
+  font-family: var(--syght-font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.finding-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3px;
+  flex-wrap: wrap;
+}
+
+.finding-id-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #475569;
+  background: #f8fafc;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.finding-archetype-tag {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+.verdict-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.verdict-tag.flagged {
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+}
+
+.verdict-tag.cleared {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.finding-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--syght-radius-sm);
+  margin-bottom: 0.85rem;
+}
+
+.finding-metric-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.finding-metric-col .metric-lbl {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.finding-metric-col .metric-val {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.finding-details-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.finding-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.finding-detail-row.directive {
+  padding: 0.5rem 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: var(--syght-radius-sm);
+}
+
+.finding-detail-row .detail-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.05em;
+}
+
+.finding-detail-row .detail-text {
+  color: #334155;
+}
+
+.finding-detail-row.directive .detail-text {
+  color: #0f172a;
+}
+
+.finding-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+}
+
