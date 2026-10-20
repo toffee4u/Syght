@@ -735,43 +735,6 @@ export default function CommandCenter({
           </div>
         </div>
 
-        {/* Detailed Feature Explanatory Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          {activeShapData.labels.slice(0, 6).map((label, idx) => {
-            const val = activeShapData.values[idx];
-            const isPositive = val >= 0;
-            const desc = activeShapData.descriptions[idx];
-            return (
-              <div
-                key={label}
-                className={`p-4 rounded-xl border transition-all ${
-                  isPositive
-                    ? 'bg-slate-50 border-slate-200/80 hover:border-slate-300'
-                    : 'bg-emerald-50/50 border-emerald-200/80'
-                }`}
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <span className={`font-semibold text-xs ${isPositive ? 'text-slate-800' : 'text-emerald-900'}`}>
-                    {label}
-                  </span>
-                  <span className={`shap-value-badge ${isPositive ? 'positive' : 'negative'} font-mono`}>
-                    {isPositive ? '+' : ''}{val.toFixed(3)} SHAP
-                  </span>
-                </div>
-                <div className="shap-bar-track mb-2">
-                  <div
-                    className={`shap-bar-fill ${isPositive ? 'push-positive' : 'push-negative'}`}
-                    style={{ width: `${Math.min(100, Math.abs(val) * 240)}%` }}
-                  />
-                </div>
-                <p className={`text-xs leading-relaxed ${isPositive ? 'text-slate-600' : 'text-emerald-800'}`}>
-                  {desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-
         <div className="syght-banner-notice mt-4">
           <IconShield size={18} className="text-sky-600 shrink-0 mt-0.5" />
           <div className="flex items-center justify-between gap-4 w-full flex-wrap">

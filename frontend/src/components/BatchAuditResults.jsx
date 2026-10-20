@@ -194,15 +194,16 @@ export default function BatchAuditResults({
   pipelineExecutionTrigger,
   onInspectCase,
   onOpenDatasetStudio,
+  onRunAuditWithSample,
+  onRunAuditWithPortfolio,
+  onSaveAuditResults,
   onShowToast,
 }) {
   const [activeDatasetMode, setActiveDatasetMode] = useState(resultsData ? 'custom' : 'sample-10');
-  const [currentResults, setCurrentResults] = useState(
-    resultsData || buildResultsFrom10Cases()
-  );
+  const [currentResults, setCurrentResults] = useState(resultsData || null);
 
-  // Execution state
-  const [isExecuting, setIsExecuting] = useState(true);
+  // Execution state (Starts as false unless triggered explicitly)
+  const [isExecuting, setIsExecuting] = useState(false);
   const [executionProgress, setExecutionProgress] = useState(0);
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
   const [elapsedMs, setElapsedMs] = useState(0);
@@ -428,6 +429,10 @@ export default function BatchAuditResults({
     setIsExecuting(false);
     setExecutionProgress(100);
     setCurrentStageIndex(4);
+    setCurrentResults(dataPayload);
+    if (onSaveAuditResults) {
+      onSaveAuditResults(dataPayload);
+    }
     setModelsState((curr) =>
       curr.map((m) => ({
         ...m,
@@ -456,9 +461,12 @@ export default function BatchAuditResults({
   };
 
   const handleSkipToResults = () => {
-    finishExecution(currentResults);
+    if (currentResults) {
+      finishExecution(currentResults);
+    }
   };
 
+  // Trigger Handler
   useEffect(() => {
     if (pipelineExecutionTrigger) {
       if (pipelineExecutionTrigger.source === 'sample-10') {
@@ -471,16 +479,19 @@ export default function BatchAuditResults({
         startLiveExecution(pipelineExecutionTrigger.data, 'custom');
       }
     } else if (resultsData) {
-      startLiveExecution(resultsData, 'custom');
+      // Existing history! Do NOT auto run
+      setIsExecuting(false);
+      setCurrentResults(resultsData);
     } else {
-      const payload = buildResultsFrom10Cases();
-      startLiveExecution(payload, 'sample-10');
+      // Direct open without trigger or prior history: show Standby/Empty state
+      setIsExecuting(false);
+      setCurrentResults(null);
     }
   }, [pipelineExecutionTrigger, resultsData]);
 
   // Chart.js visualizations
   useEffect(() => {
-    if (isExecuting) return;
+    if (isExecuting || !currentResults) return;
 
     let riskChart = null;
     let modelsChart = null;
@@ -756,6 +767,19 @@ export default function BatchAuditResults({
     if (onShowToast) onShowToast('Exported audited results report (.CSV)', 'info');
   };
 
+  // Export JSON Handler
+  const handleExportJson = () => {
+    if (!currentResults) return;
+    const jsonString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentResults, null, 2));
+    const a = document.createElement('a');
+    a.href = jsonString;
+    a.download = `Syght_Audit_Report_${currentResults?.dataset_name || 'claims'}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    if (onShowToast) onShowToast('Exported audited intelligence dossier (.JSON)', 'info');
+  };
+
   // Guarded results array
   const evaluatedItems = currentResults?.results || [];
   const totalCount = currentResults?.total_evaluated || evaluatedItems.length;
@@ -788,18 +812,19 @@ export default function BatchAuditResults({
         <div className="page-header-title-box">
           <div className="syght-chip">
             <span className="chip-dot" />
-            Team Pulse SIU Fraud Intelligence • Multi-Model Inference Report
+            SIU Fraud Intelligence • Multi-Model Inference Report
           </div>
           <h1 className="syght-page-title">
             Model Audit Run & Intelligence Results
           </h1>
           <p className="syght-page-desc">
-            Autonomous multi-model fraud evaluation across {totalCount} healthcare claims records. 
-            Real-time execution across 4 gradient boosting & linear ensembles plus Bipartite Collusion Graph Engine.
+            {currentResults
+              ? `Autonomous multi-model fraud evaluation across ${totalCount} healthcare claims records.`
+              : 'Launch parallel gradient boosting and graph ensembles to audit provider billing patterns in sub-5ms.'}
           </p>
         </div>
 
-        {/* Top Header Quick-Run Actions with Hugeicons */}
+        {/* Top Header Quick-Run & Export Actions */}
         <div className="page-header-actions">
           <button
             type="button"
@@ -837,18 +862,86 @@ export default function BatchAuditResults({
             <span>Upload Dataset</span>
           </button>
 
+          {/* Export Result Button (Prominent) */}
           <button
             type="button"
             className="syght-btn-primary"
             onClick={handleExportCsv}
-            disabled={isExecuting}
-            title="Export Audited Results to CSV"
+            disabled={isExecuting || !currentResults}
+            title="Export Full Audited Report to CSV"
           >
             <HugeiconsIcon icon={Download01Icon} size={15} />
-            <span>Export CSV</span>
+            <span>Export Result</span>
           </button>
         </div>
       </div>
+
+      {/* =========================================================================
+          STANDBY STATE: When opened directly and no model has been executed yet
+          ========================================================================= */}
+      {!isExecuting && !currentResults && (
+        <section className="results-standby-card">
+          <div className="standby-icon-aura">
+            <HugeiconsIcon icon={DatabaseIcon} size={32} className="text-sky-600" />
+          </div>
+          <h2 className="standby-title">
+            No Active Audit Results
+          </h2>
+          <p className="standby-desc">
+            There is nothing here yet. Launch the multi-model inference pipeline or upload a claims batch to generate real-time confidence scores, 1-SE fraud classification, and TreeSHAP forensic reports.
+          </p>
+
+          <div className="standby-actions-grid">
+            <button
+              type="button"
+              className="standby-action-btn primary"
+              onClick={() => {
+                const payload = buildResultsFrom10Cases();
+                startLiveExecution(payload, 'sample-10');
+              }}
+            >
+              <div className="standby-btn-icon-wrap amber">
+                <HugeiconsIcon icon={FlashIcon} size={22} />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-sm text-slate-900">Run with 10 Sample Claims</div>
+                <div className="text-xs text-slate-500">Fast sub-5ms benchmark across 5 clinical fraud typologies</div>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="standby-action-btn"
+              onClick={() => {
+                const payload = buildResultsFrom25Cases();
+                startLiveExecution(payload, 'benchmark-25');
+              }}
+            >
+              <div className="standby-btn-icon-wrap sky">
+                <HugeiconsIcon icon={DatabaseIcon} size={22} />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-sm text-slate-900">Run 25 Portfolio Facilities</div>
+                <div className="text-xs text-slate-500">Comprehensive PM-JAY institutional claim evaluation</div>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              className="standby-action-btn"
+              onClick={onOpenDatasetStudio}
+            >
+              <div className="standby-btn-icon-wrap purple">
+                <HugeiconsIcon icon={Layers01Icon} size={22} />
+              </div>
+              <div className="text-left">
+                <div className="font-bold text-sm text-slate-900">Upload Healthcare Claims Dataset</div>
+                <div className="text-xs text-slate-500">Import CSV or JSON files with drag-and-drop</div>
+              </div>
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* =========================================================================
           VIEW 1: REAL-TIME MULTI-MODEL EXECUTION CONSOLE (When isExecuting is true)
@@ -1017,9 +1110,9 @@ export default function BatchAuditResults({
       )}
 
       {/* =========================================================================
-          VIEW 2: CALIBRATED AUDIT RESULTS INTELLIGENCE (When isExecuting is false)
+          VIEW 2: CALIBRATED AUDIT RESULTS INTELLIGENCE (When isExecuting is false & currentResults exists)
           ========================================================================= */}
-      {!isExecuting && (
+      {!isExecuting && currentResults && (
         <>
           {/* Executive Plain-Language Verdict Banner */}
           <section className="executive-verdict-banner">
@@ -1038,6 +1131,27 @@ export default function BatchAuditResults({
               </div>
 
               <div className="verdict-re-run-controls">
+                {/* Export Result Quick Button */}
+                <button
+                  type="button"
+                  className="syght-btn-primary text-xs"
+                  onClick={handleExportCsv}
+                  title="Export Audited Report as CSV"
+                >
+                  <HugeiconsIcon icon={Download01Icon} size={13} />
+                  <span>Export Result</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="syght-btn-secondary text-xs"
+                  onClick={handleExportJson}
+                  title="Export Structured JSON Report"
+                >
+                  <HugeiconsIcon icon={Download01Icon} size={13} />
+                  <span>JSON Dossier</span>
+                </button>
+
                 <button
                   type="button"
                   className="syght-btn-secondary text-xs"
@@ -1296,7 +1410,6 @@ export default function BatchAuditResults({
 
           {/* =========================================================================
               FORENSIC DETAILS & CLINICAL DIRECTIVES CARDS
-              (Replaces the overwhelming raw data table with clean, high-precision cards)
               ========================================================================= */}
           <div className="results-table-card">
             <div className="table-card-header">
