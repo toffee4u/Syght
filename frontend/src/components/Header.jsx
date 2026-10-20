@@ -29,7 +29,7 @@ export default function Header({
   // Close mobile menu on resize to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1100) {
+      if (window.innerWidth >= 1150) {
         setMobileMenuOpen(false);
       }
     };

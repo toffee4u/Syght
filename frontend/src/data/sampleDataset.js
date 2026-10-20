@@ -477,8 +477,8 @@ export const SAMPLE_DATASET_ROWS = [
   },
 ];
 
-// Helper to convert rows to a downloadable CSV string
-export function generateSampleCsvContent() {
+// Helper to convert arbitrary rows to a downloadable CSV string
+export function generateCsvFromRows(rows) {
   const headers = [
     "provider_id",
     "name",
@@ -498,7 +498,7 @@ export function generateSampleCsvContent() {
   ];
 
   const csvRows = [headers.join(",")];
-  SAMPLE_DATASET_ROWS.forEach(row => {
+  (rows || []).forEach(row => {
     const values = headers.map(h => {
       const val = row[h];
       if (typeof val === 'string' && val.includes(',')) {
@@ -510,4 +510,33 @@ export function generateSampleCsvContent() {
   });
 
   return csvRows.join("\n");
+}
+
+// Backward-compatible helper for full sample CSV
+export function generateSampleCsvContent() {
+  return generateCsvFromRows(SAMPLE_DATASET_ROWS);
+}
+
+// Preset scenario loader
+export function getDatasetPreset(key) {
+  if (key === 'collusion') {
+    return SAMPLE_DATASET_ROWS.filter(
+      r => r.graph_degree_centrality >= 0.55 ||
+           r.provider_id.includes('COLLUSION') ||
+           r.provider_id.includes('PHANTOM') ||
+           r.archetype.toLowerCase().includes('syndicate')
+    );
+  }
+  if (key === 'upcoding') {
+    return SAMPLE_DATASET_ROWS.filter(
+      r => r.mean_inpatient_los >= 5.0 ||
+           r.provider_id.includes('UPCODING') ||
+           r.provider_id.includes('UNBUNDLING') ||
+           r.provider_id.includes('DEAD')
+    );
+  }
+  if (key === 'clean') {
+    return SAMPLE_DATASET_ROWS.filter(r => r.baseline_risk < 0.25);
+  }
+  return SAMPLE_DATASET_ROWS;
 }
