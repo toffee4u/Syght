@@ -380,20 +380,25 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 0.45rem 0.95rem;
-  background: #09090b;
-  color: #ffffff;
+  padding: 0.24rem 0.58rem;
+  height: 28px;
+  background: rgba(9, 9, 11, 0.05);
+  color: #18181b;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--syght-radius-full);
   font-family: var(--syght-font-sans);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 600;
+  white-space: nowrap;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-cta-btn:hover {
-  background: #27272a;
+  background: #09090b;
+  color: #ffffff;
+  border-color: #09090b;
   transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 /* Mobile Hamburger */
