@@ -135,7 +135,7 @@ export const FIGURE_ARTIFACTS = [
   {
     id: "fig-lift",
     title: "Operational Recovery Lift",
-    sub: "Cumulative Claim Dollar Capture by Risk Decile ($45.9M Exposure)",
+    sub: "Cumulative Claim Rupee Capture by Risk Decile (₹45.9M / ₹382.4 Cr Exposure)",
     src: "/reports/figures/04_operational_recovery_lift.png",
     fallbackSrc: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80"
   }

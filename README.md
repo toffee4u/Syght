@@ -36,8 +36,8 @@
 
 ## 💡 Why Syght?
 
-Healthcare billing fraud costs payers billions of dollars annually, yet automated detection faces severe operational challenges:
-- **Severe Class Imbalance**: Legitimate providers account for ~90% of entities in benchmark claims data. A naive algorithm that flags every provider as clean achieves over 90% accuracy while stopping $0 in fraudulent billing.
+Healthcare billing fraud costs payers thousands of crores of rupees (₹) annually, yet automated detection faces severe operational challenges:
+- **Severe Class Imbalance**: Legitimate providers account for ~90% of entities in benchmark claims data. A naive algorithm that flags every provider as clean achieves over 90% accuracy while stopping ₹0 in fraudulent billing.
 - **Auditor Burnout**: Human audits take hours per provider. Flooding teams with false positives destroys trust in automated tools.
 - **Complex Organizational Billing**: Fraudulent behavior rarely manifests in a single claim. It reveals itself across longitudinal provider patterns: unbundled same-day duplicate procedures, artificial inpatient stays, and physician billing monopolies.
 - **Fairness & Patient Equity**: Clinical algorithms must never penalize facilities based on patient demographic backgrounds.
@@ -86,7 +86,7 @@ flowchart TD
 
     subgraph Phase4["4. MULTI-MODEL CROSS-VALIDATION"]
         TrainSet --> CV["5-Fold Stratified CV (Fitted Preprocessing)"]:::model
-        CV --> R["📏 Rule Baselines<br/><i>Claim Volume, Total Dollars, Mean Dollars</i>"]:::model
+        CV --> R["📏 Rule Baselines<br/><i>Claim Volume, Total Rupees, Mean Rupees</i>"]:::model
         CV --> M["🤖 Machine Learning Suite<br/><i>Logistic L1/L2, Random Forest, LightGBM, XGBoost</i>"]:::model
         R & M --> Sel["🏆 1-Standard-Error Parsimony Selection<br/><i>Must statistically outperform volume heuristics</i>"]:::model
     end
@@ -94,7 +94,7 @@ flowchart TD
     subgraph Phase5["5. COST-AWARE THRESHOLD TUNING"]
         Sel --> OOF["Out-of-Fold Probabilities"]:::eval
         OOF --> T1["🎯 Max-F1 Optimization"]:::eval
-        OOF --> T2["💵 Expected Cost Curve Sweep<br/><i>Balances $250 audit cost vs recovered exposure</i>"]:::eval
+        OOF --> T2["💵 Expected Cost Curve Sweep<br/><i>Balances ₹25,000 audit cost vs recovered exposure</i>"]:::eval
     end
 
     subgraph Phase6["6. FROZEN EVALUATION & PLAIN-LANGUAGE NOTES"]
@@ -143,7 +143,7 @@ Measures the operational footprint and billing velocity of the provider:
 - `inpatient_claims_per_beneficiary`, `outpatient_claims_per_beneficiary`: Setting-specific patient utilization rates.
 
 ### 2. Billing & Financial Profiles (15 Features)
-Captures money flow, high-dollar outliers, and patient cost-sharing:
+Captures money flow, high-value outliers, and patient cost-sharing:
 - `total_reimbursed`, `mean_reimbursed`, `median_reimbursed`, `std_reimbursed`, `max_reimbursed`: Reimbursement distribution summary.
 - `p90_reimbursed`, `p99_reimbursed`: 90th and 99th upper-tail percentiles to detect extreme billing outliers.
 - `total_deductible`, `mean_deductible`, `max_deductible`: Patient deductible distributions.
@@ -259,7 +259,7 @@ Bipartite network visualization exposing syndicate rings where shared attending 
 ![Hospital-Physician Collusion Network Topology](reports/figures/collusion_network_graph.png)
 
 #### 4. Operational Fraud Recovery Lift Curve
-Empirical proof that prioritizing the top 5% highest-risk providers captures ~72% of all fraudulent reimbursement dollars, maximizing investigator recovery ROI:
+Empirical proof that prioritizing the top 5% highest-risk providers captures ~72% of all fraudulent reimbursement rupees, maximizing investigator recovery ROI:
 
 ![Operational Fraud Recovery Lift Curve](reports/figures/fraud_recovery_lift.png)
 
@@ -270,16 +270,16 @@ Syght is continuously validated across 10 diverse real-world healthcare scenario
 
 | Provider ID | Clinical Healthcare Scenario | Ground Truth | Claims | Reimbursement | Risk Score | AI Decision | Priority |
 |:---|:---|:---:|---:|:---|:---:|:---:|:---:|
-| `PRV_01_RURAL_PRIMARY_CLINIC` | Rural Primary Health Center | Clean | 120 | $38,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_02_PHANTOM_SURGERY_MILL` | Ghost Surgeries & Inpatient Upcoding | Fraud | 520 | $5,100,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_03_KICKBACK_COLLUSION_RING` | Multi-Hospital Doctor Recycling Ring | Fraud | 380 | $2,750,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_04_COMMUNITY_GENERAL_HOSPITAL` | Community General Hospital | Clean | 350 | $180,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_05_UNBUNDLING_DIAGNOSTIC_LAB` | Same-Day Split Diagnostic Billing | Fraud | 940 | $920,000 | **68.3%** | **FLAGGED FOR AUDIT** | `HIGH` |
-| `PRV_06_SOLO_DOCTOR_MONOPOLY` | Single-Doctor Billing Monopoly | Fraud | 510 | $1,200,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_07_DIAGNOSTIC_IMAGING_CENTER` | Accredited MRI/CT Diagnostic Lab | Clean | 450 | $95,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_08_ICU_LENGTH_OF_STAY_UPCODING` | Artificial ICU Stay Inflation | Fraud | 420 | $4,600,000 | **99.9%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
-| `PRV_09_DAYCARE_DIALYSIS_CENTER` | Outpatient Hemodialysis Clinic | Clean | 280 | $72,000 | **14.9%** | **AUTO-CLEARED** | `LOW` |
-| `PRV_10_MATERNITY_NURSING_HOME` | Mother & Child Nursing Home | Clean | 270 | $195,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_01_RURAL_PRIMARY_CLINIC` | Rural Primary Health Center | Clean | 120 | ₹38,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_02_PHANTOM_SURGERY_MILL` | Ghost Surgeries & Inpatient Upcoding | Fraud | 520 | ₹5,100,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_03_KICKBACK_COLLUSION_RING` | Multi-Hospital Doctor Recycling Ring | Fraud | 380 | ₹2,750,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_04_COMMUNITY_GENERAL_HOSPITAL` | Community General Hospital | Clean | 350 | ₹180,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_05_UNBUNDLING_DIAGNOSTIC_LAB` | Same-Day Split Diagnostic Billing | Fraud | 940 | ₹920,000 | **68.3%** | **FLAGGED FOR AUDIT** | `HIGH` |
+| `PRV_06_SOLO_DOCTOR_MONOPOLY` | Single-Doctor Billing Monopoly | Fraud | 510 | ₹1,200,000 | **100.0%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_07_DIAGNOSTIC_IMAGING_CENTER` | Accredited MRI/CT Diagnostic Lab | Clean | 450 | ₹95,000 | **0.0%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_08_ICU_LENGTH_OF_STAY_UPCODING` | Artificial ICU Stay Inflation | Fraud | 420 | ₹4,600,000 | **99.9%** | **FLAGGED FOR AUDIT** | `CRITICAL` |
+| `PRV_09_DAYCARE_DIALYSIS_CENTER` | Outpatient Hemodialysis Clinic | Clean | 280 | ₹72,000 | **14.9%** | **AUTO-CLEARED** | `LOW` |
+| `PRV_10_MATERNITY_NURSING_HOME` | Mother & Child Nursing Home | Clean | 270 | ₹195,000 | **0.1%** | **AUTO-CLEARED** | `LOW` |
 
 > Full evaluation report available at [`reports/ten_cases_test_report.md`](reports/ten_cases_test_report.md).
 
@@ -291,7 +291,7 @@ The selected architecture undergoes `RandomizedSearchCV` using 5-fold cross-vali
 ### 8. Validation-Only Threshold Tuning
 Decision thresholds are never tuned on the held-out test set. Using out-of-fold predicted probabilities from cross-validation, Syght identifies two operational thresholds:
 - **Max-F1 Threshold**: The probability cutoff maximizing $F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$.
-- **Cost-Optimal Threshold**: The cutoff minimizing expected net financial losses based on audit review cost ($C_{\text{investigate}} = \$250$) and expected recovery rate ($R_{\text{recovery}} = 30\%$).
+- **Cost-Optimal Threshold**: The cutoff minimizing expected net financial losses based on audit review cost ($C_{\text{investigate}} = \text{₹}25,000$) and expected recovery rate ($R_{\text{recovery}} = 30\%$).
 
 ### 9. Single-Pass Frozen Held-Out Evaluation
 The selected model and thresholds are applied to the frozen test set in a **single evaluation pass**. Metrics include:
@@ -347,12 +347,12 @@ For anti-fraud units with restricted human investigator bandwidth:
 
 | Audit Capacity | Providers Audited | Precision@K | % Total Fraud Exposure Captured | Projected Net Savings |
 |---|---|---|---|---|
-| **Top 1%** | 11 providers | **90.9%** | **25.3% – 32.7%** | $14.2 Million |
-| **Top 5%** | 57 providers | **82.5%** | **72.1% – 75.8%** | **$45.9 Million** |
-| **Top 10%** | 113 providers | **65.5%** | **89.2% – 89.8%** | $56.8 Million |
-| **Top 20%** | 226 providers | **42.5%** | **98.4%** | $62.1 Million |
+| **Top 1%** | 11 providers | **90.9%** | **25.3% – 32.7%** | ₹118 Crore (₹14.2M) |
+| **Top 5%** | 57 providers | **82.5%** | **72.1% – 75.8%** | **₹380 Crore (₹45.9M)** |
+| **Top 10%** | 113 providers | **65.5%** | **89.2% – 89.8%** | ₹470 Crore (₹56.8M) |
+| **Top 20%** | 226 providers | **42.5%** | **98.4%** | ₹515 Crore (₹62.1M) |
 
-> **Key Presentation Takeaway**: Auditing just **5% of flagged providers** captures **over 72% of all fraudulent claim exposure**, delivering an estimated **$45,928,182 in net clawback savings** for the insurance fund.
+> **Key Presentation Takeaway**: Auditing just **5% of flagged providers** captures **over 72% of all fraudulent claim exposure**, delivering an estimated **₹380+ Crore (₹45,928,182) in net clawback savings** for the insurance fund.
 
 ### 4. Top Feature Drivers (Global Risk Attribution)
 1. `total_reimbursed` (+1.2966): Sheer financial reimbursement scale.
@@ -378,8 +378,8 @@ Default $0.50$ thresholds treat false positives and false negatives as equally c
 
 $$\text{Cost}(\theta) = (\text{TP}(\theta) + \text{FP}(\theta)) \times C_{\text{investigate}} + \sum_{i \in \text{FN}(\theta)} (\text{Exposure}_i \times R_{\text{recovery}})$$
 
-- **Investigation Cost ($C_{\text{investigate}} = \$250$)**: Fixed cost of human auditor case review.
-- **Exposure ($\text{Exposure}_i$)**: Total reimbursed dollars for missed fraudulent provider $i$.
+- **Investigation Cost ($C_{\text{investigate}} = \text{₹}25,000$)**: Fixed cost of human auditor case review.
+- **Exposure ($\text{Exposure}_i$)**: Total reimbursed rupees for missed fraudulent provider $i$.
 - **Recovery Fraction ($R_{\text{recovery}} = 30\%$)**: Estimated collectible recovery upon audit.
 
 ### Investigation Queue Simulation (Top-K Review Capacity)

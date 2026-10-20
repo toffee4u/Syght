@@ -31,7 +31,7 @@ export default function PreAuthGateway({ onShowToast }) {
       'KNOWN_COLLUSIVE_PROVIDER_REGISTRY',
     ],
     reasons: [
-      'Claim amount ($14,500) exceeds 99th percentile for outpatient/general admitting category.',
+      'Claim amount (₹14,500) exceeds 99th percentile for outpatient/general admitting category.',
       'Billed length of stay (14 days) conflicts with non-surgical primary diagnosis.',
       'Provider is under active Special Investigation Unit freeze.',
     ],
@@ -189,7 +189,7 @@ export default function PreAuthGateway({ onShowToast }) {
             </div>
 
             <div className="form-field">
-              <label className="field-label">Requested Amount ($)</label>
+              <label className="field-label">Requested Amount (₹)</label>
               <input
                 type="number"
                 className="syght-input font-mono"

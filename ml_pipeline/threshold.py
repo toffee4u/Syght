@@ -207,7 +207,7 @@ def select_validation_threshold(
     }
 
     logger.info(
-        "Threshold Selection: Max-F1=%.4f (F1=%.4f), Cost-Optimal=%.3f (Total Cost=$%s, Savings=$%s)",
+        "Threshold Selection: Max-F1=%.4f (F1=%.4f), Cost-Optimal=%.3f (Total Cost=₹%s, Savings=₹%s)",
         f1_thresh,
         max_f1,
         cost_thresh,

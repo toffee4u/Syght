@@ -209,7 +209,7 @@ export default function ClaimAnalyzer({
             </div>
 
             <div className="form-field">
-              <label className="field-label">Inpatient Reimbursed ($)</label>
+              <label className="field-label">Inpatient Reimbursed (₹)</label>
               <input
                 type="number"
                 className="syght-input font-mono"
@@ -219,7 +219,7 @@ export default function ClaimAnalyzer({
             </div>
 
             <div className="form-field">
-              <label className="field-label">Outpatient Reimbursed ($)</label>
+              <label className="field-label">Outpatient Reimbursed (₹)</label>
               <input
                 type="number"
                 className="syght-input font-mono"

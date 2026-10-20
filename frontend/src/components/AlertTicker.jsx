@@ -7,7 +7,7 @@ export default function AlertTicker() {
       type: 'danger',
       icon: IconAlert,
       target: 'PRV_02_PHANTOM_SURGERY_MILL',
-      desc: '460 Inpatient Surgeries Billed by 2 Attending Doctors ($5,100,000 Payout) — 100.0% Fraud Risk',
+      desc: '460 Inpatient Surgeries Billed by 2 Attending Doctors (₹5,100,000 Payout) — 100.0% Fraud Risk',
     },
     {
       type: 'danger',

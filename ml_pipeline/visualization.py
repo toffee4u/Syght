@@ -258,12 +258,12 @@ def plot_evaluation_dashboard(
     # 4. Calibration Curve or Cost Curve
     ax4 = axes[1, 1]
     if cost_curve is not None and "threshold" in cost_curve.columns:
-        ax4.plot(cost_curve["threshold"], cost_curve["total_cost"], color="#c0392b", lw=2.5, label="Expected Operational Cost ($)")
+        ax4.plot(cost_curve["threshold"], cost_curve["total_cost"], color="#c0392b", lw=2.5, label="Expected Operational Cost (₹)")
         min_cost_thr = cost_curve.loc[cost_curve["total_cost"].idxmin(), "threshold"]
         ax4.axvline(min_cost_thr, color="#2c3e50", linestyle="--", label=f"Cost-Optimal Cutoff ({min_cost_thr:.3f})")
-        ax4.set_title("Operational Cost Curve ($2,500 Audit Cost vs Fraud Clawback)", fontsize=12, fontweight="bold")
+        ax4.set_title("Operational Cost Curve (₹2,500 Audit Cost vs Fraud Clawback)", fontsize=12, fontweight="bold")
         ax4.set_xlabel("Decision Threshold", fontsize=11)
-        ax4.set_ylabel("Net Projected Exposure ($)", fontsize=11)
+        ax4.set_ylabel("Net Projected Exposure (₹)", fontsize=11)
         ax4.legend(loc="upper right", fontsize=10)
     else:
         # Calibration curve
@@ -401,7 +401,7 @@ def plot_fraud_recovery_lift(
     rec_5pct = df.loc[idx_5pct, "pct_fraud_recovered"]
     ax.plot(0.05, rec_5pct, "ro", markersize=10)
     ax.annotate(
-        f"Auditing Top 5% Providers Recovers\n{rec_5pct:.1%} of Total Fraud Dollars!",
+        f"Auditing Top 5% Providers Recovers\n{rec_5pct:.1%} of Total Fraud Exposure (₹)!",
         xy=(0.05, rec_5pct),
         xytext=(0.15, rec_5pct - 0.15),
         arrowprops=dict(facecolor="black", shrink=0.08, width=1.5),
