@@ -96,6 +96,7 @@ export default function ClaimAnalyzer({
           drivers: data.key_risk_drivers.map(d => ({
             feature: d.feature,
             desc: d.description,
+            easyDesc: d.easy_explanation,
             shap: `${d.shap_contribution >= 0 ? '+' : ''}${d.shap_contribution.toFixed(3)}`,
           })),
           directive: data.decision.includes('FLAGGED')
@@ -411,6 +412,11 @@ export default function ClaimAnalyzer({
                       />
                     </div>
                     <div className="shap-desc">{d.desc}</div>
+                    {d.easyDesc && (
+                      <div style={{ fontSize: '0.8rem', color: '#0369a1', marginTop: '0.35rem', background: '#f0f9ff', padding: '0.35rem 0.6rem', borderRadius: '6px', border: '1px solid #bae6fd', lineHeight: '1.4' }}>
+                        💡 <strong>Easy Explanation:</strong> {d.easyDesc}
+                      </div>
+                    )}
                   </div>
                 );
               })}

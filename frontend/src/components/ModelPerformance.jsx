@@ -1,9 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import {
   IconLineChart,
   IconLayers,
   IconCheckCircle,
+  IconBrain,
+  IconSparkles,
+  IconShield,
 } from './Icons';
 
 export default function ModelPerformance({ models }) {
@@ -11,6 +14,7 @@ export default function ModelPerformance({ models }) {
   const chart2Ref = useRef(null);
   const chart3Ref = useRef(null);
   const chart4Ref = useRef(null);
+  const [showBeginnerGuide, setShowBeginnerGuide] = useState(true);
 
   useEffect(() => {
     // Common Light Theme Chart.js options
@@ -271,19 +275,85 @@ export default function ModelPerformance({ models }) {
 
   return (
     <div className="tab-view active syght-view">
-      <div className="syght-page-header">
+      <div className="syght-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div className="syght-chip">
             <span className="chip-dot" />
             Empirical Validation Suite
           </div>
           <h1 className="syght-page-title">Model Performance & Econometric Curves</h1>
-          <p className="syght-page-desc">
-            Rigorous 5-fold stratified cross-validation benchmarks comparing 7 machine learning architectures 
-            evaluated strictly under class-imbalanced PR-AUC and cost-sensitive loss curves.
+          <p className="syght-page-desc" style={{ maxWidth: '820px', marginBottom: '0.5rem' }}>
+            <strong>Simple Summary:</strong> We tested 7 machine learning models and simple rule baselines against historical claims from 5,000+ hospitals. LightGBM was selected as Champion for catching over 75% of fraudulent payouts while keeping false alarms under 3.5%.
+          </p>
+          <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
+            Technical metric: 5-Fold Stratified Cross-Validation on class-imbalanced PR-AUC (Average Precision) with 1-SE parsimony selection and cost-sensitive loss calibration.
           </p>
         </div>
+        <div>
+          <button
+            type="button"
+            className="syght-btn-secondary"
+            onClick={() => setShowBeginnerGuide(!showBeginnerGuide)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', borderRadius: '10px', cursor: 'pointer' }}
+          >
+            <IconBrain size={16} className="text-sky-600" />
+            <span>{showBeginnerGuide ? 'Hide Beginner Guide' : 'Show Beginner Guide (Easy Explanation)'}</span>
+          </button>
+        </div>
       </div>
+
+      {showBeginnerGuide && (
+        <div className="syght-panel" style={{ marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.04) 0%, rgba(124, 58, 237, 0.04) 100%)', border: '1px solid rgba(2, 132, 199, 0.25)', borderRadius: '12px' }}>
+          <div className="syght-panel-header" style={{ borderBottom: '1px solid rgba(2, 132, 199, 0.15)' }}>
+            <div className="panel-title-flex">
+              <IconSparkles size={18} className="text-sky-600" />
+              <h3>Beginner-Friendly Guide: How Syght Trains & Evaluates AI Models</h3>
+            </div>
+            <span className="syght-chip" style={{ background: '#e0f2fe', color: '#0369a1', borderColor: '#bae6fd' }}>Plain Language Version</span>
+          </div>
+          <div style={{ padding: '1.25rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+            <div style={{ background: '#ffffff', padding: '1.1rem', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#0284c7', fontWeight: '600' }}>
+                <IconBrain size={18} />
+                <span>1. What is Model Training?</span>
+              </div>
+              <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: '1.55' }}>
+                We feed historical claims from 5,000+ hospitals into the computer. Instead of memorizing names, the AI learns 61 subtle behavioral patterns (like superhuman surgeon workloads or unnatural stay lengths) that distinguish genuine clinics from organized fraud syndicates.
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', padding: '1.1rem', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#7c3aed', fontWeight: '600' }}>
+                <IconLineChart size={18} />
+                <span>2. What is 5-Fold Cross-Validation?</span>
+              </div>
+              <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: '1.55' }}>
+                Like giving 5 different practice exams to a student. We split providers into 5 equal batches. In each round, 4 batches train the AI and 1 batch tests it. Every hospital gets tested fairly so we know the model won't fail when facing brand-new, unseen claims.
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', padding: '1.1rem', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#059669', fontWeight: '600' }}>
+                <IconShield size={18} />
+                <span>3. Why PR-AUC Instead of Accuracy?</span>
+              </div>
+              <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: '1.55' }}>
+                Over 90% of hospitals are clean. A dumb model that blindly guesses "Clean" every time gets 90% accuracy but stops zero fraud! PR-AUC (Precision-Recall) measures true fraud-catching power: when Syght flags a clinic, is it actually fraud, or did we waste an auditor's afternoon?
+              </p>
+            </div>
+
+            <div style={{ background: '#ffffff', padding: '1.1rem', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: '#e11d48', fontWeight: '600' }}>
+                <IconCheckCircle size={18} />
+                <span>4. The 1-SE Rule & Optimal Cutoff (0.5364)</span>
+              </div>
+              <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: '1.55' }}>
+                The 1-SE rule says: if two models perform similarly, always choose the simpler, more stable one. LightGBM was selected as Champion. Our 0.5364 cutoff balances the ₹3,500 cost of an auditor review against saving ₹25+ Lakhs in recoverable fraudulent payouts.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 2x2 Clean Modern Analytics Grid */}
       <div className="charts-2x2-grid">
