@@ -59,11 +59,63 @@ INVESTIGATOR_FEATURE_DESCRIPTIONS: Dict[str, str] = {
     "mean_op_annual_reimbursement": "Average annual outpatient Medicare reimbursement across patient panel",
 }
 
+# 🔰 Beginner-friendly, plain-language explanations of feature metrics
+BEGINNER_FEATURE_EXPLANATIONS: Dict[str, str] = {
+    "n_claims": "Total insurance bills submitted. An abnormally high count often signals high-speed bill churning.",
+    "n_inpatient_claims": "Overnight hospital admissions. Highly expensive; often inflated to pocket large payouts.",
+    "n_outpatient_claims": "Day clinic visits. Can be multiplied through repeated unnecessary follow-up visits.",
+    "inpatient_share": "Percentage of bills that are expensive overnight stays rather than routine day visits.",
+    "n_unique_beneficiaries": "Number of distinct patients treated. Low patient count with high bills suggests ghost billing.",
+    "n_unique_attending_physicians": "Active doctors on duty. A large clinic with only 1 doctor indicates a billing monopoly.",
+    "claims_per_beneficiary": "How often the same patient is billed repeatedly in a short time frame.",
+    "claims_per_attending_physician": "Number of claims signed per doctor. Flags impossible human workloads (e.g. 200 surgeries/day).",
+    "total_reimbursed": "Total cash payout received from the insurance scheme.",
+    "mean_reimbursed": "Average rupee cost per claim submitted.",
+    "median_reimbursed": "The typical, middle-of-the-road cost per claim.",
+    "std_reimbursed": "How wildly the billing amounts jump around.",
+    "max_reimbursed": "The single most expensive bill the hospital submitted.",
+    "p90_reimbursed": "The cost threshold for the hospital's top 10% most expensive claims.",
+    "mean_deductible": "Average co-pay amount charged to patients.",
+    "reimbursed_per_beneficiary": "Average insurance revenue extracted from each individual patient.",
+    "mean_reimbursed_inpatient": "Average money received for each overnight hospital stay.",
+    "mean_reimbursed_outpatient": "Average money received for each day clinic visit.",
+    "mean_claim_duration_days": "Average number of days a medical service episode lasted.",
+    "mean_admit_days": "Average days patients stayed admitted in a hospital bed (length of stay).",
+    "std_admit_days": "Variability in hospital stays. Artificial claims often bill identical days (e.g., exactly 5 days).",
+    "ip_cv_los": "Unnatural uniformity in hospital stay duration. Clean hospitals have varied stays based on recovery.",
+    "pct_claims_zero_duration": "Share of claims where service lasted zero days.",
+    "pct_claims_missing_attending": "Claims filed with no doctor name listed (ghost billing indicator).",
+    "pct_claims_with_operating_physician": "Share of claims that billed for an operating surgeon.",
+    "mean_n_diagnosis_codes": "Average number of illnesses diagnosed per patient visit.",
+    "mean_n_procedure_codes": "Average number of medical treatments/surgeries billed per visit.",
+    "pct_claims_with_procedure": "Percentage of visits where a surgical or medical procedure was billed.",
+    "top_diagnosis_concentration": "Billing the exact same illness diagnosis over and over for everyone.",
+    "top_physician_concentration": "A single doctor generating almost all the hospital's revenue.",
+    "pct_duplicate_bene_claims_same_day": "Same-day unbundling: billing the same patient multiple times on the exact same day.",
+    "n_states_served": "How many different states patients traveled from.",
+    "n_counties_served": "Geographic reach of patients visiting this facility.",
+    "mean_patient_age": "Average age of patients treated.",
+    "pct_patients_deceased": "Mortality rate. Flags post-mortem claims billed after patient death date.",
+    "mean_chronic_conditions": "How sick the patients are. Prevents genuine high-risk clinics from being wrongly flagged.",
+    "pct_renal_disease": "Share of patients suffering from kidney failure.",
+    "mean_ip_annual_reimbursement": "Historical annual inpatient insurance bills across patient panel.",
+    "mean_op_annual_reimbursement": "Historical annual outpatient insurance bills across patient panel.",
+}
+
 
 def get_investigator_description(feature_name: str) -> str:
     """Translates a raw feature name into an intuitive description for insurance investigators."""
     clean_name = feature_name.split("__")[-1]
     return INVESTIGATOR_FEATURE_DESCRIPTIONS.get(clean_name, clean_name.replace("_", " ").title())
+
+
+def get_beginner_feature_explanation(feature_name: str) -> str:
+    """Translates a raw feature name into an easy, beginner-friendly explanation."""
+    clean_name = feature_name.split("__")[-1]
+    return BEGINNER_FEATURE_EXPLANATIONS.get(
+        clean_name,
+        f"Behavioral indicator measuring {clean_name.replace('_', ' ')} across provider billing records."
+    )
 
 
 class SyghtExplainer:
@@ -146,6 +198,7 @@ class SyghtExplainer:
             df = self._compute_native_global_importance(names)
 
         df["description"] = df["feature"].apply(get_investigator_description)
+        df["easy_explanation"] = df["feature"].apply(get_beginner_feature_explanation)
         df["effect"] = df["direction"].apply(
             lambda d: "Increases Fraud Risk" if d > 0 else ("Lowers Fraud Risk" if d < 0 else "Neutral")
         )
@@ -184,7 +237,7 @@ class SyghtExplainer:
     ) -> Dict[str, Any]:
         """
         Explains an individual provider prediction, generating human-readable
-        risk factors suitable for claims investigators.
+        risk factors suitable for claims investigators and beginners.
         """
         X_trans = self.preprocessor.transform(provider_row)
         names = self.feature_names
@@ -204,6 +257,7 @@ class SyghtExplainer:
                     contributions.append({
                         "feature": name,
                         "description": get_investigator_description(name),
+                        "easy_explanation": get_beginner_feature_explanation(name),
                         "observed_value": float(actual_val) if actual_val is not None and not pd.isna(actual_val) else None,
                         "shap_contribution": float(round(val, 4)),
                     })
@@ -217,6 +271,7 @@ class SyghtExplainer:
                 contributions.append({
                     "feature": name,
                     "description": get_investigator_description(name),
+                    "easy_explanation": get_beginner_feature_explanation(name),
                     "observed_value": float(actual_val) if actual_val is not None and not pd.isna(actual_val) else None,
                     "shap_contribution": 0.0,
                 })

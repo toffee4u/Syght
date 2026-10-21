@@ -46,17 +46,20 @@ kaggle.json
 *credentials*
 *token*
 
-# Data Directories & Datasets (Raw & Processed Data Must NEVER be committed)
-/data/
-/data/raw/
+# Data Directories & Datasets (Raw benchmark datasets tracked for out-of-the-box reproducibility)
 /data/processed/
 /data/interim/
 /data/sample/
+!data/
+!data/raw/
+!data/raw/*
 !data/portfolio_cases.json
 !frontend/src/data/
 *.csv
 *.tsv
+!data/raw/*.csv
 !sample_datasets/*.csv
+!sample_datasets/*.txt
 !frontend/public/sample_datasets/*.csv
 !frontend/dist/sample_datasets/*.csv
 *.parquet

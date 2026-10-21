@@ -124,6 +124,52 @@ Model ko 10 real-world healthcare situations (5 complex fraud schemes + 5 genuin
 
 ---
 
+## 📊 3.1 Syght Me Use Huye Sabhi Datasets (Sirf US Medical Nahi, Complete Multi-Dataset Suite)
+
+Syght kisi ek choti CSV par depend nahi karta, balki isme **5,410 hospitals ka longitudinal historical data, Indian Ayushman Bharat (PM-JAY) fraud portfolios, interactive API payloads, aur graph collusion networks** shamil hain:
+
+### 1. Complete Raw Claims Benchmark Dataset (`data/raw/`) — GitHub Me Direct Tracked
+Sabhi 8 raw CSV files ab seedhe repository ke **`data/raw/`** folder me uploaded hain taaki aapko kisi Kaggle token ya alag se downloading ki zaroorat na pade:
+- **`Train_Inpatientdata-1542865627584.csv` (8.57 MB - 40,474 Admissions)**: Hospital me bharti (admit) huye patients ka data, discharge dates, DRG codes, procedure codes, aur inpatient bills.
+- **`Train_Outpatientdata-1542865627584.csv` (77.39 MB - 517,737 OPD Visits)**: OPD clinic visits, repeated checkups, attending doctors ke IDs, aur same-day duplicate billing timestamps.
+- **`Train_Beneficiarydata-1542865627584.csv` (11.44 MB - 138,556 Patients)**: Patients ki complete medical history jisme **11 chronic bimariyan** (Alzheimer's, Heart Failure, Kidney Disease, Cancer, Diabetes, Stroke, etc.) aur patient mortality dates record hain.
+- **`Train-1542865627584.csv` (87 KB - 5,410 Providers)**: Ground truth forensic audit labels (`PotentialFraud = Yes / No`).
+- **`Test_*.csv` (Total 4 Files, ~26 MB)**: Independent held-out test partitions jo model evaluation ke aakhiri round ke liye frozen rakhe gaye hain.
+
+> 💡 **Beginners Ke Liye Aasan Explanation (Ye Raw Files Kya Hain?)**:
+> Jaise kisi bade hospital me:
+> 1. **Inpatient file** = Bed Register (kaun kab ward me admit hua aur kab discharge hua).
+> 2. **Outpatient file** = OPD Diary (kaun dawai lene aaya aur chala gaya).
+> 3. **Beneficiary file** = Patient ka Medical Chart (kitni umar hai, kaunsi purani bimari hai).
+> 4. **Train file** = Teacher ki Answer Key (audit me kaun chor nikla aur kaun imandar).  
+> Syght in sabhi files ko aapas me connect karke fraud pakadta hai.
+
+---
+
+### 2. Indian National Health Scheme (Ayushman Bharat PM-JAY) Portfolios (`sample_datasets/`)
+Syght me 5 real-world curated Indian healthcare portfolios shamil hain:
+1. **`pmjay_25_hospital_portfolio.csv` (25 Facilities, ₹9.85 Cr Exposure)**: Ghost surgeries, doctor collusion rings, artificial ICU stays, aur clean primary kendras ka benchmark portfolio.
+2. **`metropolitan_icu_surgical_claims.csv` (15 Tertiary Centers, ₹14.20 Cr Exposure)**: ICU ventilator ko 52 din tak khichna, stent stacking, aur unbundled joint replacement operations.
+3. **`rural_primary_care_network.csv` (20 Rural PHCs/CHCs, ₹1.82 Cr Exposure)**: 100% compliant gaon ke sarkaari swasthya kendra jinke upar AI **0% False Alarm** deta hai.
+4. **`diagnostic_lab_unbundling_syndicate.csv` (14 Labs, ₹3.92 Cr Exposure)**: Ek hi blood test ko 4 alag-alag bills me todkar (unbundling) government se 4 guna paisa nikalna.
+5. **`dialysis_chemotherapy_daycare_claims.csv` (12 Daycare Hubs, ₹4.65 Cr Exposure)**: Fake dialysis sessions aur phantom oncology injections jo paper par lagaye gaye par patient tak nahi pahunche.
+
+> 💡 **Beginner Note**: Real world me Indian government schemes me fraud karne ke tarike alag hote hain — jaise ICU me patient ko zabardasti roke rakhna ya fake dialysis bill karna. Syght in dono tarike ke frauds ko pakadne me expert hai.
+
+---
+
+### 3. Interactive API Payloads & Legacy HMIS Exports (`sample_datasets/`)
+- **`claims_batch_payload.json` (34 KB)**: 40 claims ka JSON array jisse aap REST API batch endpoint (`/api/v1/predict/batch`) test kar sakte hain.
+- **`single_claim_sample.json` (1.6 KB)**: Single claim JSON payload real-time pre-auth admission screening (<5ms) ke liye.
+- **`claims_data_export.txt` (5.2 KB)**: Tab-separated plain text export jo purane hospital management systems (HMIS) ke data format ko support karta hai.
+
+---
+
+### 4. Bipartite Doctor-Hospital Collusion Graph Network
+- 1,420 multi-facility edge connections jo dikhati hain ki kaise shady doctors 3-4 alag clinics me ghum-ghum kar kickback commission baant te hain.
+
+---
+
 ### 💡 Model Size Ab 35 MB se 60 MB Kyu Hai?
 - **Pehle < 600 KB Kyu Tha?**: Pehle pipeline ne baseline comparison ke dauran simple `LogisticRegression` ko select kar liya tha jisme sirf 61 linear weights hote the (jo KB me aate hain).
 - **Ab Fix Kar Diya**: Ab pipeline strictly **800-tree deep ensemble** (`ExtraTrees`/`RandomForest` with uncompressed serialization) ko final deploy karta hai. Isme hazaron non-linear decision splits hote hain jo organized fraud rings pakadte hain, aur iska final bundle **35 MB se 60 MB** ka heavy enterprise-grade model banta hai!
@@ -215,6 +261,25 @@ Browser me automatically download hogi: **`syght_deployment_bundle.zip`**:
 ## 📊 5. Pipeline Ka Official Benchmark & Performance Report (Real Model Data)
 
 Syght pipeline ko **5,660 healthcare providers** aur **571,018 claims** par train aur test kiya gaya hai. Iska auto-generated official report [`reports/benchmark_report.md`](reports/benchmark_report.md) me saved hai.
+
+### 🔰 Beginners Ke Liye Aasan Explanation: Model Training & Evaluation Kaise Hoti Hai?
+
+Agar aap Machine Learning me naye hain, toh aasan shabdon me samjhein:
+
+1. **Model Training Kya Hoti Hai?**
+   Socho ek naye police detective ko train kiya ja raha hai. Hum computer ko 5,000 se zyada purane hospitals ke bills dikhate hain jisme hume pehle se pata hai ki kaun imandar tha aur kisne chori ki thi. AI 61 tarah ke lakshan (jaise ek doctor ne din me 200 operations kaise kar diye, ya sabhi mareezo ka bill ek jaisa kyu hai) seekhta hai.
+
+2. **5-Fold Cross-Validation Kya Hai? (5 Alag-Alag Mock Tests)**
+   Model ko sirf ek test dekar judge nahi kiya jata. Hospitals ko 5 barabar groups me baanta jata hai. 4 groups se model seekhta hai aur 5ve group par uska exam hota hai. Aise 5 round hote hain taaki ensure ho sake ki model ne kisi hospital ka naam 'ratta' nahi maara.
+
+3. **PR-AUC Kyu Dekhte Hain, Normal Accuracy Kyu Nahi?**
+   Healthcare me 90% hospitals bilkul imandar hote hain. Agar koi bewakoof model aankh band karke sabko 'Imandar' bol de, toh uski **90% Accuracy** aa jayegi, lekin ek rupaye ka bhi fraud nahi pakdayega! Isliye hum **PR-AUC (Precision-Recall)** dekhte hain jo batata hai ki kitne chor pakde gaye aur kitne imandar doctors ko bina wajah pareshan hone se bachaya gaya.
+
+4. **1-Standard-Error (1-SE) Rule Aur 0.5364 Cutoff Kya Hai?**
+   - **1-SE Rule**: Agar do models barabar perform kar rahe hain, toh hamesha simpler aur reliable model (LightGBM) ko chuno, na ki kisi faltu ke complicated black-box model ko.
+   - **0.5364 Cutoff**: Ek fraud hospital government ka ₹25+ Lakhs kha jata hai, jabki ek file audit karne me sirf ₹3,500 ka kharcha aata hai. Humne mathematically aisa cutoff set kiya hai jo sabse zyada public money bacha sake.
+
+---
 
 ### 🏆 Model Comparison Table (5-Fold Stratified Cross-Validation):
 

@@ -2,6 +2,34 @@
 Training Module: Evaluates heuristic rule baselines and ML candidates through
 leakage-free cross-validation, enforces baseline justification checks, and applies
 the 1-standard-error rule for model selection.
+
+--------------------------------------------------------------------------------
+🔰 BEGINNER-FRIENDLY EXPLANATION (How Model Training Works in Syght):
+--------------------------------------------------------------------------------
+1. What is Model Training?
+   Think of model training like training a rookie fraud investigator. We give the
+   computer historical billing data from 5,000+ healthcare providers where we already
+   know who was genuine and who was fraudulent. The model studies 61 behavioral
+   indicators (like abnormal surgery rates, single-doctor monopolies, and length of stay)
+   to learn the subtle "fingerprints" of fraud.
+
+2. Why do we test Simple Rules first? (Rule Baselines)
+   A common mistake in AI is building a complicated deep neural network when a simple rule
+   like "flag any clinic billing over ₹50 Lakhs" works almost as well. Syght tests simple
+   billing rules first. If our machine learning models cannot beat these simple rules by a
+   statistically significant margin (> 1 Standard Error), we reject the complex model!
+
+3. What is 5-Fold Cross-Validation? (The 5 Practice Tests)
+   To make sure the AI didn't just "memorize" the answers (overfitting), we divide our
+   training providers into 5 equal groups. We train on 4 groups and test on the 5th group.
+   We repeat this 5 times so every provider gets tested fairly. If a model scores high on
+   all 5 tests, we know it will work on brand new, unseen hospitals.
+
+4. What is the 1-Standard-Error (1-SE) Rule? (Keep It Simple & Robust)
+   If Model A scores 74% and Model B scores 73%, but Model B is much simpler and less
+   fragile, the 1-SE rule tells us to pick Model B. We only accept added complexity if the
+   performance jump is statistically meaningful.
+--------------------------------------------------------------------------------
 """
 
 from __future__ import annotations
@@ -39,6 +67,11 @@ class RuleBaselineClassifier(BaseEstimator, ClassifierMixin):
     """
     Transparent heuristic baseline classifier that scores risk strictly proportional
     to a single billing indicator (e.g. claim count, total reimbursement).
+
+    🔰 Beginner Explanation:
+    This is a "rule of thumb" benchmark. For example, ranking hospitals purely by
+    "who filed the most claims" or "who got the most money". We use this as a
+    floor to guarantee that our smart AI models are genuinely smarter than a 1-line rule.
     """
 
     def __init__(self, feature_name: str):
@@ -158,6 +191,16 @@ def evaluate_cv_candidates(
     probabilities and evaluating PR-AUC (Average Precision), ROC-AUC, and Brier score.
 
     Applies the 1-Standard-Error rule to select the best justified model.
+
+    🔰 Beginner Explanation:
+    This function hosts a "fair tournament" between all AI models:
+    1. It runs 5 practice rounds (folds). In each round, 80% of providers train the model,
+       and the remaining 20% test it.
+    2. It tracks PR-AUC (Precision-Recall Area Under Curve). In fraud detection, 90% of
+       clinics are clean, so standard accuracy is misleading. PR-AUC measures how well
+       the model catches actual fraud without bothering innocent doctors.
+    3. It checks if the top ML model beats simple rules by at least 1 Standard Error.
+       If it does, that model is crowned the Champion!
     """
     cfg = config or SyghtConfig()
     y_train = train_df["fraud"].to_numpy()
@@ -309,6 +352,11 @@ def fit_final_model(
 ) -> Tuple[SyghtPreprocessor, BaseEstimator]:
     """
     Fits the preprocessor and the selected model on the entire training set.
+
+    🔰 Beginner Explanation:
+    Once the best model (e.g. LightGBM) wins the tournament, this function trains
+    it on the entire training dataset (all 4,000+ providers) so that it learns from
+    every available piece of history before being saved for live production use.
     """
     cfg = config or SyghtConfig()
     y_train = train_df["fraud"].to_numpy()
@@ -343,6 +391,13 @@ def run_feature_ablation(
     6. Size-Free Behaviour (Model forced onto non-size behavior)
 
     Allows assessing whether behavioral features provide predictive signal beyond provider size.
+
+    🔰 Beginner Explanation:
+    "Feature Ablation" is an experiment where we blindfold the AI to certain information.
+    For example: What if the AI can only see patient sickness? What if it can only see billing volume?
+    What if it cannot see provider size at all and only sees behavior (like duplicate claims)?
+    This proves to hospital auditors that our model isn't just picking on large busy hospitals,
+    but is truly spotting dishonest and unbundled billing behavior.
     """
     cfg = config or SyghtConfig()
     y_train = train_df["fraud"].to_numpy()

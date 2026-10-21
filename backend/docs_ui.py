@@ -523,11 +523,11 @@ def get_custom_docs_html(
   <header class="docs-hero-section">
     <div class="hero-glow-halo"></div>
     <div class="docs-hero-chip">
-      <span>Team Pulse • Healthinsurance Fraud Detector Portal</span>
+      <span>Team Pulse • Health Insurance Fraud Detector Portal</span>
     </div>
-    <h1 class="docs-hero-title">Syght Healthinsurance Fraud Detector API</h1>
+    <h1 class="docs-hero-title">Syght Health Insurance Fraud Detector API</h1>
     <p class="docs-hero-tagline">
-      High-throughput production gateway executing calibrated LightGBM risk scoring, TreeSHAP feature attributions, 
+      Syght Healthcare Fraud Intelligence API — High-throughput production gateway executing calibrated LightGBM risk scoring, TreeSHAP feature attributions, 
       and sub-5ms real-time pre-authorization interception for PM-JAY and private health insurance claims.
     </p>
 
@@ -635,6 +635,18 @@ def get_docs_architecture_html() -> str:
             whereas a False Positive costs only ₹3,500 in auditor desk review. Our cost matrix calibrates the decision cutoff at <strong>0.5364</strong>.
           </p>
         </div>
+      </div>
+
+      <div style="background: rgba(2, 132, 199, 0.05); border: 1px solid rgba(2, 132, 199, 0.2); border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;">
+        <div style="font-weight: 700; color: #0284c7; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>🔰 Beginner-Friendly Explanation: How Model Training Works</span>
+        </div>
+        <p style="font-size: 0.9rem; color: #334155; line-height: 1.55; margin-bottom: 0.5rem;">
+          <strong>What is happening here?</strong> We train AI on past claims from 5,000+ hospitals. Rather than memorizing hospital names, the AI learns 61 subtle patterns (like impossible surgeon workloads or unnatural stay lengths).
+        </p>
+        <p style="font-size: 0.9rem; color: #334155; line-height: 1.55;">
+          <strong>Why the 1-SE Rule?</strong> If a simpler, faster model (LightGBM) performs essentially as well as a complicated black box, the 1-SE rule chooses the simpler one. Our 0.5364 decision cutoff mathematically balances the ₹3,500 cost of checking a hospital against the ₹25+ Lakhs saved by catching a fraud ring.
+        </p>
       </div>
 
       <h2 style="font-family: var(--syght-font-heading); margin: 2rem 0 1rem 0; font-size: 1.5rem;">Pipeline Execution Stages</h2>

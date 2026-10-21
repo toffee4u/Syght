@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 class RiskDriver(BaseModel):
     feature: str = Field(..., description="Technical feature name")
     description: str = Field(..., description="Human-readable clinical/financial explanation")
+    easy_explanation: Optional[str] = Field(None, description="Beginner-friendly, plain-language explanation of this risk driver")
     observed_value: Optional[float] = Field(None, description="Observed numeric value for provider")
     shap_contribution: float = Field(..., description="SHAP feature attribution value")
 
