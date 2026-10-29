@@ -1,5 +1,5 @@
-# Presentation Part 3: Supervised Learning & Algorithm Benchmark
-**Presenter**: Member 3  
+# Presentation Part 4: Supervised Learning & Algorithm Benchmark
+**Presenter**: Member 4  
 **Syllabus Focus**: Unit-1 Experiment 3 & Experiment 4 (Supervised Learning & Multi-Algorithm Classification)  
 **Point Explained**: How we developed supervised classifiers, benchmarked 5 algorithms, selected LightGBM champion (0.7011 PR-AUC), and extracted SHAP explanations.  
 **Time**: ~3 minutes  

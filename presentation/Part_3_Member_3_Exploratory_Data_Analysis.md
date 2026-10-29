@@ -1,7 +1,7 @@
-# Presentation Part 2: Exploratory Data Analysis & Forensic Patterns
-**Presenter**: Member 2  
+# Presentation Part 3: Exploratory Data Analysis & Forensic Patterns
+**Presenter**: Member 3  
 **Syllabus Focus**: Unit-1 Experiment 2 (Exploratory Data Analysis to Identify Patterns, Correlations, and Trends)  
-**Point Explained**: How EDA uncovered the 9.56% fraud class imbalance and exposed operational forensic billing patterns.  
+**Point Explained**: How EDA uncovered the 9.56% fraud class imbalance, established statistical baselines, and exposed operational fraud patterns.  
 **Time**: ~3 minutes  
 
 ---
@@ -10,7 +10,7 @@
 - **Audit Verification Results**:
   - Total claims analyzed: 571,018 records (42,763 Inpatient + 528,255 Outpatient).
   - Total providers evaluated: 5,410 unique healthcare institutions.
-  - Duplicate check: Exactly 0 duplicate rows across all tables.
+  - Duplicate check: Exactly 0 duplicate rows detected across all tables.
   - Foreign key integrity: 100% clean provider ID join between claims and ground truth labels.
 - **Audit Outcome**: 100% Passed pre-flight quality checks before feature engineering.
 

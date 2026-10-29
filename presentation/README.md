@@ -1,34 +1,24 @@
 # Healthcare Insurance Fraud Detection Platform
-## Presentation Guide & Syllabus Mapping
+## Presentation Guide & Syllabus Mapping (5-Member Team)
 <!-- Student Academic Project: Team Presentation Deck -->
 
 ---
 
-### Team Presentation Structure
+### Team Presentation Structure & Member Roles
 
-This presentation is designed so that **Member 1 introduces the overall project and data pre-processing**, followed by the other members each explaining **one specific point** based on the syllabus.
+The presentation is organized so that **Member 1 introduces the overall project and system architecture**, while each of the remaining 4 members presents **one specific point** mapped directly to the syllabus experiments.
 
-#### 4-Member Team Structure (Primary)
-
-| Member | Role | Syllabus Focus | Point Explained | Slide Deck |
+| Member | Role | Syllabus Focus | Point Explained | Slide Deck File |
 |:---:|---|---|---|:---:|
-| **Member 1** | Project Lead | **Unit-1 Exp 1** (Data Pre-processing, Pandas, NumPy & Matplotlib) | **Overall Project Introduction**: Mission, architecture, 4-table claims ingestion & data cleaning | [Part 1 Slides](Part_1_Member_1_Problem_Domain_and_Preprocessing.md) |
-| **Member 2** | Data Analyst | **Unit-1 Exp 2** (Exploratory Data Analysis) | **Point 1 (EDA & Patterns)**: Pre-flight audit, 9.56% class imbalance, correlation heatmaps & unbundling | [Part 2 Slides](Part_2_Member_2_Exploratory_Data_Analysis.md) |
-| **Member 3** | ML Engineer | **Unit-1 Exp 3 & 4** (Supervised Learning & Algorithms) | **Point 2 (Model Benchmark)**: 5-model comparison, LightGBM champion (0.7011 PR-AUC), 0.42 threshold & SHAP | [Part 3 Slides](Part_3_Member_3_Supervised_Learning_and_Model_Benchmark.md) |
-| **Member 4** | Cloud & AI Dev | **Unit-2 Exp 1, 2 & 3** (AI Concepts, Azure ML & Demo) | **Point 3 (Azure ML, NLP & Demo)**: Azure ML SDK v2 pipeline, 4-agent system, Clinical NLP & live web demo | [Part 4 Slides](Part_4_Member_4_AI_Concepts_Azure_ML_and_AI_Agents.md) |
+| **Member 1** | **Project Lead** | **Overall Project** | **Overall Project Introduction & System Architecture**: Vision, fraud stakes, end-to-end pipeline & platform features | [Part 1 Slides](Part_1_Member_1_Overall_Project_Introduction.md) |
+| **Member 2** | **Data Engineer** | **Unit-1 Exp 1** (Data Pre-processing) | **Point 1 (Pre-processing)**: Multi-table ingestion (558k+ claims), Pandas data cleaning, Length of Stay & NumPy log1p normalization | [Part 2 Slides](Part_2_Member_2_Data_Preprocessing.md) |
+| **Member 3** | **Data Analyst** | **Unit-1 Exp 2** (Exploratory Data Analysis) | **Point 2 (EDA & Patterns)**: Pre-flight audit, 9.56% class imbalance, correlation heatmaps, unbundling & ICU prolongation | [Part 3 Slides](Part_3_Member_3_Exploratory_Data_Analysis.md) |
+| **Member 4** | **ML Engineer** | **Unit-1 Exp 3 & 4** (Supervised ML & Benchmark) | **Point 3 (Model Benchmark)**: 5-model benchmark, LightGBM champion (0.7011 PR-AUC), 0.42 threshold calibration & SHAP | [Part 4 Slides](Part_4_Member_4_Supervised_Learning_and_Model_Benchmark.md) |
+| **Member 5** | **Cloud & AI Dev** | **Unit-2 Exp 1, 2, 3 & Demo** (Azure AI & NLP) | **Point 4 (Azure AI & Live Demo)**: AI principles, Azure ML SDK v2 pipeline, 4-agent system, Clinical NLP & live web demo | [Part 5 Slides](Part_5_Member_5_Clinical_NLP_Azure_AI_Tools_and_Live_Demo.md) |
 
 ---
 
-#### 5-Member Team Structure (Alternative)
-
-If presenting as a 5-member team, the topics divide into 1 overall overview + 4 individual points:
-
-| Member | Role | Syllabus Focus | Point Explained | Slide Deck |
-|:---:|---|---|---|:---:|
-| **Member 1** | Project Lead | **Unit-1 Exp 1** (Data Pre-processing) | **Overall Project Introduction & Data Pre-processing** | [Part 1 Slides](Part_1_Member_1_Problem_Domain_and_Preprocessing.md) |
-| **Member 2** | Data Analyst | **Unit-1 Exp 2** (Exploratory Data Analysis) | **Point 1**: EDA, 9.56% class imbalance & forensic patterns | [Part 2 Slides](Part_2_Member_2_Exploratory_Data_Analysis.md) |
-| **Member 3** | ML Engineer | **Unit-1 Exp 3 & 4** (Supervised Classification) | **Point 2**: Multi-algorithm benchmark, LightGBM champion & SHAP | [Part 3 Slides](Part_3_Member_3_Supervised_Learning_and_Model_Benchmark.md) |
-| **Member 4** | Cloud ML Dev | **Unit-2 Exp 1 & 2** (Azure ML & Agents) | **Point 3**: Azure ML SDK v2 pipeline & 4-agent system | [Part 4 Slides](Part_4_Member_4_AI_Concepts_Azure_ML_and_AI_Agents.md) |
-| **Member 5** | AI & Full-Stack | **Unit-2 Exp 3 & Demo** (NLP & Web Platform) | **Point 4**: Clinical NLP, Azure AI tools & Live Web Platform Demo | [Part 5 Slides](Part_5_Member_5_Clinical_NLP_Azure_AI_Tools_and_Live_Demo.md) |
-
-**Time Guideline**: ~3 minutes per member (~12 to 15 minutes total) followed by examiner Q&A.
+### Timing & Presentation Guidelines
+- **Estimated Time**: ~3 minutes per member (~15 minutes total presentation).
+- **Format**: Concise, punchy bullet points designed for slide presentation or viva discussion.
+- **Tone**: Professional, student-friendly, and free of filler text or conversational scripts.
