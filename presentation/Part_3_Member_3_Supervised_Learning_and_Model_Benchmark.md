@@ -1,13 +1,14 @@
-# Presentation Part 3: Supervised Learning, Model Benchmark & Explainability
+# Presentation Part 3: Supervised Learning & Algorithm Benchmark
 **Presenter**: Member 3  
 **Syllabus Focus**: Unit-1 Experiment 3 & Experiment 4 (Supervised Learning & Multi-Algorithm Classification)  
+**Point Explained**: How we developed supervised classifiers, benchmarked 5 algorithms, selected LightGBM champion (0.7011 PR-AUC), and extracted SHAP explanations.  
 **Time**: ~3 minutes  
 
 ---
 
 ### Slide 1: Supervised Learning Formulation
-- **Classification Task**: Supervised binary classification predicting provider status: $y \in \{0, 1\}$.
-- **Engineered Feature Space**: 61 forensic behavioral features per provider (admission lengths, financial sums, duplicate ratios, physician degree).
+- **Classification Task**: Supervised binary classification predicting provider fraud status: $y \in \{0, 1\}$.
+- **Engineered Feature Space**: 61 forensic behavioral features per provider (stay lengths, financial sums, duplicate ratios, network degree).
 - **Leakage-Free Splitting**:
   - Stratified 80% train / 20% test split preserving the 9.56% fraud ratio.
   - Test set kept strictly frozen for final model evaluation.
@@ -37,18 +38,10 @@
 
 ---
 
-### Slide 4: Threshold Optimization
-- **Standard 0.50 Threshold**: Misses subtle fraud cases due to low baseline prevalence (9.5%).
-- **Precision-Recall Curve Sweep**: Evaluated F1-score across thresholds from 0.10 to 0.90.
-- **Operational Threshold**: Calibrated to **0.42**, achieving optimal balance between fraud recall and investigator workload.
-
----
-
-### Slide 5: Explainable AI with SHAP
-- **SHAP TreeExplainer**: Computes exact additive Shapley values for each claim prediction.
-- **Top Fraud Drivers**:
-  1. `pct_duplicate_bene_claims_same_day` (+0.34 SHAP)
-  2. `unbundling_score` (+0.28 SHAP)
-  3. `mean_inpatient_los` (+0.22 SHAP)
-  4. `top_physician_concentration` (+0.19 SHAP)
-- **Clinical Benefit**: Provides clear, auditable explanations for investigators rather than black-box decisions.
+### Slide 4: Threshold Optimization & SHAP Explainability
+- **Threshold Calibration**:
+  - Default 0.50 threshold misses subtle fraud cases due to low 9.5% prevalence.
+  - Precision-Recall curve sweep optimized threshold to **0.42** for balanced precision and recall.
+- **SHAP Feature Importance (TreeExplainer)**:
+  - Top predictive drivers: `pct_duplicate_bene_claims_same_day` (+0.34), `unbundling_score` (+0.28), `mean_inpatient_los` (+0.22).
+  - Provides transparent, auditable explanations for every flagged claim.

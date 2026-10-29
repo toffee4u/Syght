@@ -1,6 +1,7 @@
-# Presentation Part 2: Exploratory Data Analysis, Descriptive Statistics & Patterns
+# Presentation Part 2: Exploratory Data Analysis & Forensic Patterns
 **Presenter**: Member 2  
 **Syllabus Focus**: Unit-1 Experiment 2 (Exploratory Data Analysis to Identify Patterns, Correlations, and Trends)  
+**Point Explained**: How EDA uncovered the 9.56% fraud class imbalance and exposed operational forensic billing patterns.  
 **Time**: ~3 minutes  
 
 ---
@@ -16,7 +17,7 @@
 ---
 
 ### Slide 2: Descriptive Statistics & Class Imbalance
-- **Provider Distribution**:
+- **Severe Class Imbalance**:
   - Legitimate Providers (0): 4,904 facilities (90.44%).
   - Fraudulent Providers (1): 506 facilities (9.56%).
   - Baseline fraud prevalence: ~1 in 10 providers.
@@ -37,11 +38,11 @@
 
 ---
 
-### Slide 4: Forensic Fraud Patterns Discovered
-- **Unbundling Anomalies**:
+### Slide 4: Key Forensic Patterns Discovered
+- **Pattern 1 (Unbundling Anomalies)**:
   - Suspicious clinics bill same-day duplicate visits for the same patient in >25% of cases.
   - Splitting single treatment packages into separate bills to extract higher reimbursements.
-- **Artificial Stay Extensions**:
+- **Pattern 2 (Artificial Stay Extensions)**:
   - Unusually long hospitalizations for minor diagnoses to exhaust package caps.
-- **Doctor Collusion**:
+- **Pattern 3 (Doctor Collusion)**:
   - Single attending physicians generating almost all billing at multiple linked facilities.

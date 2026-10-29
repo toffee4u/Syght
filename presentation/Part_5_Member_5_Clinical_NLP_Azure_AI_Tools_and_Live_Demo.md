@@ -1,6 +1,7 @@
 # Presentation Part 5: Clinical NLP, Azure AI Tools & Live Platform Demo
 **Presenter**: Member 5  
 **Syllabus Focus**: Unit-2 Experiment 3 & Live Platform Demo (Generative AI, NLP, Azure AI Tools & Full-Stack Platform)  
+**Point Explained**: How Clinical NLP scans doctor notes for phantom billing/upcoding, Azure AI Document Intelligence extracts scanned bills, and how the live web platform functions.  
 **Time**: ~3 minutes  
 
 ---
@@ -32,7 +33,7 @@
 - **Frontend (React 19 & Tailwind CSS)**:
   - Responsive, modern dashboard built with Vite.
   - Real-time simulation of incoming insurance claims.
-  - Dataset Studio for scanning multi-table, single-claim, and custom CSV datasets with AI prompt generator.
+  - Dataset Studio for scanning multi-table, single-claim, and custom CSV formats with AI sample prompt generation.
 
 ---
 

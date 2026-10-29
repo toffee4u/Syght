@@ -1,11 +1,12 @@
 # Presentation Part 4: AI Concepts, Azure ML Architecture & AI Agent Systems
 **Presenter**: Member 4  
 **Syllabus Focus**: Unit-2 Experiment 1 & Experiment 2 (AI/ML Concepts, Azure ML SDK v2 & Generative AI Agents)  
+**Point Explained**: How we applied core AI/ML principles, built an Azure ML SDK v2 4-stage pipeline with online endpoints, and implemented an autonomous 4-agent fraud investigation system.  
 **Time**: ~3 minutes  
 
 ---
 
-### Slide 1: AI & ML Concepts in Healthcare Fraud
+### Slide 1: AI & ML Concepts in Healthcare Fraud (Experiment 1)
 - **Paradigm Comparison**:
   - *Rule Engines*: Rigid if-then checks, easily bypassed by adapting fraud rings.
   - *Machine Learning*: Statistical pattern recognition on high-dimensional claims data.
