@@ -1,0 +1,24 @@
+# ==============================================================================
+# Syght — Render Blueprint Specification (Infrastructure-as-Code)
+# ==============================================================================
+# This blueprint enables 1-click deployment on Render.com.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: syght-platform
+    runtime: python
+    plan: free
+    region: oregon # or frankfurt, singapore, ohio
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 1"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SYGHT_MODEL_PATH
+        value: models/syght_model_bundle.joblib
+      - key: PORT
+        value: 10000

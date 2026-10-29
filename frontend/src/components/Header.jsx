@@ -89,7 +89,7 @@ export default function Header({
   return (
     <header className="syght-header">
       <nav aria-label="Main Navigation" className="syght-navbar">
-        {/* Brand & Team Pulse Tag */}
+        {/* Brand &  Tag */}
         <div className="navbar-brand-cluster">
           <a 
             href="/command"

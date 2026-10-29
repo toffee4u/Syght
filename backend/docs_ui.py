@@ -1,7 +1,7 @@
 """
 Custom Branded Documentation Portal for Syght Enterprise.
 Ultra-high-tech Swagger UI, ReDoc, and dedicated Architecture, Archetypes, and Benchmark pages.
-Styled with Team Pulse signature aesthetics.
+Styled with  signature aesthetics.
 """
 
 SYGHT_LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" width="48" height="46" fill="none" viewBox="0 0 48 46"><path fill="#863bff" d="M25.946 44.938c-.664.845-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.287c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.497 0-3.578-1.842-3.578H1.237c-.92 0-1.456-1.04-.92-1.788L10.013.474c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.579 1.842 3.579h11.377c.943 0 1.473 1.088.89 1.83L25.947 44.94z" style="fill:#863bff;fill:color(display-p3 .5252 .23 1);fill-opacity:1"/><mask id="a" width="48" height="46" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#000" d="M25.842 44.938c-.664.844-2.021.375-2.021-.698V33.937a2.26 2.26 0 0 0-2.262-2.262H10.183c-.92 0-1.456-1.04-.92-1.788l7.48-10.471c1.07-1.498 0-3.579-1.842-3.579H1.133c-.92 0-1.456-1.04-.92-1.787L9.91.473c.214-.297.556-.474.92-.474h28.894c.92 0 1.456 1.04.92 1.788l-7.48 10.471c-1.07 1.498 0 3.578 1.842 3.578h11.377c.943 0 1.473 1.088.89 1.832L25.843 44.94z" style="fill:#000;fill-opacity:1"/></mask><g mask="url(#a)"><g filter="url(#b)"><ellipse cx="5.508" cy="14.704" fill="#ede6ff" rx="5.508" ry="14.704" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -4.47 31.516)"/></g><g filter="url(#c)"><ellipse cx="10.399" cy="29.851" fill="#ede6ff" rx="10.399" ry="29.851" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -39.328 7.883)"/></g><g filter="url(#d)"><ellipse cx="5.508" cy="30.487" fill="#7e14ff" rx="5.508" ry="30.487" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -25.913 -14.639)scale(1 -1)"/></g><g filter="url(#e)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.814 -32.644 -3.334)scale(1 -1)"/></g><g filter="url(#f)"><ellipse cx="5.508" cy="30.599" fill="#7e14ff" rx="5.508" ry="30.599" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="matrix(.00324 1 1 -.00324 -34.34 30.47)"/></g><g filter="url(#g)"><ellipse cx="14.072" cy="22.078" fill="#ede6ff" rx="14.072" ry="22.078" style="fill:#ede6ff;fill:color(display-p3 .9275 .9033 1);fill-opacity:1" transform="rotate(93.35 24.506 48.493)scale(-1 1)"/></g><g filter="url(#h)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#i)"><ellipse cx="3.47" cy="21.501" fill="#7e14ff" rx="3.47" ry="21.501" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(89.009 28.708 47.59)scale(-1 1)"/></g><g filter="url(#j)"><ellipse cx=".387" cy="8.972" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(39.51 .387 8.972)"/></g><g filter="url(#k)"><ellipse cx="47.523" cy="-6.092" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 47.523 -6.092)"/></g><g filter="url(#l)"><ellipse cx="41.412" cy="6.333" fill="#47bfff" rx="5.971" ry="9.665" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 41.412 6.333)"/></g><g filter="url(#m)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#n)"><ellipse cx="-1.879" cy="38.332" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 -1.88 38.332)"/></g><g filter="url(#o)"><ellipse cx="35.651" cy="29.907" fill="#7e14ff" rx="4.407" ry="29.108" style="fill:#7e14ff;fill:color(display-p3 .4922 .0767 1);fill-opacity:1" transform="rotate(37.892 35.651 29.907)"/></g><g filter="url(#p)"><ellipse cx="38.418" cy="32.4" fill="#47bfff" rx="5.971" ry="15.297" style="fill:#47bfff;fill:color(display-p3 .2799 .748 1);fill-opacity:1" transform="rotate(37.892 38.418 32.4)"/></g></g><defs><filter id="b" width="60.045" height="41.654" x="-19.77" y="16.149" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="c" width="90.34" height="51.437" x="-54.613" y="-7.533" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="d" width="79.355" height="29.4" x="-49.64" y="2.03" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="e" width="79.579" height="29.4" x="-45.045" y="20.029" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="f" width="79.579" height="29.4" x="-43.513" y="21.178" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="g" width="74.749" height="58.852" x="15.756" y="-17.901" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="7.659"/></filter><filter id="h" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="i" width="61.377" height="25.362" x="23.548" y="2.284" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="j" width="56.045" height="63.649" x="-27.636" y="-22.853" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="k" width="54.814" height="64.646" x="20.116" y="-38.415" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="l" width="33.541" height="35.313" x="24.641" y="-11.323" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="m" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="n" width="54.814" height="64.646" x="-29.286" y="6.009" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="o" width="54.814" height="64.646" x="8.244" y="-2.416" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter><filter id="p" width="39.409" height="43.623" x="18.713" y="10.588" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur result="effect1_foregroundBlur_2002_17158" stdDeviation="4.596"/></filter></defs></svg>"""
@@ -381,6 +381,7 @@ def _get_navbar_html(active_tab: str = "api") -> str:
 
       <div class="navbar-center-links">
         <a href="/docs" class="nav-tab-link {'active' if active_tab == 'api' else ''}">API Explorer</a>
+        <a href="/docs/syllabus" class="nav-tab-link {'active' if active_tab == 'syllabus' else ''}">Syllabus & Lab</a>
         <a href="/docs/architecture" class="nav-tab-link {'active' if active_tab == 'architecture' else ''}">Architecture & 1-SE</a>
         <a href="/docs/archetypes" class="nav-tab-link {'active' if active_tab == 'archetypes' else ''}">Clinical Archetypes</a>
         <a href="/docs/benchmark" class="nav-tab-link {'active' if active_tab == 'benchmark' else ''}">Benchmark & Models</a>
@@ -403,7 +404,7 @@ def _get_navbar_html(active_tab: str = "api") -> str:
 
 def get_custom_docs_html(
     openapi_url: str = "/openapi.json",
-    title: str = "Syght Enterprise API — Team Pulse Documentation",
+    title: str = "Syght Enterprise API —  Documentation",
 ) -> str:
     """Generates an ultra-premium, custom-styled Swagger UI HTML page matching Syght's UI."""
     return f"""<!DOCTYPE html>
@@ -523,7 +524,7 @@ def get_custom_docs_html(
   <header class="docs-hero-section">
     <div class="hero-glow-halo"></div>
     <div class="docs-hero-chip">
-      <span>Team Pulse • Health Insurance Fraud Detector Portal</span>
+      <span> • Health Insurance Fraud Detector Portal</span>
     </div>
     <h1 class="docs-hero-title">Syght Health Insurance Fraud Detector API</h1>
     <p class="docs-hero-tagline">
@@ -560,7 +561,7 @@ def get_custom_docs_html(
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Enterprise</strong> — Engineered with pride by <strong>Team Pulse</strong>.</div>
+      <div><strong>Syght Enterprise</strong> — Engineered with pride by <strong></strong>.</div>
       <div>Ayushman Bharat PM-JAY & National Health Authority (NHA) Aligned Architecture.</div>
     </div>
   </footer>
@@ -716,7 +717,7 @@ result = predictor.predict_provider(claim_features, provider_id=<span style="col
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Architecture Documentation</strong> • Team Pulse Engineering</div>
+      <div><strong>Syght Architecture Documentation</strong> •  Engineering</div>
       <div><a href="/docs" style="color: #0284c7; text-decoration: none;">← Return to Interactive Swagger</a></div>
     </div>
   </footer>
@@ -802,7 +803,7 @@ def get_docs_archetypes_html() -> str:
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Forensic Archetypes</strong> • Team Pulse Engineering</div>
+      <div><strong>Syght Forensic Archetypes</strong> •  Engineering</div>
       <div><a href="/docs" style="color: #0284c7; text-decoration: none;">← Return to Interactive Swagger</a></div>
     </div>
   </footer>
@@ -921,7 +922,7 @@ def get_docs_benchmark_html() -> str:
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Benchmark Suite</strong> • Team Pulse Engineering</div>
+      <div><strong>Syght Benchmark Suite</strong> •  Engineering</div>
       <div><a href="/docs" style="color: #0284c7; text-decoration: none;">← Return to Interactive Swagger</a></div>
     </div>
   </footer>
@@ -932,7 +933,7 @@ def get_docs_benchmark_html() -> str:
 
 def get_custom_redoc_html(
     openapi_url: str = "/openapi.json",
-    title: str = "Syght Enterprise API — Team Pulse ReDoc Console",
+    title: str = "Syght Enterprise API —  ReDoc Console",
 ) -> str:
     """Generates an ultra-premium ReDoc HTML documentation page."""
     return f"""<!DOCTYPE html>
@@ -958,6 +959,152 @@ def get_custom_redoc_html(
 
   <redoc spec-url="{openapi_url}"></redoc>
   <script src="https://cdn.jsdelivr.net/npm/redoc@2.1.5/bundles/redoc.standalone.js"></script>
+</body>
+</html>
+"""
+
+def get_docs_syllabus_html() -> str:
+    """Dedicated documentation page: Academic Syllabus Alignment & Lab Experiments."""
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syllabus & Lab Experiments — Syght Documentation</title>
+  <link rel="icon" type="image/svg+xml" href="{FAVICON_DATA_URI}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    {_get_shared_styles()}
+    .syllabus-badge {{
+      display: inline-block;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }}
+    .badge-unit1 {{ background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }}
+    .badge-unit2 {{ background: #faf5ff; color: #7c3aed; border: 1px solid #e9d5ff; }}
+    .status-pill {{
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }}
+  </style>
+</head>
+<body>
+  {_get_navbar_html(active_tab="syllabus")}
+
+  <main class="docs-content-container">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
+      <span class="syllabus-badge badge-unit1">Unit-1: AIML Algorithms</span>
+      <span class="syllabus-badge badge-unit2">Unit-2: Azure AI Tools</span>
+      <span class="status-pill">● 100% Academic Syllabus Compliance</span>
+    </div>
+
+    <h1>Course Syllabus & Practical Lab Curriculum</h1>
+    <p class="docs-lead">
+      Syght directly fulfills the course syllabus for <strong>Healthcare Insurance Fraud Detection</strong>,
+      providing 7 dedicated experiment notebooks, production Python modules, and comprehensive Viva Voce questions with answers.
+    </p>
+
+    <h2>📋 Syllabus Alignment Matrix</h2>
+    <table class="docs-table">
+      <thead>
+        <tr>
+          <th>Unit</th>
+          <th>Exp No.</th>
+          <th>Official Course Experiment Title</th>
+          <th>Project Syght Implementation</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
+          <td><strong>Exp 1</strong></td>
+          <td>Introduction to Data Pre-processing, Pandas, NumPy & Matplotlib for Data Analysis</td>
+          <td><code>ml_pipeline/data_audit.py</code><br><code>notebooks/experiments/Experiment_1...ipynb</code></td>
+          <td><span class="status-pill">COMPLETED</span></td>
+        </tr>
+        <tr>
+          <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
+          <td><strong>Exp 2</strong></td>
+          <td>Perform exploratory data analysis (EDA) on a real-world dataset to identify patterns, correlations, and trends using descriptive statistics and visualizations</td>
+          <td><code>ml_pipeline/visualization.py</code><br><code>notebooks/experiments/Experiment_2...ipynb</code></td>
+          <td><span class="status-pill">COMPLETED</span></td>
+        </tr>
+        <tr>
+          <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
+          <td><strong>Exp 3</strong></td>
+          <td>Understand supervised learning to train and develop classifier models</td>
+          <td><code>ml_pipeline/split.py</code><br><code>notebooks/experiments/Experiment_3...ipynb</code></td>
+          <td><span class="status-pill">COMPLETED</span></td>
+        </tr>
+        <tr>
+          <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
+          <td><strong>Exp 4</strong></td>
+          <td>Build a classification model by using different machine learning algorithms</td>
+          <td><code>ml_pipeline/train.py</code> (7 ML Models + 1-SE Rule)<br><code>notebooks/experiments/Experiment_4...ipynb</code></td>
+          <td><span class="status-pill">COMPLETED</span></td>
+        </tr>
+        <tr>
+          <td><span class="syllabus-badge badge-unit2">Unit-2</span></td>
+          <td><strong>Exp 1</strong></td>
+          <td>Introduction to Artificial Intelligence and Machine Learning Concepts</td>
+          <td>Foundations of AI/ML in Health Fraud, Fairness & Ethics<br><code>notebooks/experiments/Experiment_5...ipynb</code></td>
+          <td><span class="status-pill">COMPLETED</span></td>
+        </tr>
+        <tr>
+          <td><span class="syllabus-badge badge-unit2">Unit-2</span></td>
+          <td><strong>Exp 2</strong></td>
+          <td>Understanding Azure Machine Learning, Generative AI Models, and AI Agent Systems</td>
+          <td><code>ml_pipeline/azure_ml_integration.py</code><br><code>ml_pipeline/genai_agent_system.py</code><br><code>notebooks/experiments/Experiment_6...ipynb</code></td>
+          <td><span class="status-pill">COMPLETED</span></td>
+        </tr>
+        <tr>
+          <td><span class="syllabus-badge badge-unit2">Unit-2</span></td>
+          <td><strong>Exp 3</strong></td>
+          <td>Exploring Generative AI, Natural Language Processing and Azure AI Tools</td>
+          <td><code>ml_pipeline/nlp_clinical_analyzer.py</code> (Doc Intelligence & Search)<br><code>notebooks/experiments/Experiment_7...ipynb</code></td>
+          <td><span class="status-pill">COMPLETED</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>☁️ Azure Machine Learning & AI Agent Endpoints</h2>
+    <p>Test the interactive Unit-2 Azure AI and GenAI endpoints directly in the API Explorer:</p>
+    <div class="docs-code-box">
+# 1. Inspect Azure ML SDK v2 Pipeline & Managed Endpoint Specification:
+GET /api/v1/azure-ml/pipeline-spec
+
+# 2. Run the Autonomous 4-Agent Fraud Investigation System:
+POST /api/v1/agents/investigate
+
+# 3. Generate plain-language executive audit briefs with Generative AI:
+POST /api/v1/genai/audit-summary
+
+# 4. Analyze doctor notes & catch upcoding/phantom billing with NLP:
+POST /api/v1/nlp/analyze-notes
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <a href="/docs" class="btn-return-dashboard" style="display: inline-flex; text-decoration: none;">Explore Interactive API Docs →</a>
+    </div>
+  </main>
+
+  <footer class="docs-footer">
+    Syght Enterprise Platform &bull; Academic Syllabus Compliance &bull; 2026
+  </footer>
 </body>
 </html>
 """

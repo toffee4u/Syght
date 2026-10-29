@@ -4,7 +4,6 @@
 
 **A transparent, high-precision machine learning system engineered for healthcare insurance Special Investigation Units (SIUs) to detect suspicious billing patterns, uncover collusion rings, and intercept fraudulent claims in sub-5ms.**
 
-[![Team: Team Pulse](https://img.shields.io/badge/Team-Team%20Pulse-7928CA?style=for-the-badge)](#)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-25%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
@@ -14,6 +13,7 @@
 [![Explainability](https://img.shields.io/badge/Explainability-TreeSHAP-purple?style=for-the-badge)](#-explainability--plain-language-risk-drivers)
 
 <p align="center">
+  <a href="#-course-syllabus-alignment--academic-lab-experiments">Syllabus & Lab Experiments</a> •
   <a href="#-why-syght">Why Syght</a> •
   <a href="#-datasets-used-for-training-evaluation--benchmarking">Datasets Used</a> •
   <a href="#-pipeline-architecture">Architecture</a> •
@@ -29,7 +29,25 @@
 ---
 
 > [!NOTE]
-> **Operational Decision Support**: Syght is a decision-support platform designed to surface high-risk billing patterns and optimize investigative bandwidth for human clinical auditors and Special Investigation Units (SIUs). **Predictions represent statistical risk scores, not legal proof of fraud.**
+> **Operational Decision Support & Academic Alignment**: Syght is an enterprise decision-support platform engineered for healthcare insurance Special Investigation Units (SIUs) and built to strictly comply with the university practical curriculum for **Unit-1 (Data Pre-processing & AIML Algorithms)** and **Unit-2 (AI/ML Fundamentals with Azure AI Tools)**. For the complete experiment manual with Viva questions, see the [📘 Official Syllabus Lab Manual](docs/SYLLABUS_LAB_MANUAL.md).
+
+---
+
+## 🎓 Course Syllabus Alignment & Academic Lab Experiments
+
+Syght is architected so that every experiment in your course syllabus maps 1-to-1 with a dedicated Jupyter Notebook, a production Python engine, and verified evaluation figures:
+
+| Syllabus Unit | Experiment No. | Official Syllabus Topic / Experiment | Dedicated Notebook & Code Implementation | Key Capabilities & Artifacts | Status |
+|:---:|:---:|---|---|---|:---:|
+| **Unit-1** | **Exp 1** | **Introduction to Data Pre-processing, Pandas, NumPy & Matplotlib for Data Analysis** | [📓 Experiment 1 Notebook](notebooks/experiments/Experiment_1_Data_Preprocessing_Pandas_NumPy_Matplotlib.ipynb)<br>`ml_pipeline/data_audit.py` | Multi-table ingestion (CMS Medicare & PM-JAY), null audits, date parsing, log transforms, Matplotlib distributions | **✅ 100% Complete** |
+| **Unit-1** | **Exp 2** | **Perform exploratory data analysis (EDA) on a real-world dataset to identify patterns, correlations, and trends using descriptive statistics and visualizations** | [📓 Experiment 2 Notebook](notebooks/experiments/Experiment_2_Exploratory_Data_Analysis_EDA.ipynb)<br>`reports/figures/`<br>`ml_pipeline/visualization.py` | Descriptive stats (mean/IQR/skewness), 9.5% fraud imbalance, Pearson/Spearman heatmaps, length-of-stay and duplicate trends | **✅ 100% Complete** |
+| **Unit-1** | **Exp 3** | **Understand supervised learning to train and develop classifier models** | [📓 Experiment 3 Notebook](notebooks/experiments/Experiment_3_Supervised_Learning_Classifier_Development.ipynb)<br>`ml_pipeline/split.py`<br>`ml_pipeline/evaluate.py` | Binary supervised setup, zero-leakage stratified provider K-fold, PR-AUC vs ROC-AUC, cost-utility matrices | **✅ 100% Complete** |
+| **Unit-1** | **Exp 4** | **Build a classification model by using different machine learning algorithms** | [📓 Experiment 4 Notebook](notebooks/experiments/Experiment_4_Multi_Algorithm_Classification_Benchmark.ipynb)<br>`ml_pipeline/train.py`<br>`reports/benchmark_report.md` | Benchmarking 7 algorithms (Logistic Reg, RF, Extra Trees, Gradient Boosting, XGBoost, LightGBM) + 1-SE selection rule | **✅ 100% Complete** |
+| **Unit-2** | **Exp 1** | **Introduction to Artificial Intelligence and Machine Learning Concepts** | [📓 Experiment 5 Notebook](notebooks/experiments/Experiment_5_AI_ML_Concepts_Healthcare_Fraud.ipynb)<br>`docs/pipeline_architecture.md` | Rule engines vs ML vs AI Agents, Bias-Variance tradeoff, Overfitting, Algorithmic fairness & demographic exclusion | **✅ 100% Complete** |
+| **Unit-2** | **Exp 2** | **Understanding Azure Machine Learning, Generative AI Models, and AI Agent Systems** | [📓 Experiment 6 Notebook](notebooks/experiments/Experiment_6_Azure_ML_Generative_AI_and_AI_Agents.ipynb)<br>`ml_pipeline/azure_ml_integration.py`<br>`ml_pipeline/genai_agent_system.py` | Azure ML SDK v2 4-stage pipeline, managed online endpoint (score.py), Azure OpenAI GPT-4 summaries, 4-agent autonomous triage | **✅ 100% Complete** |
+| **Unit-2** | **Exp 3** | **Exploring Generative AI, Natural Language Processing and Azure AI Tools** | [📓 Experiment 7 Notebook](notebooks/experiments/Experiment_7_Generative_AI_NLP_and_Azure_AI_Tools.ipynb)<br>`ml_pipeline/nlp_clinical_analyzer.py` | Clinical notes NLP, Upcoding & Phantom billing detection, Azure AI Document Intelligence OCR, Azure AI Search precedents | **✅ 100% Complete** |
+
+> 📖 **Comprehensive Lab Manual**: Read the full [📘 Academic Lab Manual & Viva Voce Guide](docs/SYLLABUS_LAB_MANUAL.md) for theory, step-by-step algorithms, expected outputs, and 21 viva questions with answers.
 
 ---
 
@@ -392,5 +410,5 @@ Syght/
 ---
 
 <div align="center">
-  <sub>Engineered by <strong>Team Pulse</strong> • Syght Health Insurance Fraud Detector Platform</sub>
+  <sub>Engineered by <strong></strong> • Syght Health Insurance Fraud Detector Platform</sub>
 </div>

@@ -58,7 +58,7 @@ export default function ReviewQueue({
         <div className="page-header-title-box">
           <div className="syght-chip">
             <span className="chip-dot" />
-            Team Pulse Worklist
+             Worklist
           </div>
           <h1 className="syght-page-title">
             Priority Review Queue & Auditor Worklist
@@ -73,7 +73,6 @@ export default function ReviewQueue({
       {/* Summary KPI Strip (Syght Bento Cards) */}
       <div className="bento-kpi-grid queue-kpis">
         <div className="bento-card group">
-          <div className="bento-watermark">01</div>
           <div className="bento-card-header">
             <span className="bento-card-label">TOTAL FLAGGED EXPOSURE</span>
             <span className="bento-card-icon-box text-rose-400">
@@ -90,7 +89,6 @@ export default function ReviewQueue({
         </div>
 
         <div className="bento-card group">
-          <div className="bento-watermark">02</div>
           <div className="bento-card-header">
             <span className="bento-card-label">PENDING AUDIT</span>
             <span className="bento-card-icon-box text-amber-400">
@@ -107,7 +105,6 @@ export default function ReviewQueue({
         </div>
 
         <div className="bento-card group">
-          <div className="bento-watermark">03</div>
           <div className="bento-card-header">
             <span className="bento-card-label">ACTIONED TODAY</span>
             <span className="bento-card-icon-box text-emerald-400">

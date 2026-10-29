@@ -1,13 +1,37 @@
 # 🏥 Syght — Explainable Healthcare Fraud Detection System
 ### Enterprise Healthcare Fraud Detection Architecture Guide
 
-[![Team: Team Pulse](https://img.shields.io/badge/Team-Team%20Pulse-7928CA?style=for-the-badge)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-25%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
 [![Read in English](https://img.shields.io/badge/Language-English%20README-purple?style=for-the-badge)](README.md)
 
 > **Syght** ek advanced, explainable machine learning aur graph intelligence system hai jo **Ayushman Bharat (PM-JAY)**, government health schemes aur private health insurance TPAs me hone wale **crores of rupees ke fake claims, phantom billing, aur hospital collusion fraud** ko pakadta hai.
+
+---
+
+## 🎓 College Syllabus & Practical Experiments Mapping
+
+Aapke syllabus ke sabhi experiments (Unit-1 aur Unit-2) ko Syght project me 100% complete aur test kar diya gaya hai:
+
+| Unit | Exp No. | Syllabus Topic | Notebook / Code File | Key Topic Covered |
+|:---:|:---:|---|---|---|
+| **Unit-1** | **Exp 1** | **Data Pre-processing, Pandas, NumPy & Matplotlib** | [
+otebooks/experiments/Experiment_1...ipynb](notebooks/experiments/Experiment_1_Data_Preprocessing_Pandas_NumPy_Matplotlib.ipynb) | Multi-table CSVs load karna, missing values handle karna, date difference se Length of Stay nikalna, log-transform aur distribution plots. |
+| **Unit-1** | **Exp 2** | **Exploratory Data Analysis (EDA) on Real-World Dataset** | [
+otebooks/experiments/Experiment_2...ipynb](notebooks/experiments/Experiment_2_Exploratory_Data_Analysis_EDA.ipynb) | 5.5 Lakh claims par descriptive stats (mean/IQR/skewness), 9.5% fraud class imbalance, Pearson/Spearman correlation heatmaps, duplicate claims patterns. |
+| **Unit-1** | **Exp 3** | **Supervised Learning & Classifier Development** | [
+otebooks/experiments/Experiment_3...ipynb](notebooks/experiments/Experiment_3_Supervised_Learning_Classifier_Development.ipynb) | Binary classification (Fraud 1 vs Clean 0), Zero-leakage provider split, PR-AUC vs ROC-AUC, cost-utility curve aur confusion matrix. |
+| **Unit-1** | **Exp 4** | **Classification Models using Different ML Algorithms** | [
+otebooks/experiments/Experiment_4...ipynb](notebooks/experiments/Experiment_4_Multi_Algorithm_Classification_Benchmark.ipynb) | 7 Algorithms compare kiye (Logistic Reg, Random Forest, Extra Trees, Gradient Boosting, XGBoost, LightGBM) aur 1-SE rule se best model select kiya. |
+| **Unit-2** | **Exp 1** | **AI & Machine Learning Concepts in Health Fraud** | [
+otebooks/experiments/Experiment_5...ipynb](notebooks/experiments/Experiment_5_AI_ML_Concepts_Healthcare_Fraud.ipynb) | Rule engines vs ML vs AI Agents, Bias-Variance tradeoff, Overfitting, Class Imbalance techniques, aur Algorithmic Fairness. |
+| **Unit-2** | **Exp 2** | **Azure Machine Learning, Generative AI & AI Agent Systems** | [
+otebooks/experiments/Experiment_6...ipynb](notebooks/experiments/Experiment_6_Azure_ML_Generative_AI_and_AI_Agents.ipynb) | Azure ML SDK v2 4-stage cloud pipeline, model registry, online endpoint (score.py), Azure OpenAI summaries, aur 4-Agent autonomous triage. |
+| **Unit-2** | **Exp 3** | **Generative AI, NLP & Azure AI Tools** | [
+otebooks/experiments/Experiment_7...ipynb](notebooks/experiments/Experiment_7_Generative_AI_NLP_and_Azure_AI_Tools.ipynb) | Clinical notes NLP extraction, Upcoding & Phantom billing pakadna, Azure AI Document Intelligence OCR, aur Azure AI Search precedents. |
+
+> 📖 **Pura Lab Manual Padhein**: [📘 Official Syllabus Lab Manual (docs/SYLLABUS_LAB_MANUAL.md)](docs/SYLLABUS_LAB_MANUAL.md) me viva questions aur theory available hai.
 
 ---
 
@@ -381,5 +405,5 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ---
 
 <div align="center">
-  <sub>Engineered with care by <strong>Team Pulse</strong> for healthcare fraud analysts and Special Investigation Units.</sub>
+  <sub>Engineered with care by <strong></strong> for healthcare fraud analysts and Special Investigation Units.</sub>
 </div>

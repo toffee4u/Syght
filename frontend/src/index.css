@@ -1,7 +1,7 @@
 /* ==============================================================================
    Syght Enterprise Healthcare Fraud Detection Platform
    Modern High-Tech Light Theme Design System
-   Engineered by Team Pulse
+   Healthcare Insurance Fraud Detection Platform
    ============================================================================== */
 
 :root {
@@ -136,7 +136,7 @@ a {
   box-sizing: border-box;
 }
 
-/* Brand & Team Pulse Cluster */
+/* Brand &  Cluster */
 .navbar-brand-cluster {
   display: flex;
   align-items: center;
@@ -191,7 +191,7 @@ a {
   letter-spacing: -0.03em;
 }
 
-/* Team Pulse Signature Badge */
+/*  Signature Badge */
 .team-pulse-pill {
   display: inline-flex;
   align-items: center;
@@ -933,23 +933,9 @@ a {
   transform: translateY(-2px);
 }
 
-.bento-watermark {
-  position: absolute;
-  top: 0.25rem;
-  right: 1rem;
-  font-family: var(--syght-font-mono);
-  font-size: 4.8rem;
-  font-weight: 800;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.04);
-  pointer-events: none;
-  user-select: none;
-  transition: color 0.3s;
-}
 
-.bento-card:hover .bento-watermark {
-  color: rgba(0, 0, 0, 0.07);
-}
+
+.bento-card:hover 
 
 .bento-card-header {
   display: flex;
@@ -1896,7 +1882,7 @@ a {
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* Giant Team Pulse Brand Banner (onesuperbrain.com signature aesthetic) */
+/* Giant  Brand Banner (onesuperbrain.com signature aesthetic) */
 .footer-giant-brand-section {
   position: relative;
   width: 100%;
@@ -6114,11 +6100,7 @@ a {
     border-radius: var(--syght-radius-md);
   }
 
-  .bento-watermark {
-    font-size: 3.2rem;
-    top: 0.2rem;
-    right: 0.65rem;
-  }
+  
 
   /* Batch Audit Results Mobile Refinements */
   .table-card-header {

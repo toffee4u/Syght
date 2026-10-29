@@ -434,7 +434,7 @@ export default function CommandCenter({
         <div className="hero-content-cluster">
           <div className="hero-pill-badge">
             <span className="beacon-emerald" />
-            <span className="hero-pill-text">Team Pulse Engineering • Health Insurance Fraud Detector</span>
+            <span className="hero-pill-text"> Engineering • Health Insurance Fraud Detector</span>
           </div>
 
           <h1 className="hero-headline">
@@ -525,7 +525,6 @@ export default function CommandCenter({
       <section className="bento-kpi-grid">
         {/* Card 01 */}
         <div className="bento-card group">
-          <div className="bento-watermark">01</div>
           <div className="bento-card-header">
             <span className="bento-card-label">TOTAL CLAIMS ANALYZED</span>
             <span className="bento-card-icon-box text-sky-600">
@@ -541,7 +540,6 @@ export default function CommandCenter({
 
         {/* Card 02 */}
         <div className="bento-card group">
-          <div className="bento-watermark">02</div>
           <div className="bento-card-header">
             <span className="bento-card-label">UNDER INVESTIGATION</span>
             <span className="bento-card-icon-box text-rose-600">
@@ -557,7 +555,6 @@ export default function CommandCenter({
 
         {/* Card 03 */}
         <div className="bento-card group">
-          <div className="bento-watermark">03</div>
           <div className="bento-card-header">
             <span className="bento-card-label">REVIEWED TODAY</span>
             <span className="bento-card-icon-box text-emerald-600">
@@ -573,7 +570,6 @@ export default function CommandCenter({
 
         {/* Card 04 */}
         <div className="bento-card group">
-          <div className="bento-watermark">04</div>
           <div className="bento-card-header">
             <span className="bento-card-label">HIGH-RISK FLAGS TRIGGERED</span>
             <span className="bento-card-icon-box text-amber-600">
@@ -589,7 +585,6 @@ export default function CommandCenter({
 
         {/* Card 05 */}
         <div className="bento-card group highlight-card">
-          <div className="bento-watermark">05</div>
           <div className="bento-card-header">
             <span className="bento-card-label">TOTAL FLAGGED EXPOSURE</span>
             <span className="bento-card-icon-box text-sky-600">
@@ -605,7 +600,6 @@ export default function CommandCenter({
 
         {/* Card 06 */}
         <div className="bento-card group">
-          <div className="bento-watermark">06</div>
           <div className="bento-card-header">
             <span className="bento-card-label">AVG PRE-AUTH LATENCY</span>
             <span className="bento-card-icon-box text-violet-600">
@@ -1030,7 +1024,7 @@ export default function CommandCenter({
               <p className="panel-subtitle-text">Real-time throughput, model lift, and SLA compliance</p>
             </div>
           </div>
-          <span className="syght-chip font-mono">Team Pulse Live</span>
+          <span className="syght-chip font-mono"> Live</span>
         </div>
 
         <div className="multi-progress-grid">

@@ -31,6 +31,7 @@ COPY backend/ ./backend/
 COPY models/ ./models/
 COPY reports/ ./reports/
 COPY tests/ ./tests/
+COPY frontend/ ./frontend/
 
 # Expose API port
 EXPOSE 8000

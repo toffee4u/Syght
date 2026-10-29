@@ -688,7 +688,6 @@ export default function CollusionNetwork() {
       {/* Topology Intelligence Cards (Bento 3-Column Strip) */}
       <div className="bento-kpi-grid" style={{ marginTop: '1.5rem' }}>
         <div className="bento-card group">
-          <div className="bento-watermark">01</div>
           <div className="bento-card-header">
             <span className="bento-card-label">BIPARTITE TOPOLOGY PROJECTION</span>
             <span className="bento-card-icon-box text-sky-600">
@@ -702,7 +701,6 @@ export default function CollusionNetwork() {
         </div>
 
         <div className="bento-card group">
-          <div className="bento-watermark">02</div>
           <div className="bento-card-header">
             <span className="bento-card-label">SYNDICATE RING (PRV_03)</span>
             <span className="bento-card-icon-box text-rose-600">
@@ -716,7 +714,6 @@ export default function CollusionNetwork() {
         </div>
 
         <div className="bento-card group">
-          <div className="bento-watermark">03</div>
           <div className="bento-card-header">
             <span className="bento-card-label">GRAPH DEGREE SHAP LIFT</span>
             <span className="bento-card-icon-box text-emerald-600">

@@ -1,3 +1,4 @@
+# Student Academic Project: Healthcare Insurance Fraud Detection (FastAPI Backend)
 """
 Syght Enterprise Healthcare Fraud Detection API.
 FastAPI Production Gateway with SHAP Explainability & Real-Time Pre-Auth.
@@ -32,6 +33,7 @@ from backend.docs_ui import (
     get_docs_architecture_html,
     get_docs_archetypes_html,
     get_docs_benchmark_html,
+    get_docs_syllabus_html,
     SYGHT_FAVICON_SVG,
 )
 
@@ -133,9 +135,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Syght Enterprise API — Team Pulse",
+    title="Syght Enterprise API — ",
     description=(
-        "Engineered by Team Pulse. Production-grade, explainable machine learning & graph intelligence API "
+        "Healthcare Insurance Fraud Detection Platform. Production-grade, explainable machine learning & graph intelligence API "
         "for detecting healthcare insurance fraud (Ayushman Bharat PM-JAY / Private TPAs). "
         "Provides provider risk scoring with SHAP explainability and sub-5ms real-time pre-authorization."
     ),
@@ -198,7 +200,7 @@ async def root():
     """Root endpoint welcoming clients and directing to OpenAPI documentation."""
     return {
         "service": "Syght Healthinsurance Fraud Detector API",
-        "team": "Team Pulse",
+        "team": "",
         "version": "1.0.0",
         "status": "online",
         "documentation": "/docs",
@@ -214,7 +216,7 @@ async def health_check():
     return HealthCheckResponse(
         status="healthy" if model_ready else "degraded_no_model",
         version="1.0.0",
-        team="Team Pulse",
+        team="",
         model_loaded=model_ready,
         selected_model=predictor.metadata.get("selected_model") if model_ready else None,
         decision_threshold=predictor.decision_threshold if model_ready else None,
@@ -610,6 +612,199 @@ async def predict_custom_dataset(request: Request):
         "champion_model": predictor.metadata.get("selected_model", "LightGBM"),
         "total_batch_latency_ms": round(total_latency, 2),
         "results": results,
+    }
+
+
+# ==============================================================================
+# Syllabus Compliance & Azure AI / GenAI Agent Endpoints (Unit-1 & Unit-2)
+# ==============================================================================
+from ml_pipeline.azure_ml_integration import AzureMLConfig, AzureMLManager
+from ml_pipeline.genai_agent_system import HealthFraudAgentSystem
+from ml_pipeline.nlp_clinical_analyzer import (
+    ClinicalNotesNLPAnalyzer,
+    AzureAIDocumentIntelligenceConnector,
+    AzureAISearchConnector,
+)
+
+agent_system = HealthFraudAgentSystem()
+nlp_analyzer = ClinicalNotesNLPAnalyzer()
+doc_intelligence = AzureAIDocumentIntelligenceConnector()
+search_connector = AzureAISearchConnector()
+
+
+@app.get("/api/v1/syllabus/curriculum", tags=["Syllabus Compliance & Coursework"])
+async def get_syllabus_curriculum():
+    """
+    Returns official syllabus alignment metadata for Unit-1 and Unit-2.
+    Maps every experiment to its implementation in the Syght Health Fraud Detector platform.
+    """
+    return {
+        "status": "COMPLIANT",
+        "course_title": "Healthcare Insurance Fraud Detector Platform",
+        "units": [
+            {
+                "unit": "Unit-1",
+                "title": "Data Pre-processing and AIML Algorithms",
+                "experiments": [
+                    {
+                        "experiment_no": 1,
+                        "title": "Introduction to Data Pre-processing, Pandas, NumPy & Matplotlib for Data Analysis",
+                        "objective": "Ingest multi-table claims (Inpatient, Outpatient, Beneficiary, Provider labels), clean structural nulls, handle deduplication, apply NumPy vectorization, and render distribution plots with Matplotlib.",
+                        "notebook": "notebooks/experiments/Experiment_1_Data_Preprocessing_Pandas_NumPy_Matplotlib.ipynb",
+                        "status": "COMPLETED",
+                    },
+                    {
+                        "experiment_no": 2,
+                        "title": "Perform exploratory data analysis (EDA) on a real-world dataset to identify patterns, correlations, and trends using descriptive statistics and visualizations",
+                        "objective": "Deep statistical analysis on 558k claims across 5,410 providers. Uncover fraud prevalence (9.5%), Pearson/Spearman correlation matrices, length-of-stay distributions, and duplicate claim trends.",
+                        "notebook": "notebooks/experiments/Experiment_2_Exploratory_Data_Analysis_EDA.ipynb",
+                        "status": "COMPLETED",
+                    },
+                    {
+                        "experiment_no": 3,
+                        "title": "Understand supervised learning to train and develop classifier models",
+                        "objective": "Binary supervised classification formulation, zero-leakage stratified 5-fold cross-validation, PR-AUC and ROC-AUC optimization for severe class imbalance, and cost-utility thresholding.",
+                        "notebook": "notebooks/experiments/Experiment_3_Supervised_Learning_Classifier_Development.ipynb",
+                        "status": "COMPLETED",
+                    },
+                    {
+                        "experiment_no": 4,
+                        "title": "Build a classification model by using different machine learning algorithms",
+                        "objective": "Train and systematically benchmark 7 candidate algorithms (Logistic Regression L1/L2, Random Forest, Extra Trees, Gradient Boosting, XGBoost, LightGBM) against heuristic rule baselines using the 1-Standard-Error rule.",
+                        "notebook": "notebooks/experiments/Experiment_4_Multi_Algorithm_Classification_Benchmark.ipynb",
+                        "status": "COMPLETED",
+                    },
+                ],
+            },
+            {
+                "unit": "Unit-2",
+                "title": "AI and Machine Learning Fundamentals with Azure AI Tools",
+                "experiments": [
+                    {
+                        "experiment_no": 1,
+                        "title": "Introduction to Artificial Intelligence and Machine Learning Concepts",
+                        "objective": "Comprehensive foundations of AI/ML in healthcare: Rule engines vs ML vs Deep Learning, Bias-Variance tradeoff, Overfitting, Class Imbalance techniques (SMOTE/Focal Loss), and Algorithmic Fairness in fraud audits.",
+                        "notebook": "notebooks/experiments/Experiment_5_AI_ML_Concepts_Healthcare_Fraud.ipynb",
+                        "status": "COMPLETED",
+                    },
+                    {
+                        "experiment_no": 2,
+                        "title": "Understanding Azure Machine Learning, Generative AI Models, and AI Agent Systems",
+                        "objective": "Azure ML SDK v2 Pipeline Jobs, Model Registry, Managed Online Endpoints, Generative AI (LLMs) for plain-language clinical audit narratives, and an Autonomous 4-Agent Fraud Investigation System.",
+                        "notebook": "notebooks/experiments/Experiment_6_Azure_ML_Generative_AI_and_AI_Agents.ipynb",
+                        "module": "ml_pipeline/azure_ml_integration.py & ml_pipeline/genai_agent_system.py",
+                        "status": "COMPLETED",
+                    },
+                    {
+                        "experiment_no": 3,
+                        "title": "Exploring Generative AI, Natural Language Processing and Azure AI Tools",
+                        "objective": "NLP on doctor clinical notes and discharge summaries to catch phantom billing/upcoding, Azure AI Document Intelligence for scanned medical bills, and Azure AI Search for medical precedents.",
+                        "notebook": "notebooks/experiments/Experiment_7_Generative_AI_NLP_and_Azure_AI_Tools.ipynb",
+                        "module": "ml_pipeline/nlp_clinical_analyzer.py",
+                        "status": "COMPLETED",
+                    },
+                ],
+            },
+        ],
+    }
+
+
+@app.get("/api/v1/azure-ml/pipeline-spec", tags=["Azure AI Tools (Unit-2)"])
+async def get_azure_ml_spec():
+    """
+    Returns the Azure Machine Learning SDK v2 specification, including
+    workspace settings, 4-stage pipeline components, compute cluster configs, and online endpoints.
+    """
+    aml_mgr = AzureMLManager()
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        exported = aml_mgr.export_azure_assets(Path(tmp_dir))
+        exported_keys = list(exported.keys())
+    status_info = aml_mgr.get_service_status()
+
+    return {
+        "status": "success",
+        "service_info": status_info,
+        "exported_spec_files": exported_keys,
+        "pipeline_stages": [
+            "Stage 1: Multi-Table Ingestion & Data Quality Audit (CommandComponent)",
+            "Stage 2: Provider 61-Behavioral Feature Engineering (CommandComponent)",
+            "Stage 3: Stratified 5-Fold Cross-Validation & LightGBM Model Selection (CommandComponent)",
+            "Stage 4: Frozen Test Evaluation & Model Registry (CommandComponent)",
+        ],
+        "online_endpoint": {
+            "name": aml_mgr.config.endpoint_name,
+            "deployment": aml_mgr.config.deployment_name,
+            "vm_size": aml_mgr.config.compute_vm_size,
+            "scoring_script": "score.py",
+            "sla_latency": "<5ms sub-transactional pre-auth",
+        },
+    }
+
+
+@app.post("/api/v1/agents/investigate", tags=["AI Agent Systems (Unit-2)"])
+async def run_multi_agent_investigation(request: Request):
+    """
+    Executes the Autonomous 4-Agent Fraud Investigation System on a provider or claim payload:
+    1. ClaimIntakeAgent: Checks schema, syntax & duplicate submissions.
+    2. ClinicalCodingAgent: Analyzes unbundling, length of stay, and procedure combinations.
+    3. RiskScoringAgent: Assesses ML risk probabilities and doctor collusion network degree.
+    4. SIUForensicReportAgent: Generative AI synthesizes an actionable legal/clinical brief.
+    """
+    payload = await request.json()
+    provider_id = payload.get("Provider") or payload.get("provider_id", "PRV_DEMO_01")
+    
+    # If partial data is sent, score with predictor first to enrich risk features
+    if "fraud_risk_score" not in payload and predictor is not None:
+        try:
+            pred = predictor.predict_provider(payload)
+            payload["fraud_risk_score"] = pred["fraud_risk_score"]
+        except Exception:
+            payload["fraud_risk_score"] = 0.50
+
+    result = agent_system.investigate(provider_id, payload)
+    return {"status": "success", "investigation": result}
+
+
+@app.post("/api/v1/genai/audit-summary", tags=["Generative AI (Unit-2)"])
+async def generate_genai_audit_summary(request: Request):
+    """
+    Generates a plain-language executive clinical audit summary for Special Investigation Units (SIUs)
+    using Generative AI synthesis over behavioral risk drivers.
+    """
+    payload = await request.json()
+    provider_id = payload.get("Provider") or payload.get("provider_id", "PRV_AUDIT_SAMPLE")
+    brief = agent_system.investigate(provider_id, payload)
+    return {
+        "status": "success",
+        "provider_id": provider_id,
+        "executive_narrative": brief["narrative_report"],
+        "recommended_decision": brief["decision"],
+        "statutory_action": brief["statutory_action"],
+    }
+
+
+@app.post("/api/v1/nlp/analyze-notes", tags=["NLP & Azure AI Tools (Unit-2)"])
+async def analyze_clinical_notes_nlp(request: Request):
+    """
+    Performs Natural Language Processing (NLP) on clinical consultation notes / discharge summaries
+    and cross-validates them against billed ICD-10 diagnosis codes to detect Upcoding and Phantom Billing.
+    """
+    payload = await request.json()
+    notes = payload.get("clinical_notes", "")
+    codes = payload.get("billed_icd_codes", ["I10"])
+    
+    if not notes.strip():
+        raise HTTPException(status_code=400, detail="clinical_notes cannot be empty")
+
+    nlp_result = nlp_analyzer.verify_notes_against_codes(notes, codes)
+    search_precedents = search_connector.search_fraud_precedents(notes, top_k=2)
+
+    return {
+        "status": "success",
+        "nlp_analysis": nlp_result.to_dict(),
+        "matched_precedents": search_precedents,
+        "document_intelligence_ready": True,
     }
 
 

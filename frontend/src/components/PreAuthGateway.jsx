@@ -117,7 +117,7 @@ export default function PreAuthGateway({ onShowToast }) {
         <div className="page-header-title-box">
           <div className="syght-chip">
             <span className="chip-dot" />
-            Team Pulse Inline Interceptor
+             Inline Interceptor
           </div>
           <h1 className="syght-page-title">
             Sub-5ms Real-Time Pre-Authorization Gateway
