@@ -3,7 +3,7 @@ Azure Machine Learning (Azure ML) Integration Module for Syght.
 Implements Unit-2 Experiment 2: Azure ML SDK v2 Pipeline Definition,
 Compute Cluster Configuration, Model Registry, and Managed Online Endpoint Deployment.
 
-🔰 BEGINNER-FRIENDLY EXPLANATION (How Azure Machine Learning Works in Syght):
+🔰 Technical Overview (How Azure Machine Learning Works in Syght):
 --------------------------------------------------------------------------------
 1. What is Azure Machine Learning (Azure ML)?
    Azure ML is Microsoft's cloud platform for managing the entire machine learning lifecycle.

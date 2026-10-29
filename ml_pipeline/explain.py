@@ -59,8 +59,8 @@ INVESTIGATOR_FEATURE_DESCRIPTIONS: Dict[str, str] = {
     "mean_op_annual_reimbursement": "Average annual outpatient Medicare reimbursement across patient panel",
 }
 
-# 🔰 Beginner-friendly, plain-language explanations of feature metrics
-BEGINNER_FEATURE_EXPLANATIONS: Dict[str, str] = {
+# 🔰 Clear, plain-language explanations of feature metrics
+PLAIN_FEATURE_EXPLANATIONS: Dict[str, str] = {
     "n_claims": "Total insurance bills submitted. An abnormally high count often signals high-speed bill churning.",
     "n_inpatient_claims": "Overnight hospital admissions. Highly expensive; often inflated to pocket large payouts.",
     "n_outpatient_claims": "Day clinic visits. Can be multiplied through repeated unnecessary follow-up visits.",
@@ -109,10 +109,10 @@ def get_investigator_description(feature_name: str) -> str:
     return INVESTIGATOR_FEATURE_DESCRIPTIONS.get(clean_name, clean_name.replace("_", " ").title())
 
 
-def get_beginner_feature_explanation(feature_name: str) -> str:
-    """Translates a raw feature name into an easy, beginner-friendly explanation."""
+def get_plain_feature_explanation(feature_name: str) -> str:
+    """Translates a raw feature name into an easy, Technical Overview."""
     clean_name = feature_name.split("__")[-1]
-    return BEGINNER_FEATURE_EXPLANATIONS.get(
+    return PLAIN_FEATURE_EXPLANATIONS.get(
         clean_name,
         f"Behavioral indicator measuring {clean_name.replace('_', ' ')} across provider billing records."
     )
@@ -198,7 +198,7 @@ class SyghtExplainer:
             df = self._compute_native_global_importance(names)
 
         df["description"] = df["feature"].apply(get_investigator_description)
-        df["easy_explanation"] = df["feature"].apply(get_beginner_feature_explanation)
+        df["easy_explanation"] = df["feature"].apply(get_plain_feature_explanation)
         df["effect"] = df["direction"].apply(
             lambda d: "Increases Fraud Risk" if d > 0 else ("Lowers Fraud Risk" if d < 0 else "Neutral")
         )
@@ -237,7 +237,7 @@ class SyghtExplainer:
     ) -> Dict[str, Any]:
         """
         Explains an individual provider prediction, generating human-readable
-        risk factors suitable for claims investigators and beginners.
+        risk factors suitable for claims investigators and auditors.
         """
         X_trans = self.preprocessor.transform(provider_row)
         names = self.feature_names
@@ -257,7 +257,7 @@ class SyghtExplainer:
                     contributions.append({
                         "feature": name,
                         "description": get_investigator_description(name),
-                        "easy_explanation": get_beginner_feature_explanation(name),
+                        "easy_explanation": get_plain_feature_explanation(name),
                         "observed_value": float(actual_val) if actual_val is not None and not pd.isna(actual_val) else None,
                         "shap_contribution": float(round(val, 4)),
                     })
@@ -271,7 +271,7 @@ class SyghtExplainer:
                 contributions.append({
                     "feature": name,
                     "description": get_investigator_description(name),
-                    "easy_explanation": get_beginner_feature_explanation(name),
+                    "easy_explanation": get_plain_feature_explanation(name),
                     "observed_value": float(actual_val) if actual_val is not None and not pd.isna(actual_val) else None,
                     "shap_contribution": 0.0,
                 })

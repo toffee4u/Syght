@@ -160,7 +160,7 @@ Sabhi 8 raw CSV files ab seedhe repository ke **`data/raw/`** folder me uploaded
 - **`Train-1542865627584.csv` (87 KB - 5,410 Providers)**: Ground truth forensic audit labels (`PotentialFraud = Yes / No`).
 - **`Test_*.csv` (Total 4 Files, ~26 MB)**: Independent held-out test partitions jo model evaluation ke aakhiri round ke liye frozen rakhe gaye hain.
 
-> 💡 **Beginners Ke Liye Aasan Explanation (Ye Raw Files Kya Hain?)**:
+> 💡 **Domain Overview (Ye Raw Files Kya Hain?)**:
 > Jaise kisi bade hospital me:
 > 1. **Inpatient file** = Bed Register (kaun kab ward me admit hua aur kab discharge hua).
 > 2. **Outpatient file** = OPD Diary (kaun dawai lene aaya aur chala gaya).
@@ -178,7 +178,7 @@ Syght me 5 real-world curated Indian healthcare portfolios shamil hain:
 4. **`diagnostic_lab_unbundling_syndicate.csv` (14 Labs, ₹3.92 Cr Exposure)**: Ek hi blood test ko 4 alag-alag bills me todkar (unbundling) government se 4 guna paisa nikalna.
 5. **`dialysis_chemotherapy_daycare_claims.csv` (12 Daycare Hubs, ₹4.65 Cr Exposure)**: Fake dialysis sessions aur phantom oncology injections jo paper par lagaye gaye par patient tak nahi pahunche.
 
-> 💡 **Beginner Note**: Real world me Indian government schemes me fraud karne ke tarike alag hote hain — jaise ICU me patient ko zabardasti roke rakhna ya fake dialysis bill karna. Syght in dono tarike ke frauds ko pakadne me expert hai.
+> 💡 **Clinical Note**: Real world me Indian government schemes me fraud karne ke tarike alag hote hain — jaise ICU me patient ko zabardasti roke rakhna ya fake dialysis bill karna. Syght in dono tarike ke frauds ko pakadne me expert hai.
 
 ---
 
@@ -286,7 +286,7 @@ Browser me automatically download hogi: **`syght_deployment_bundle.zip`**:
 
 Syght pipeline ko **5,660 healthcare providers** aur **571,018 claims** par train aur test kiya gaya hai. Iska auto-generated official report [`reports/benchmark_report.md`](reports/benchmark_report.md) me saved hai.
 
-### 🔰 Beginners Ke Liye Aasan Explanation: Model Training & Evaluation Kaise Hoti Hai?
+### 🔰 Technical Overview: Model Training & Evaluation Kaise Hoti Hai?
 
 Agar aap Machine Learning me naye hain, toh aasan shabdon me samjhein:
 

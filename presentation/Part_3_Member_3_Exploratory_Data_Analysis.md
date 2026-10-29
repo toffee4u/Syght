@@ -46,3 +46,4 @@
   - Unusually long hospitalizations for minor diagnoses to exhaust package caps.
 - **Pattern 3 (Doctor Collusion)**:
   - Single attending physicians generating almost all billing at multiple linked facilities.
+

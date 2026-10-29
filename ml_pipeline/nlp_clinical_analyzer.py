@@ -3,7 +3,7 @@ Natural Language Processing (NLP) & Azure AI Tools Integration for Healthcare Cl
 Implements Unit-2 Experiment 3: Exploring Generative AI, Natural Language Processing,
 and Azure AI Tools (Azure AI Document Intelligence & Azure AI Search).
 
-🔰 BEGINNER-FRIENDLY EXPLANATION (How NLP & Azure AI Tools Spot Fraud):
+🔰 Technical Overview (How NLP & Azure AI Tools Spot Fraud):
 --------------------------------------------------------------------------------
 1. Why do we need Natural Language Processing (NLP) in Medical Insurance?
    Over 70% of hospital records exist as unstructured text: doctor notes, discharge

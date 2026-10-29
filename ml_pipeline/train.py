@@ -4,7 +4,7 @@ leakage-free cross-validation, enforces baseline justification checks, and appli
 the 1-standard-error rule for model selection.
 
 --------------------------------------------------------------------------------
-🔰 BEGINNER-FRIENDLY EXPLANATION (How Model Training Works in Syght):
+🔰 Technical Overview (How Model Training Works in Syght):
 --------------------------------------------------------------------------------
 1. What is Model Training?
    Think of model training like training a rookie fraud investigator. We give the
@@ -68,7 +68,7 @@ class RuleBaselineClassifier(BaseEstimator, ClassifierMixin):
     Transparent heuristic baseline classifier that scores risk strictly proportional
     to a single billing indicator (e.g. claim count, total reimbursement).
 
-    🔰 Beginner Explanation:
+    📊 Technical Overview:
     This is a "rule of thumb" benchmark. For example, ranking hospitals purely by
     "who filed the most claims" or "who got the most money". We use this as a
     floor to guarantee that our smart AI models are genuinely smarter than a 1-line rule.
@@ -192,7 +192,7 @@ def evaluate_cv_candidates(
 
     Applies the 1-Standard-Error rule to select the best justified model.
 
-    🔰 Beginner Explanation:
+    📊 Technical Overview:
     This function hosts a "fair tournament" between all AI models:
     1. It runs 5 practice rounds (folds). In each round, 80% of providers train the model,
        and the remaining 20% test it.
@@ -353,7 +353,7 @@ def fit_final_model(
     """
     Fits the preprocessor and the selected model on the entire training set.
 
-    🔰 Beginner Explanation:
+    📊 Technical Overview:
     Once the best model (e.g. LightGBM) wins the tournament, this function trains
     it on the entire training dataset (all 4,000+ providers) so that it learns from
     every available piece of history before being saved for live production use.
@@ -392,7 +392,7 @@ def run_feature_ablation(
 
     Allows assessing whether behavioral features provide predictive signal beyond provider size.
 
-    🔰 Beginner Explanation:
+    📊 Technical Overview:
     "Feature Ablation" is an experiment where we blindfold the AI to certain information.
     For example: What if the AI can only see patient sickness? What if it can only see billing volume?
     What if it cannot see provider size at all and only sees behavior (like duplicate claims)?

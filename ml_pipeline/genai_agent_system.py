@@ -2,7 +2,7 @@
 Generative AI & AI Agent Systems for Health Insurance Fraud Investigation.
 Implements Unit-2 Experiment 2: Generative AI Models and AI Agent Systems.
 
-🔰 BEGINNER-FRIENDLY EXPLANATION (How AI Agents Work in Syght):
+🔰 Technical Overview (How AI Agents Work in Syght):
 --------------------------------------------------------------------------------
 1. What is an AI Agent System?
    Instead of a single monolithic script, an AI Agent System divides complex fraud

@@ -640,7 +640,7 @@ def get_docs_architecture_html() -> str:
 
       <div style="background: rgba(2, 132, 199, 0.05); border: 1px solid rgba(2, 132, 199, 0.2); border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;">
         <div style="font-weight: 700; color: #0284c7; font-size: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <span>🔰 Beginner-Friendly Explanation: How Model Training Works</span>
+          <span>🔰 Technical Overview: How Model Training Works</span>
         </div>
         <p style="font-size: 0.9rem; color: #334155; line-height: 1.55; margin-bottom: 0.5rem;">
           <strong>What is happening here?</strong> We train AI on past claims from 5,000+ hospitals. Rather than memorizing hospital names, the AI learns 61 subtle patterns (like impossible surgeon workloads or unnatural stay lengths).

@@ -83,7 +83,7 @@ All raw benchmark files are stored directly in **`data/raw/`** in this repositor
 | **`Test_Beneficiarydata-1542969243754.csv`** | 5.33 MB | 63,302 Patients | Independent held-out patient clinical profiles for frozen test evaluation. |
 | **`Test-1542969243754.csv`** | 15 KB | 1,041 Providers | Independent held-out provider test partition. |
 
-> 💡 **Easy Explanation for Beginners (What are these Raw Tables?)**:
+> 💡 **Domain Overview (Healthcare Claims Relational Structure)**:
 > Imagine a massive hospital system. The **Inpatient table** is the overnight bed register (when patients stayed in a ward). The **Outpatient table** is the day-clinic register (when patients saw a doctor and went home). The **Beneficiary table** is the patients' medical history (how old they are, what chronic illnesses they suffer from). The **Train table** is the teacher's answer key showing which hospitals were confirmed fraud and which were honest. Syght reads all these tables together to spot suspicious trends across time.
 
 ---
@@ -120,7 +120,7 @@ In addition to CMS Medicare data, Syght includes **5 curated, verified sample da
 - **Archetypes Covered:** Duplicate hemodialysis session billing (5x/week), high-cost oncology infusion phantom billing, and patient churn across sister clinics.
 - **Expected Decision:** Critical Priority Disbursement Freeze.
 
-> 💡 **Easy Explanation for Beginners (Why Indian Scheme Portfolios?)**:
+> 💡 **Domain Overview (Real-World Public Health Portfolios)**:
 > Medical fraud differs by geography. While international fraud often involves billing codes, fraud in government schemes like Ayushman Bharat PM-JAY frequently involves physical hospital tricks: keeping patients in the ICU for extra weeks to drain package balances, running "ghost" surgeries where one doctor claims to do 200 operations in a day, or splitting a single blood test into 4 separate bills to multiply government reimbursements. Syght tests both formats!
 
 ---
@@ -136,7 +136,7 @@ Syght provides real-world payloads so developers and hospital IT teams can test 
 ### 4. Bipartite Collusion Graph Network Topology Dataset
 - Generated from the cross-hospital bipartite graph ($G = (V_{\text{providers}} \cup V_{\text{physicians}}, E)$) containing **1,420 multi-facility edge networks**.
 - Captures shared clinician degree centrality, eigenvector centrality, clustering coefficients, and cross-facility shared physician ratios.
-- 💡 **Easy Explanation for Beginners**: Fraud rings don't operate in silos. Corrupt doctors frequently hop between multiple clinics to share referral kickbacks. Our network graph connects doctors and hospitals like a web of contacts, catching collusion syndicates that single-hospital audits miss!
+- 💡 **Operational Context**: Fraud rings don't operate in silos. Corrupt doctors frequently hop between multiple clinics to share referral kickbacks. Our network graph connects doctors and hospitals like a web of contacts, catching collusion syndicates that single-hospital audits miss!
 
 ---
 
@@ -221,7 +221,7 @@ flowchart TD
 
 ## 🏆 Official Model Performance (Frozen Test Set Audit)
 
-### 🔰 Beginner-Friendly Guide to Syght Model Training (Easy Explanation)
+### 🔰 Technical Guide to Syght Model Training
 
 If you are new to Machine Learning, here is what our model training pipeline actually does in simple words:
 
@@ -249,7 +249,7 @@ If you are new to Machine Learning, here is what our model training pipeline act
 
 ### 1. Cross-Validation Multi-Model Comparison (5-Fold Stratified CV)
 
-| Model Architecture | CV PR-AUC (Mean ± Std) | CV ROC-AUC (Mean ± Std) | Brier Calibration Loss | Selection Status | Beginner Summary |
+| Model Architecture | CV PR-AUC (Mean ± Std) | CV ROC-AUC (Mean ± Std) | Brier Calibration Loss | Selection Status | Technical Summary |
 |---|:---:|:---:|:---:|:---:|---|
 | `Rule_ClaimVolume` (Heuristic) | 0.4067 ± 0.0432 | 0.8072 ± 0.0151 | 0.0864 | Baseline | Simple rule: ranks solely by total claim count. |
 | `Rule_TotalReimbursed` (Heuristic) | 0.6732 ± 0.0398 | 0.9298 ± 0.0129 | 0.0793 | Strongest Baseline | Simple rule: ranks solely by total money received. |
