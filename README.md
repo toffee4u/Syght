@@ -68,7 +68,7 @@ The model is trained and evaluated on real-world multi-table healthcare claims:
 ### Pre-processing Steps:
 1. **Missing Values**: Imputed missing deductible amounts to `0.0`; encoded missing operating physicians as `'NONE'` to prevent 80% data loss in outpatient records.
 2. **Datetime Arithmetic**: Derived patient **Length of Stay (LOS)**: $\text{LengthOfStay} = \text{DischargeDt} - \text{AdmissionDt}$.
-3. **Distribution Normalization**: Financial reimbursements exhibit heavy right-skewness. Vectorized NumPy log-transformation was applied: $\text{Log\_Amount} = \log(1 + \max(\text{Amount}, 0))$.
+3. **Distribution Normalization**: Financial reimbursements exhibit heavy right-skewness. Vectorized NumPy log-transformation was applied: $\text{LogAmount} = \log(1 + \max(\text{Amount}, 0))$.
 
 ---
 

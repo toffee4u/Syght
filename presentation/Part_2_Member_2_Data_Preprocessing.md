@@ -32,7 +32,7 @@
   - Claim reimbursement amounts exhibit extreme right-skew (ranging from ₹0 to ₹10 Lakhs+).
   - Skewed distributions cause gradient instability and poor convergence during model training.
 - **Log1p Transformation**:
-  - Applied vectorized NumPy calculation: $\text{Log\_Amount} = \log(1 + \max(\text{Amount}, 0))$.
+  - Applied vectorized NumPy calculation: $\text{LogAmount} = \log(1 + \max(\text{Amount}, 0))$.
   - Transformed heavily skewed financial amounts into approximately normal bell-curve distributions.
 
 ---
