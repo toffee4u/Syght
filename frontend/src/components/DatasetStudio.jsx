@@ -18,9 +18,6 @@ import {
   ShieldCheck,
   Activity,
   Zap,
-  Copy,
-  Check,
-  Bot,
   FileText,
   Layers,
   ChevronDown,
@@ -52,32 +49,8 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
   const [filterTab, setFilterTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // AI Prompt & Data Formats state
-  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  // Supported Data Formats Guide state
   const [showFormatsGuide, setShowFormatsGuide] = useState(true);
-
-  // Pre-configured AI prompt to generate valid claims for Syght
-  const AI_GENERATION_PROMPT = `Generate a realistic dataset of 4 healthcare provider billing records for testing an AI health insurance fraud detection model (Syght).
-Include 2 legitimate community healthcare facilities and 2 fraudulent hospital syndicates (one phantom surgery mill with single-doctor monopoly, and one artificial ICU stay prolonging + duplicate claim unbundling syndicate).
-
-Please output pure tabular CSV format that can be saved directly into a file (.csv or .txt) and uploaded into the Syght file scanner:
-
-provider_id,provider_name,archetype,total_inpatient_surgeries,unique_attending_physicians,mean_inpatient_los,same_day_duplicate_rate,graph_degree_centrality,inpatient_reimbursed_sum,outpatient_reimbursed_sum,anomaly_indicators
-PRV_AI_01,Metro Surgical & ICU Specialty Center,Artificial ICU Prolongation & Duplicate Billing,380,2,18.4,0.28,0.88,9850000,450000,"Average ICU stay 18.4 days; 28% duplicate same-day procedures"
-PRV_AI_02,City Community Care Hospital,Compliant Primary Care Hospital,45,14,2.5,0.01,0.15,420000,180000,"Clean protocol-concordant billing across diverse physician roster"
-PRV_AI_03,Apex Phantom Laparoscopy Clinic,Phantom Surgery Mill & Single-Doctor Monopoly,320,1,3.2,0.18,0.94,12500000,210000,"Single surgeon billed 320 major operations; highly central collusion ring"
-PRV_AI_04,Rural Primary Health Kendra,Compliant Rural Health Network,12,8,2.1,0.00,0.08,150000,95000,"Normal primary consultations with 0% duplicate submissions"
-
-Output ONLY the CSV data above (or a valid JSON array of these objects). Do not include conversational text, pleasantries, or markdown explanation so it can be saved directly as a .csv, .txt, or .json file and uploaded to Syght.`;
-
-  const handleCopyAiPrompt = () => {
-    navigator.clipboard.writeText(AI_GENERATION_PROMPT);
-    setCopiedPrompt(true);
-    setTimeout(() => setCopiedPrompt(false), 2500);
-    if (onShowToast) {
-      onShowToast('AI prompt copied to clipboard! Paste it into ChatGPT, Gemini, or Claude, save output as .csv/.txt/.json, and upload below.', 'success');
-    }
-  };
 
   // Preset Scenarios (Unified 5 Multi-Dataset Cohorts)
   const PRESETS = [
@@ -482,67 +455,6 @@ Output ONLY the CSV data above (or a valid JSON array of these objects). Do not 
             <Sparkles size={15} />
             <span>Load 25-Case Benchmark</span>
           </button>
-        </div>
-      </div>
-
-      {/* Section 1: AI Prompt Generator (Direct Copy-and-Upload Flow) */}
-      <div className="ai-prompt-generator-card">
-        <div className="ai-prompt-header">
-          <div className="ai-prompt-title-group">
-            <div className="ai-prompt-icon-badge">
-              <Bot size={22} />
-            </div>
-            <div>
-              <div className="ai-prompt-title">
-                <span>Generate Synthetic Claims with AI (ChatGPT / Gemini / Claude)</span>
-                <span className="ai-ready-badge">Ready-to-Scan</span>
-              </div>
-              <p className="ai-prompt-desc">
-                Copy this pre-engineered prompt, paste it into any AI, save the generated data as a <strong>.txt, .csv, or .json</strong> file, and manually upload it below to test!
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleCopyAiPrompt}
-            className="ai-copy-btn"
-            title="Copy pre-engineered prompt to clipboard"
-          >
-            {copiedPrompt ? <Check size={16} className="text-emerald-300" /> : <Copy size={16} />}
-            <span>{copiedPrompt ? 'Copied to Clipboard!' : 'Copy AI Prompt'}</span>
-          </button>
-        </div>
-
-        {/* 4-Step Quick Instructions Bar */}
-        <div className="ai-prompt-steps-bar">
-          <div className="ai-step-pill">
-            <span className="ai-step-number">1</span>
-            <span className="ai-step-text">Click "Copy AI Prompt"</span>
-          </div>
-          <div className="ai-step-pill">
-            <span className="ai-step-number">2</span>
-            <span className="ai-step-text">Ask ChatGPT / Gemini / Claude</span>
-          </div>
-          <div className="ai-step-pill">
-            <span className="ai-step-number">3</span>
-            <span className="ai-step-text">Save as .csv, .txt, or .json</span>
-          </div>
-          <div className="ai-step-pill">
-            <span className="ai-step-number">4</span>
-            <span className="ai-step-text">Upload file in scanner below</span>
-          </div>
-        </div>
-
-        {/* Copyable Prompt Box Preview */}
-        <div className="ai-prompt-preview-box">
-          <div className="ai-prompt-preview-header">
-            <span>PRE-FORMULATED AI PROMPT (Ready to paste in any LLM)</span>
-            <span style={{ color: '#a78bfa' }}>Exports: .CSV, .TXT, or .JSON</span>
-          </div>
-          <p style={{ margin: 0, opacity: 0.9 }}>
-            {AI_GENERATION_PROMPT.slice(0, 240)}... [Click "Copy AI Prompt" for full prompt with schema]
-          </p>
         </div>
       </div>
 
