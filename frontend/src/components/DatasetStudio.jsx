@@ -54,136 +54,28 @@ export default function DatasetStudio({ onInspectCase, onShowToast, onRunComplet
 
   // AI Prompt & Data Formats state
   const [copiedPrompt, setCopiedPrompt] = useState(false);
-  const [showPasteBox, setShowPasteBox] = useState(false);
-  const [pastedContent, setPastedContent] = useState('');
   const [showFormatsGuide, setShowFormatsGuide] = useState(true);
 
   // Pre-configured AI prompt to generate valid claims for Syght
-  const AI_GENERATION_PROMPT = `Generate a realistic JSON array of 4 healthcare provider billing records for testing an AI health insurance fraud detection model (Syght).
+  const AI_GENERATION_PROMPT = `Generate a realistic dataset of 4 healthcare provider billing records for testing an AI health insurance fraud detection model (Syght).
 Include 2 legitimate community healthcare facilities and 2 fraudulent hospital syndicates (one phantom surgery mill with single-doctor monopoly, and one artificial ICU stay prolonging + duplicate claim unbundling syndicate).
 
-Return STRICTLY a valid JSON array matching this format (no conversational filler, no markdown codeblocks):
-[
-  {
-    "provider_id": "PRV_AI_01",
-    "provider_name": "Metro Surgical & ICU Specialty Center",
-    "archetype": "Artificial ICU Prolongation & Duplicate Billing",
-    "total_inpatient_surgeries": 380,
-    "unique_attending_physicians": 2,
-    "mean_inpatient_los": 18.4,
-    "same_day_duplicate_rate": 0.28,
-    "graph_degree_centrality": 0.88,
-    "inpatient_reimbursed_sum": 9850000,
-    "outpatient_reimbursed_sum": 450000,
-    "anomaly_indicators": "Average ICU stay 18.4 days (regional baseline 2.1 days); 28% duplicate same-day procedures"
-  },
-  {
-    "provider_id": "PRV_AI_02",
-    "provider_name": "City Community Care Hospital",
-    "archetype": "Compliant Primary Care Hospital",
-    "total_inpatient_surgeries": 45,
-    "unique_attending_physicians": 14,
-    "mean_inpatient_los": 2.5,
-    "same_day_duplicate_rate": 0.01,
-    "graph_degree_centrality": 0.15,
-    "inpatient_reimbursed_sum": 420000,
-    "outpatient_reimbursed_sum": 180000,
-    "anomaly_indicators": "Clean protocol-concordant billing across diverse physician roster"
-  },
-  {
-    "provider_id": "PRV_AI_03",
-    "provider_name": "Apex Phantom Laparoscopy Clinic",
-    "archetype": "Phantom Surgery Mill & Single-Doctor Monopoly",
-    "total_inpatient_surgeries": 320,
-    "unique_attending_physicians": 1,
-    "mean_inpatient_los": 3.2,
-    "same_day_duplicate_rate": 0.18,
-    "graph_degree_centrality": 0.94,
-    "inpatient_reimbursed_sum": 12500000,
-    "outpatient_reimbursed_sum": 210000,
-    "anomaly_indicators": "Single surgeon billed 320 major operations; highly central collusion ring"
-  },
-  {
-    "provider_id": "PRV_AI_04",
-    "provider_name": "Rural Primary Health Kendra",
-    "archetype": "Compliant Rural Health Network",
-    "total_inpatient_surgeries": 12,
-    "unique_attending_physicians": 8,
-    "mean_inpatient_los": 2.1,
-    "same_day_duplicate_rate": 0.00,
-    "graph_degree_centrality": 0.08,
-    "inpatient_reimbursed_sum": 150000,
-    "outpatient_reimbursed_sum": 95000,
-    "anomaly_indicators": "Normal primary consultations with 0% duplicate submissions"
-  }
-]`;
+Please output pure tabular CSV format that can be saved directly into a file (.csv or .txt) and uploaded into the Syght file scanner:
+
+provider_id,provider_name,archetype,total_inpatient_surgeries,unique_attending_physicians,mean_inpatient_los,same_day_duplicate_rate,graph_degree_centrality,inpatient_reimbursed_sum,outpatient_reimbursed_sum,anomaly_indicators
+PRV_AI_01,Metro Surgical & ICU Specialty Center,Artificial ICU Prolongation & Duplicate Billing,380,2,18.4,0.28,0.88,9850000,450000,"Average ICU stay 18.4 days; 28% duplicate same-day procedures"
+PRV_AI_02,City Community Care Hospital,Compliant Primary Care Hospital,45,14,2.5,0.01,0.15,420000,180000,"Clean protocol-concordant billing across diverse physician roster"
+PRV_AI_03,Apex Phantom Laparoscopy Clinic,Phantom Surgery Mill & Single-Doctor Monopoly,320,1,3.2,0.18,0.94,12500000,210000,"Single surgeon billed 320 major operations; highly central collusion ring"
+PRV_AI_04,Rural Primary Health Kendra,Compliant Rural Health Network,12,8,2.1,0.00,0.08,150000,95000,"Normal primary consultations with 0% duplicate submissions"
+
+Output ONLY the CSV data above (or a valid JSON array of these objects). Do not include conversational text, pleasantries, or markdown explanation so it can be saved directly as a .csv, .txt, or .json file and uploaded to Syght.`;
 
   const handleCopyAiPrompt = () => {
     navigator.clipboard.writeText(AI_GENERATION_PROMPT);
     setCopiedPrompt(true);
     setTimeout(() => setCopiedPrompt(false), 2500);
     if (onShowToast) {
-      onShowToast('AI prompt copied to clipboard! Paste it into ChatGPT, Gemini, or Claude to generate test data.', 'success');
-    }
-  };
-
-  const handleLoadAiSampleDirectly = () => {
-    try {
-      const match = AI_GENERATION_PROMPT.match(/\[\s*\{[\s\S]*\}\s*\]/);
-      if (!match) return;
-      const sampleRows = JSON.parse(match[0]);
-      setActiveDataset({
-        name: 'AI_Generated_Healthcare_Portfolio.json',
-        type: 'AI-Generated (Simulated)',
-        size: '2.8 KB',
-        rows: sampleRows,
-        rawContent: JSON.stringify(sampleRows, null, 2),
-      });
-      setSelectedPresetKey(null);
-      setTestResults(null);
-      setShowDataPreview(true);
-      if (onShowToast) {
-        onShowToast('Loaded 4 AI-generated benchmark cases! Click "Run Model" to scan.', 'success');
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleScanPastedData = () => {
-    const trimmed = pastedContent.trim();
-    if (!trimmed) {
-      if (onShowToast) onShowToast('Please paste valid JSON or CSV data into the box first.', 'warning');
-      return;
-    }
-    try {
-      let parsedRows = [];
-      if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
-        const json = JSON.parse(trimmed);
-        parsedRows = Array.isArray(json) ? json : json.records || json.claims || [json];
-      } else {
-        parsedRows = parseCsvText(trimmed);
-      }
-      if (parsedRows.length === 0) throw new Error('No valid records parsed');
-      setActiveDataset({
-        name: 'Pasted_AI_Data.json',
-        type: 'AI-Generated (Custom)',
-        size: `${(trimmed.length / 1024).toFixed(1)} KB`,
-        rows: parsedRows,
-        rawContent: trimmed,
-      });
-      setSelectedPresetKey(null);
-      setTestResults(null);
-      setShowDataPreview(true);
-      setShowPasteBox(false);
-      setPastedContent('');
-      if (onShowToast) {
-        onShowToast(`Successfully loaded ${parsedRows.length} records from pasted AI output!`, 'success');
-      }
-    } catch (err) {
-      if (onShowToast) {
-        onShowToast(`Failed to parse pasted data: ${err.message}. Ensure it is a valid JSON array or CSV.`, 'danger');
-      }
+      onShowToast('AI prompt copied to clipboard! Paste it into ChatGPT, Gemini, or Claude, save output as .csv/.txt/.json, and upload below.', 'success');
     }
   };
 
@@ -593,219 +485,65 @@ Return STRICTLY a valid JSON array matching this format (no conversational fille
         </div>
       </div>
 
-      {/* Section 1: Supported Data Types & Format Scanner Guide */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 mb-5 shadow-sm">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600 font-bold">
-              <Layers size={18} />
+      {/* Section 1: AI Prompt Generator (Direct Copy-and-Upload Flow) */}
+      <div className="ai-prompt-generator-card">
+        <div className="ai-prompt-header">
+          <div className="ai-prompt-title-group">
+            <div className="ai-prompt-icon-badge">
+              <Bot size={22} />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-900 tracking-tight font-sans">
-                Supported Data Formats & What Syght Model Can Scan
-              </h2>
-              <p className="text-xs text-slate-500 font-sans">
-                Our calibrated LightGBM model and Pre-Auth Gateway scan multi-dimensional healthcare records across 4 primary formats:
+              <div className="ai-prompt-title">
+                <span>Generate Synthetic Claims with AI (ChatGPT / Gemini / Claude)</span>
+                <span className="ai-ready-badge">Ready-to-Scan</span>
+              </div>
+              <p className="ai-prompt-desc">
+                Copy this pre-engineered prompt, paste it into any AI, save the generated data as a <strong>.txt, .csv, or .json</strong> file, and manually upload it below to test!
               </p>
             </div>
           </div>
+
           <button
             type="button"
-            onClick={() => setShowFormatsGuide(!showFormatsGuide)}
-            className="text-xs font-mono text-slate-500 hover:text-slate-800 flex items-center gap-1 bg-slate-50 hover:bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 transition-colors"
+            onClick={handleCopyAiPrompt}
+            className="ai-copy-btn"
+            title="Copy pre-engineered prompt to clipboard"
           >
-            <span>{showFormatsGuide ? 'Collapse Guide' : 'Expand Guide'}</span>
-            {showFormatsGuide ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            {copiedPrompt ? <Check size={16} className="text-emerald-300" /> : <Copy size={16} />}
+            <span>{copiedPrompt ? 'Copied to Clipboard!' : 'Copy AI Prompt'}</span>
           </button>
         </div>
 
-        {showFormatsGuide && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
-            {/* Card 1: Provider Feature Vectors */}
-            <div className="p-3.5 rounded-lg border border-slate-100 bg-slate-50/60 hover:bg-white hover:border-sky-300 transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold font-mono text-sky-700 bg-sky-100/70 px-2 py-0.5 rounded">
-                  .CSV / .JSON
-                </span>
-                <Database size={15} className="text-sky-600" />
-              </div>
-              <h3 className="text-xs font-bold text-slate-900 mb-1">
-                1. Provider Billing Feature Sets
-              </h3>
-              <p className="text-[11px] text-slate-600 leading-relaxed mb-2">
-                Aggregated longitudinal provider records containing 61 behavioral features: surgery counts, physician monopoly ratios, ICU stays, and same-day duplicate rates.
-              </p>
-              <div className="text-[10px] font-mono text-slate-500 bg-white p-1.5 rounded border border-slate-200/70">
-                Key fields: Provider, n_claims, total_reimbursed, mean_inpatient_los, top_physician_concentration
-              </div>
-            </div>
-
-            {/* Card 2: Itemized Claims Batches */}
-            <div className="p-3.5 rounded-lg border border-slate-100 bg-slate-50/60 hover:bg-white hover:border-emerald-300 transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold font-mono text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded">
-                  .JSON / .TXT
-                </span>
-                <FileText size={15} className="text-emerald-600" />
-              </div>
-              <h3 className="text-xs font-bold text-slate-900 mb-1">
-                2. Itemized Claims Batch Exports
-              </h3>
-              <p className="text-[11px] text-slate-600 leading-relaxed mb-2">
-                Multi-patient hospital claims batches with diagnosis (ICD-10) codes, procedure (CPT) codes, admission dates, and claimed amounts for HMIS data dumps.
-              </p>
-              <div className="text-[10px] font-mono text-slate-500 bg-white p-1.5 rounded border border-slate-200/70">
-                Key fields: ClaimID, BeneID, DiagnosisCodes, ProcedureCodes, ClaimAmtReimbursed
-              </div>
-            </div>
-
-            {/* Card 3: Real-Time Pre-Auth Gateways */}
-            <div className="p-3.5 rounded-lg border border-slate-100 bg-slate-50/60 hover:bg-white hover:border-purple-300 transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold font-mono text-purple-700 bg-purple-100/70 px-2 py-0.5 rounded">
-                  JSON REST API
-                </span>
-                <Zap size={15} className="text-purple-600" />
-              </div>
-              <h3 className="text-xs font-bold text-slate-900 mb-1">
-                3. Real-Time Pre-Auth Requests
-              </h3>
-              <p className="text-[11px] text-slate-600 leading-relaxed mb-2">
-                Single admission payloads scored sub-5ms at the point of care before discharge, instantly returning Auto-Approval or SIU investigation flags.
-              </p>
-              <div className="text-[10px] font-mono text-slate-500 bg-white p-1.5 rounded border border-slate-200/70">
-                Key fields: provider_id, beneficiary_id, requested_amount, diagnosis_codes
-              </div>
-            </div>
-
-            {/* Card 4: Clinical Consultation Notes */}
-            <div className="p-3.5 rounded-lg border border-slate-100 bg-slate-50/60 hover:bg-white hover:border-amber-300 transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-bold font-mono text-amber-700 bg-amber-100/70 px-2 py-0.5 rounded">
-                  Clinical NLP
-                </span>
-                <FileSpreadsheet size={15} className="text-amber-600" />
-              </div>
-              <h3 className="text-xs font-bold text-slate-900 mb-1">
-                4. Doctor Notes & Discharge Text
-              </h3>
-              <p className="text-[11px] text-slate-600 leading-relaxed mb-2">
-                Unstructured physician consultation narratives parsed by clinical NLP to detect Upcoding (billing severe sepsis for mild cold) and Phantom Billing.
-              </p>
-              <div className="text-[10px] font-mono text-slate-500 bg-white p-1.5 rounded border border-slate-200/70">
-                Key fields: clinical_notes narrative text, billed_icd_codes validation array
-              </div>
-            </div>
+        {/* 4-Step Quick Instructions Bar */}
+        <div className="ai-prompt-steps-bar">
+          <div className="ai-step-pill">
+            <span className="ai-step-number">1</span>
+            <span className="ai-step-text">Click "Copy AI Prompt"</span>
           </div>
-        )}
-      </div>
-
-      {/* Section 2: AI Prompt Generator & Direct Paste Scanner Card */}
-      <div className="bg-gradient-to-r from-purple-50/70 via-indigo-50/40 to-sky-50/60 border border-purple-200/80 rounded-xl p-5 mb-5 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold shadow-sm shadow-purple-300">
-              <Bot size={18} />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-slate-900 font-sans">
-                  Generate Synthetic Claims with AI (ChatGPT / Gemini / Claude)
-                </h2>
-                <span className="bg-purple-100 text-purple-700 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-purple-200">
-                  Ready-to-Scan
-                </span>
-              </div>
-              <p className="text-xs text-slate-600 font-sans">
-                Copy this pre-engineered prompt, paste it into any AI model, and paste or upload the generated JSON below to scan instantly with the Syght model!
-              </p>
-            </div>
+          <div className="ai-step-pill">
+            <span className="ai-step-number">2</span>
+            <span className="ai-step-text">Ask ChatGPT / Gemini / Claude</span>
           </div>
-
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              type="button"
-              onClick={handleCopyAiPrompt}
-              className="syght-btn-primary text-xs flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white shadow-sm"
-              title="Copy pre-engineered prompt to clipboard"
-            >
-              {copiedPrompt ? <Check size={14} className="text-emerald-300" /> : <Copy size={14} />}
-              <span>{copiedPrompt ? 'Copied to Clipboard!' : 'Copy AI Prompt'}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowPasteBox(!showPasteBox)}
-              className="syght-btn-secondary text-xs flex items-center gap-1.5"
-              title="Paste AI response directly into webapp"
-            >
-              <FileText size={14} />
-              <span>{showPasteBox ? 'Hide Paste Box' : 'Paste AI Data Directly'}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleLoadAiSampleDirectly}
-              className="syght-btn-secondary text-xs flex items-center gap-1.5 text-purple-700 border-purple-200 hover:bg-purple-50"
-              title="Load 4 pre-generated AI sample cases instantly"
-            >
-              <Sparkles size={14} className="text-purple-600" />
-              <span>Load AI Sample (1-Click)</span>
-            </button>
+          <div className="ai-step-pill">
+            <span className="ai-step-number">3</span>
+            <span className="ai-step-text">Save as .csv, .txt, or .json</span>
+          </div>
+          <div className="ai-step-pill">
+            <span className="ai-step-number">4</span>
+            <span className="ai-step-text">Upload file in scanner below</span>
           </div>
         </div>
 
         {/* Copyable Prompt Box Preview */}
-        <div className="bg-slate-900 text-slate-200 rounded-lg p-3 text-xs font-mono relative overflow-hidden border border-slate-800">
-          <div className="flex items-center justify-between text-[11px] text-slate-400 pb-1.5 mb-1.5 border-b border-slate-800">
-            <span>PRE-FORMULATED AI PROMPT (Click "Copy AI Prompt" above to use in ChatGPT / Claude / Gemini)</span>
-            <span className="text-purple-400 font-semibold">Targets: Clean vs Phantom Surgeries vs ICU Prolongation</span>
+        <div className="ai-prompt-preview-box">
+          <div className="ai-prompt-preview-header">
+            <span>PRE-FORMULATED AI PROMPT (Ready to paste in any LLM)</span>
+            <span style={{ color: '#a78bfa' }}>Exports: .CSV, .TXT, or .JSON</span>
           </div>
-          <p className="text-slate-300 line-clamp-2 leading-relaxed">
-            {AI_GENERATION_PROMPT.slice(0, 240)}... [Click "Copy AI Prompt" for full schema prompt]
+          <p style={{ margin: 0, opacity: 0.9 }}>
+            {AI_GENERATION_PROMPT.slice(0, 240)}... [Click "Copy AI Prompt" for full prompt with schema]
           </p>
         </div>
-
-        {/* Expandable Direct Paste Textarea */}
-        {showPasteBox && (
-          <div className="mt-4 pt-4 border-t border-purple-200/60">
-            <label className="block text-xs font-bold text-slate-800 mb-1.5 font-sans">
-              Paste the AI-Generated JSON Array or CSV Text Here:
-            </label>
-            <textarea
-              rows={6}
-              value={pastedContent}
-              onChange={(e) => setPastedContent(e.target.value)}
-              placeholder="Paste JSON array starting with [ { 'provider_id': ... } ] or CSV rows here..."
-              className="w-full text-xs font-mono bg-white border border-purple-200 rounded-lg p-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <div className="flex items-center justify-between mt-2.5">
-              <span className="text-[11px] text-slate-500 font-mono">
-                Supports raw JSON arrays or comma/tab-delimited text
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPastedContent('');
-                    setShowPasteBox(false);
-                  }}
-                  className="syght-btn-secondary text-xs"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleScanPastedData}
-                  className="syght-btn-primary text-xs flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
-                >
-                  <Play size={13} fill="currentColor" />
-                  <span>Load & Scan Pasted AI Data →</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Unified Dataset Upload & Model Execution Master Card */}
@@ -1419,6 +1157,120 @@ Return STRICTLY a valid JSON array matching this format (no conversational fille
           </div>
         </div>
       )}
+      {/* Section: Supported Data Formats & What Syght Model Can Scan (Placed at Bottom) */}
+      <div className="supported-formats-section">
+        <div className="supported-formats-header">
+          <div className="supported-formats-title-group">
+            <div className="supported-formats-icon-badge">
+              <Layers size={20} />
+            </div>
+            <div>
+              <h2 className="supported-formats-title">
+                Supported Data Formats & What Syght Model Can Scan
+              </h2>
+              <p className="supported-formats-subtitle">
+                Our calibrated LightGBM model and Pre-Auth Gateway scan multi-dimensional healthcare records across 4 primary formats:
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowFormatsGuide(!showFormatsGuide)}
+            className="supported-formats-toggle-btn"
+          >
+            <span>{showFormatsGuide ? 'Collapse Guide' : 'Expand Guide'}</span>
+            {showFormatsGuide ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+        </div>
+
+        {showFormatsGuide && (
+          <div className="supported-formats-grid">
+            {/* Card 1: Provider Feature Vectors */}
+            <div className="format-item-card">
+              <div>
+                <div className="format-item-top">
+                  <span className="format-badge cyan">.CSV / .JSON</span>
+                  <div className="format-item-icon cyan">
+                    <Database size={15} />
+                  </div>
+                </div>
+                <h3 className="format-item-title">
+                  1. Provider Billing Feature Sets
+                </h3>
+                <p className="format-item-desc">
+                  Aggregated longitudinal provider records containing 61 behavioral features: surgery counts, physician monopoly ratios, ICU stays, and same-day duplicate rates.
+                </p>
+              </div>
+              <div className="format-key-fields">
+                <strong>Key fields:</strong> Provider, n_claims, total_reimbursed, mean_inpatient_los, top_physician_concentration
+              </div>
+            </div>
+
+            {/* Card 2: Itemized Claims Batches */}
+            <div className="format-item-card">
+              <div>
+                <div className="format-item-top">
+                  <span className="format-badge emerald">.JSON / .TXT</span>
+                  <div className="format-item-icon emerald">
+                    <FileText size={15} />
+                  </div>
+                </div>
+                <h3 className="format-item-title">
+                  2. Itemized Claims Batch Exports
+                </h3>
+                <p className="format-item-desc">
+                  Multi-patient hospital claims batches with diagnosis (ICD-10) codes, procedure (CPT) codes, admission dates, and claimed amounts for HMIS data dumps.
+                </p>
+              </div>
+              <div className="format-key-fields">
+                <strong>Key fields:</strong> ClaimID, BeneID, DiagnosisCodes, ProcedureCodes, ClaimAmtReimbursed
+              </div>
+            </div>
+
+            {/* Card 3: Real-Time Pre-Auth Gateways */}
+            <div className="format-item-card">
+              <div>
+                <div className="format-item-top">
+                  <span className="format-badge purple">JSON REST API</span>
+                  <div className="format-item-icon purple">
+                    <Zap size={15} />
+                  </div>
+                </div>
+                <h3 className="format-item-title">
+                  3. Real-Time Pre-Auth Requests
+                </h3>
+                <p className="format-item-desc">
+                  Single admission payloads scored sub-5ms at the point of care before discharge, instantly returning Auto-Approval or SIU investigation flags.
+                </p>
+              </div>
+              <div className="format-key-fields">
+                <strong>Key fields:</strong> provider_id, beneficiary_id, requested_amount, diagnosis_codes
+              </div>
+            </div>
+
+            {/* Card 4: Clinical Consultation Notes */}
+            <div className="format-item-card">
+              <div>
+                <div className="format-item-top">
+                  <span className="format-badge amber">Clinical NLP</span>
+                  <div className="format-item-icon amber">
+                    <FileSpreadsheet size={15} />
+                  </div>
+                </div>
+                <h3 className="format-item-title">
+                  4. Doctor Notes & Discharge Text
+                </h3>
+                <p className="format-item-desc">
+                  Unstructured physician consultation narratives parsed by clinical NLP to detect Upcoding (billing severe sepsis for mild cold) and Phantom Billing.
+                </p>
+              </div>
+              <div className="format-key-fields">
+                <strong>Key fields:</strong> clinical_notes narrative text, billed_icd_codes validation array
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
