@@ -1,5 +1,4 @@
 # Test Suite
-<!-- Student Academic Project: Pytest Suite for Backend & Syllabus Validation -->
 
 Automated testing suite ensuring model reliability, endpoint performance, and curriculum compliance:
 - **`test_fastapi_backend.py`**: Validates FastAPI endpoints, pre-auth scoring gateway, SHAP waterfall outputs, and dataset scanner.

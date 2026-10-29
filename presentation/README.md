@@ -1,7 +1,5 @@
 # Healthcare Insurance Fraud Detection Platform
 ## Presentation Guide & Syllabus Mapping (5-Member Team)
-<!-- Student Academic Project: Team Presentation Deck -->
-
 ---
 
 ### Team Presentation Structure & Member Roles

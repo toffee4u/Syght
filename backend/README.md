@@ -1,5 +1,4 @@
 # Backend Services
-<!-- Student Academic Project: Healthcare Insurance Fraud Detection (FastAPI Backend) -->
 
 FastAPI REST backend providing endpoints for:
 - Real-time pre-authorization fraud evaluation (`/api/v1/preauth/evaluate`)

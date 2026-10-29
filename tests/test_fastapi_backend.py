@@ -1,4 +1,3 @@
-# Student Academic Project: Pytest Suite for Backend Endpoints
 """
 Unit tests for FastAPI Production Gateway (backend/main.py).
 """

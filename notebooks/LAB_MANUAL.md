@@ -1,4 +1,4 @@
-# 📘 Academic Lab Manual & Syllabus Compliance Guide
+# 📘 Healthcare Insurance Fraud Detection — Lab Experiments Manual
 ## Healthcare Insurance Fraud Detector Platform (Project Syght)
 
 ---
@@ -288,9 +288,9 @@ Over 70% of clinical data exists as unstructured doctor text. Fraud occurs when 
 
 ---
 
-## 🏁 Summary of Academic Compliance
+## 🏁 Summary of Lab Experiments
 
-Project Syght provides 100% compliance with every experiment in the syllabus:
+Summary of syllabus experiments implemented in Project Syght:
 - **7 Executable Jupyter Notebooks** located in `notebooks/experiments/`
 - **Production Backend Endpoints** in `backend/main.py`
 - **Zero-Dependency Simulation & Real Datasets** (558k CMS claims & PM-JAY portfolios)

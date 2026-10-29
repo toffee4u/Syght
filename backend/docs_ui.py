@@ -1008,7 +1008,7 @@ def get_docs_syllabus_html() -> str:
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
       <span class="syllabus-badge badge-unit1">Unit-1: AIML Algorithms</span>
       <span class="syllabus-badge badge-unit2">Unit-2: Azure AI Tools</span>
-      <span class="status-pill">● 100% Academic Syllabus Compliance</span>
+      <span class="status-pill">● Verified Lab Implementation</span>
     </div>
 
     <h1>Course Syllabus & Practical Lab Curriculum</h1>
@@ -1103,7 +1103,7 @@ POST /api/v1/nlp/analyze-notes
   </main>
 
   <footer class="docs-footer">
-    Syght Enterprise Platform &bull; Academic Syllabus Compliance &bull; 2026
+    Syght Healthcare Fraud Detection Platform &bull; 2026
   </footer>
 </body>
 </html>

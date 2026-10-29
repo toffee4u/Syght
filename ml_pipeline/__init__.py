@@ -1,4 +1,3 @@
-# Student Academic Project: Machine Learning Pipeline for Fraud Detection
 """
 Syght: Explainable Healthcare Insurance Fraud-Risk Detection Pipeline.
 

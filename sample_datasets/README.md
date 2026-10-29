@@ -1,5 +1,3 @@
-<!-- Student Academic Project: Sample Test Datasets -->
-
 # Syght Sample Healthcare Datasets for Model Testing
 
 This directory contains verified sample healthcare datasets, claims payloads, and plain-text export files designed for testing Syght's Multi-Model Machine Learning Engine (LightGBM 1-SE, HistGradientBoosting, Random Forest, ElasticNet, and Bipartite Collusion Graph Network).

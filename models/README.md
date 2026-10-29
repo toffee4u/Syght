@@ -1,5 +1,3 @@
-<!-- Student Academic Project: Serialized Model Directory -->
-
 # Syght Model Artifacts Directory
 
 This directory stores serialized model binaries, preprocessor pipelines, and metadata produced by the Syght ML training pipeline.

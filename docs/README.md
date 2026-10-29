@@ -1,8 +1,7 @@
-# Project Documentation & Lab Manuals
-<!-- Student Academic Project: Healthcare Insurance Fraud Detection Docs -->
+# Project Documentation
 
-Academic documentation and laboratory guides:
-- **`SYLLABUS_LAB_MANUAL.md`**: Complete lab manual with detailed breakdown of all Unit-1 and Unit-2 experiments.
-- **`pipeline_architecture.md`**: Architectural design of the feature engineering pipeline and model training flow.
-- **`dataset_and_benchmark.md`**: Benchmark evaluation metrics, PR-AUC curves, and class imbalance handling notes.
+This directory contains technical architecture and reference documentation for the project:
 
+- **`pipeline_architecture.md`**: Technical design of data ingestion, feature transformation, model inference, and web architecture.
+- **`dataset_and_benchmark.md`**: Notes on dataset structures, class imbalance handling, and evaluation metrics (PR-AUC, ROC-AUC).
+- **`reference_repositories.md`**: Academic references, datasets, and baseline research literature.

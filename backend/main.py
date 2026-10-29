@@ -1,4 +1,3 @@
-# Student Academic Project: Healthcare Insurance Fraud Detection (FastAPI Backend)
 """
 Syght Enterprise Healthcare Fraud Detection API.
 FastAPI Production Gateway with SHAP Explainability & Real-Time Pre-Auth.
@@ -616,7 +615,7 @@ async def predict_custom_dataset(request: Request):
 
 
 # ==============================================================================
-# Syllabus Compliance & Azure AI / GenAI Agent Endpoints (Unit-1 & Unit-2)
+# Lab Experiments & Azure AI / GenAI Agent Endpoints (Unit-1 & Unit-2)
 # ==============================================================================
 from ml_pipeline.azure_ml_integration import AzureMLConfig, AzureMLManager
 from ml_pipeline.genai_agent_system import HealthFraudAgentSystem
@@ -632,7 +631,7 @@ doc_intelligence = AzureAIDocumentIntelligenceConnector()
 search_connector = AzureAISearchConnector()
 
 
-@app.get("/api/v1/syllabus/curriculum", tags=["Syllabus Compliance & Coursework"])
+@app.get("/api/v1/syllabus/curriculum", tags=["Lab Experiments & Curriculum"])
 async def get_syllabus_curriculum():
     """
     Returns official syllabus alignment metadata for Unit-1 and Unit-2.

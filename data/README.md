@@ -1,5 +1,4 @@
 # Data Directory
-<!-- Student Academic Project: Healthcare Insurance Claims Data -->
 
 Contains healthcare claims datasets used for model training, feature extraction, and testing:
 - **Inpatient Data**: Hospitalization admission/discharge dates, procedure codes, and reimbursements.

@@ -1,5 +1,4 @@
 # Utility Scripts
-<!-- Student Academic Project: Healthcare Insurance Fraud Detection Helper Scripts -->
 
 Helpful scripts for data setup and sample batch generation:
 - **`download_dataset.py`**: Automated script to download and extract raw healthcare insurance claims data.

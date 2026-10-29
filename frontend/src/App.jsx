@@ -1,4 +1,3 @@
-// Student Academic Project: Healthcare Insurance Fraud Detection Web Dashboard
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import Header from './components/Header';

@@ -1,5 +1,4 @@
 # Frontend Web Dashboard
-<!-- Student Academic Project: React Web Application (Vite + Tailwind CSS) -->
 
 Modern, responsive web dashboard built with React 19, Vite, and Tailwind CSS:
 - **Command Center**: Real-time fraud metrics, volume gauges, and risk distributions.

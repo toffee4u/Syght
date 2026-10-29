@@ -1,4 +1,3 @@
-# Student Academic Project: Dataset Download Helper Script
 """
 Syght Healthcare Fraud Dataset Downloader.
 Downloads and verifies official CMS Medicare Provider Fraud Benchmark dataset from Kaggle.

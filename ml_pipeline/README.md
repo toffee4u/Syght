@@ -1,5 +1,4 @@
 # Machine Learning Pipeline
-<!-- Student Academic Project: Healthcare Insurance Fraud Detection ML Engine -->
 
 Core Python pipeline modules for feature engineering, model training, and Azure AI tools:
 - **Feature Engineering**: Calculates 61 provider-level forensic behavioral features from multi-table claims data.
