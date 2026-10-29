@@ -128,7 +128,7 @@ def test_custom_docs_and_redoc_endpoints(client):
     assert docs_resp.status_code == 200
     assert "text/html" in docs_resp.headers["content-type"]
     assert "SwaggerUIBundle" in docs_resp.text
-    assert "" in docs_resp.text
+    assert "Team Pulse" in docs_resp.text
     assert "Syght Healthcare Fraud Intelligence API" in docs_resp.text
 
     redoc_resp = client.get("/redoc")

@@ -89,7 +89,7 @@ export default function Header({
   return (
     <header className="syght-header">
       <nav aria-label="Main Navigation" className="syght-navbar">
-        {/* Brand &  Tag */}
+        {/* Brand & Team Pulse Tag */}
         <div className="navbar-brand-cluster">
           <a 
             href="/command"
@@ -98,7 +98,7 @@ export default function Header({
               e.preventDefault();
               handleSelectTab('tab-dashboard', '/command');
             }}
-            title="Syght — Enterprise Fraud Detection Platform"
+            title="Syght — Team Pulse Enterprise Fraud Detection"
           >
             <div className="brand-gem-container">
               <IconSyghtLogo size={22} className="brand-gem-icon" />
@@ -110,6 +110,12 @@ export default function Header({
               </div>
             </div>
           </a>
+
+          {/* Team Pulse Signature Badge */}
+          <div className="team-pulse-pill" title="Engineered by Team Pulse">
+            <span className="pulse-dot-beacon" />
+            <span className="team-pulse-label">Team Pulse</span>
+          </div>
         </div>
 
         {/* Center Pill Nav (Desktop: >= 1150px) */}
@@ -200,6 +206,10 @@ export default function Header({
               <div className="mobile-drawer-brand">
                 <IconSyghtLogo size={22} />
                 <span className="mobile-brand-title">SYGHT</span>
+                <span className="team-pulse-pill compact">
+                  <span className="pulse-dot-beacon" />
+                  Team Pulse
+                </span>
               </div>
               <button 
                 type="button" 

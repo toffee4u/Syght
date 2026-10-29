@@ -454,7 +454,7 @@ export default function App() {
         <div className="footer-giant-brand-section">
           <div className="footer-giant-brand-halo" />
           <div className="footer-giant-brand-text">
-            SYGHT FRAUD RADAR
+            TEAM PULSE
           </div>
           <p className="footer-giant-brand-caption">
             Health Insurance Fraud Detector Engine
@@ -467,7 +467,7 @@ export default function App() {
               <span className="footer-brand-title">SYGHT</span>
               <span className="team-pulse-pill compact">
                 <span className="pulse-dot-beacon" />
-                
+                Team Pulse
               </span>
             </div>
             <p className="footer-brand-desc">
@@ -475,7 +475,7 @@ export default function App() {
               Designed for SIU audit teams to intercept fraudulent claims in sub-5ms with full SHAP transparency.
             </p>
             <div className="footer-copyright font-mono">
-              © 2026 Syght Project • All Rights Reserved.
+              © 2026 Team Pulse (Syght Project) • All Rights Reserved.
             </div>
           </div>
 

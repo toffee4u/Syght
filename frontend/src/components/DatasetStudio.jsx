@@ -450,7 +450,7 @@ Output ONLY the CSV data above (or a valid JSON array of these objects). Do not 
         <div className="page-header-title-box">
           <div className="syght-chip">
             <span className="chip-dot" />
-            ML Inference Engine • LightGBM + TreeSHAP
+            Team Pulse ML Inference Engine • LightGBM + TreeSHAP
           </div>
           <h1 className="syght-page-title">
             Custom Dataset Studio & Batch Model Runner

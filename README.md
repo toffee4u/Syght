@@ -1,6 +1,9 @@
 # 🩺 Syght — Healthcare Insurance Fraud Detection System
 
-> An Explainable Machine Learning & Real-Time Pre-Authorization Fraud Detection Platform.
+[![Team: Team Pulse](https://img.shields.io/badge/Team-Team%20Pulse-7928CA?style=for-the-badge)](#)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](#)
+
+> Engineered by **Team Pulse** • Explainable Machine Learning & Real-Time Pre-Authorization Fraud Detection Platform.
 
 ---
 

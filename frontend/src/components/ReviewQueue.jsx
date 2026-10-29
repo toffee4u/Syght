@@ -58,7 +58,7 @@ export default function ReviewQueue({
         <div className="page-header-title-box">
           <div className="syght-chip">
             <span className="chip-dot" />
-             Worklist
+            Team Pulse Worklist
           </div>
           <h1 className="syght-page-title">
             Priority Review Queue & Auditor Worklist

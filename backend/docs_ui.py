@@ -404,7 +404,7 @@ def _get_navbar_html(active_tab: str = "api") -> str:
 
 def get_custom_docs_html(
     openapi_url: str = "/openapi.json",
-    title: str = "Syght Enterprise API —  Documentation",
+    title: str = "Syght Enterprise API — Team Pulse Documentation",
 ) -> str:
     """Generates an ultra-premium, custom-styled Swagger UI HTML page matching Syght's UI."""
     return f"""<!DOCTYPE html>
@@ -524,7 +524,7 @@ def get_custom_docs_html(
   <header class="docs-hero-section">
     <div class="hero-glow-halo"></div>
     <div class="docs-hero-chip">
-      <span> • Health Insurance Fraud Detector Portal</span>
+      <span>Team Pulse • Health Insurance Fraud Detector Portal</span>
     </div>
     <h1 class="docs-hero-title">Syght Health Insurance Fraud Detector API</h1>
     <p class="docs-hero-tagline">
@@ -561,7 +561,7 @@ def get_custom_docs_html(
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Enterprise</strong> — Engineered with pride by <strong></strong>.</div>
+      <div><strong>Syght Enterprise</strong> — Engineered with pride by <strong>Team Pulse</strong>.</div>
       <div>Ayushman Bharat PM-JAY & National Health Authority (NHA) Aligned Architecture.</div>
     </div>
   </footer>
@@ -717,7 +717,7 @@ result = predictor.predict_provider(claim_features, provider_id=<span style="col
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Architecture Documentation</strong> •  Engineering</div>
+      <div><strong>Syght Architecture Documentation</strong> • Team Pulse Engineering</div>
       <div><a href="/docs" style="color: #0284c7; text-decoration: none;">← Return to Interactive Swagger</a></div>
     </div>
   </footer>
@@ -803,7 +803,7 @@ def get_docs_archetypes_html() -> str:
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Forensic Archetypes</strong> •  Engineering</div>
+      <div><strong>Syght Forensic Archetypes</strong> • Team Pulse Engineering</div>
       <div><a href="/docs" style="color: #0284c7; text-decoration: none;">← Return to Interactive Swagger</a></div>
     </div>
   </footer>
@@ -922,7 +922,7 @@ def get_docs_benchmark_html() -> str:
 
   <footer class="docs-footer">
     <div class="docs-footer-inner">
-      <div><strong>Syght Benchmark Suite</strong> •  Engineering</div>
+      <div><strong>Syght Benchmark Suite</strong> • Team Pulse Engineering</div>
       <div><a href="/docs" style="color: #0284c7; text-decoration: none;">← Return to Interactive Swagger</a></div>
     </div>
   </footer>
@@ -933,7 +933,7 @@ def get_docs_benchmark_html() -> str:
 
 def get_custom_redoc_html(
     openapi_url: str = "/openapi.json",
-    title: str = "Syght Enterprise API —  ReDoc Console",
+    title: str = "Syght Enterprise API — Team Pulse ReDoc Console",
 ) -> str:
     """Generates an ultra-premium ReDoc HTML documentation page."""
     return f"""<!DOCTYPE html>

@@ -86,7 +86,7 @@ class PreAuthClaimResponse(BaseModel):
 class HealthCheckResponse(BaseModel):
     status: str
     version: str
-    team: str = ""
+    team: str = "Team Pulse"
     model_loaded: bool
     selected_model: Optional[str]
     decision_threshold: Optional[float]

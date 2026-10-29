@@ -434,7 +434,7 @@ export default function CommandCenter({
         <div className="hero-content-cluster">
           <div className="hero-pill-badge">
             <span className="beacon-emerald" />
-            <span className="hero-pill-text"> Engineering • Health Insurance Fraud Detector</span>
+            <span className="hero-pill-text">Team Pulse Engineering • Health Insurance Fraud Detector</span>
           </div>
 
           <h1 className="hero-headline">
@@ -1024,7 +1024,7 @@ export default function CommandCenter({
               <p className="panel-subtitle-text">Real-time throughput, model lift, and SLA compliance</p>
             </div>
           </div>
-          <span className="syght-chip font-mono"> Live</span>
+          <span className="syght-chip font-mono">Team Pulse Live</span>
         </div>
 
         <div className="multi-progress-grid">

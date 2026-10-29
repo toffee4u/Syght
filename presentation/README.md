@@ -1,5 +1,5 @@
 # Healthcare Insurance Fraud Detection Platform
-## Presentation Guide & Syllabus Mapping (5-Member Team)
+## Presentation Guide & Syllabus Mapping (Team Pulse — 5 Members)
 ---
 
 ### Team Presentation Structure & Member Roles
