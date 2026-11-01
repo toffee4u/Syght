@@ -1017,7 +1017,7 @@ def get_docs_syllabus_html() -> str:
       providing 7 dedicated experiment notebooks, production Python modules, and comprehensive Viva Voce questions with answers.
     </p>
 
-    <h2>📋 Syllabus Alignment Matrix</h2>
+    <h2>📋 Practical Syllabus Experiments</h2>
     <table class="docs-table">
       <thead>
         <tr>
@@ -1033,49 +1033,49 @@ def get_docs_syllabus_html() -> str:
           <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
           <td><strong>Exp 1</strong></td>
           <td>Introduction to Data Pre-processing, Pandas, NumPy & Matplotlib for Data Analysis</td>
-          <td><code>ml_pipeline/data_audit.py</code><br><code>notebooks/experiments/Experiment_1...ipynb</code></td>
+          <td><code>ml_pipeline/data_audit.py</code><br><code>notebooks/syght_syllabus_model_training.ipynb</code></td>
           <td><span class="status-pill">COMPLETED</span></td>
         </tr>
         <tr>
           <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
           <td><strong>Exp 2</strong></td>
           <td>Perform exploratory data analysis (EDA) on a real-world dataset to identify patterns, correlations, and trends using descriptive statistics and visualizations</td>
-          <td><code>ml_pipeline/visualization.py</code><br><code>notebooks/experiments/Experiment_2...ipynb</code></td>
+          <td><code>ml_pipeline/visualization.py</code><br><code>notebooks/syght_syllabus_model_training.ipynb</code></td>
           <td><span class="status-pill">COMPLETED</span></td>
         </tr>
         <tr>
           <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
           <td><strong>Exp 3</strong></td>
           <td>Understand supervised learning to train and develop classifier models</td>
-          <td><code>ml_pipeline/split.py</code><br><code>notebooks/experiments/Experiment_3...ipynb</code></td>
+          <td><code>ml_pipeline/split.py</code><br><code>notebooks/syght_syllabus_model_training.ipynb</code></td>
           <td><span class="status-pill">COMPLETED</span></td>
         </tr>
         <tr>
           <td><span class="syllabus-badge badge-unit1">Unit-1</span></td>
           <td><strong>Exp 4</strong></td>
           <td>Build a classification model by using different machine learning algorithms</td>
-          <td><code>ml_pipeline/train.py</code> (7 ML Models + 1-SE Rule)<br><code>notebooks/experiments/Experiment_4...ipynb</code></td>
+          <td><code>ml_pipeline/train.py</code> (7 ML Models + 1-SE Rule)<br><code>notebooks/syght_syllabus_model_training.ipynb</code></td>
           <td><span class="status-pill">COMPLETED</span></td>
         </tr>
         <tr>
           <td><span class="syllabus-badge badge-unit2">Unit-2</span></td>
           <td><strong>Exp 1</strong></td>
           <td>Introduction to Artificial Intelligence and Machine Learning Concepts</td>
-          <td>Foundations of AI/ML in Health Fraud, Fairness & Ethics<br><code>notebooks/experiments/Experiment_5...ipynb</code></td>
+          <td>Foundations of AI/ML in Health Fraud, Fairness & Ethics<br><code>notebooks/syght_syllabus_model_training.ipynb</code></td>
           <td><span class="status-pill">COMPLETED</span></td>
         </tr>
         <tr>
           <td><span class="syllabus-badge badge-unit2">Unit-2</span></td>
           <td><strong>Exp 2</strong></td>
           <td>Understanding Azure Machine Learning, Generative AI Models, and AI Agent Systems</td>
-          <td><code>ml_pipeline/azure_ml_integration.py</code><br><code>ml_pipeline/genai_agent_system.py</code><br><code>notebooks/experiments/Experiment_6...ipynb</code></td>
+          <td><code>ml_pipeline/azure_ml_integration.py</code><br><code>ml_pipeline/genai_agent_system.py</code><br><code>notebooks/syght_syllabus_model_training.ipynb</code></td>
           <td><span class="status-pill">COMPLETED</span></td>
         </tr>
         <tr>
           <td><span class="syllabus-badge badge-unit2">Unit-2</span></td>
           <td><strong>Exp 3</strong></td>
           <td>Exploring Generative AI, Natural Language Processing and Azure AI Tools</td>
-          <td><code>ml_pipeline/nlp_clinical_analyzer.py</code> (Doc Intelligence & Search)<br><code>notebooks/experiments/Experiment_7...ipynb</code></td>
+          <td><code>ml_pipeline/nlp_clinical_analyzer.py</code> (Doc Intelligence & Search)<br><code>notebooks/syght_syllabus_model_training.ipynb</code></td>
           <td><span class="status-pill">COMPLETED</span></td>
         </tr>
       </tbody>

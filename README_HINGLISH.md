@@ -58,10 +58,10 @@ Model ko real-world claims data par train kiya gaya hai:
 
 ## 📓 Notebooks & Lab Manual
 
-Sabhi experimental notebooks aur lab manual [`notebooks/`](notebooks/) folder me available hain:
-- **`notebooks/experiments/`**: Data Pre-processing, EDA, Classifier Models, Azure ML, aur Clinical NLP ke individual notebooks.
-- **`notebooks/syght_model_training.ipynb`**: Complete end-to-end training notebook.
-- **`notebooks/LAB_MANUAL.md`**: Theoretical background, algorithms, aur viva questions with answers.
+Project me do main master notebooks aur comprehensive lab manual [`notebooks/`](notebooks/) folder me available hain:
+- **`notebooks/syght_syllabus_model_training.ipynb`**: University syllabus ke according banaya gaya master training notebook. Isme pure ~558,000 claims dataset par direct file upload (bina kisi Kaggle API ya GitHub auth ke), Unit-1 (Exp 1.1-1.4) aur Unit-2 (Exp 2.1-2.3) ke according model training, 12 ML algorithms benchmark, aur Google Colab par direct testing ke liye interactive studio shamil hai.
+- **`notebooks/syght_model_training.ipynb`**: Pure production 19-stage machine learning training notebook (academic syllabus text bina).
+- **`notebooks/LAB_MANUAL.md`**: Theoretical background, algorithms, methodologies, aur viva questions with verified answers.
 
 ---
 

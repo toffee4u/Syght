@@ -1,14 +1,38 @@
-# Jupyter Notebooks & Lab Experiments
+# Jupyter Notebooks & Lab Manual
 
-This directory contains all experimental notebooks and the lab manual for the Healthcare Insurance Fraud Detection project:
+This directory contains the two primary notebooks and practical manual for the Healthcare Insurance Fraud Detection project (**Project Syght**):
 
-- **`experiments/`**: Dedicated notebooks for individual lab experiments:
-  - `Experiment_1_Data_Preprocessing_Pandas_NumPy_Matplotlib.ipynb` (Unit-1 Exp 1: Data Pre-processing, Pandas, NumPy, Matplotlib)
-  - `Experiment_2_Exploratory_Data_Analysis_EDA.ipynb` (Unit-1 Exp 2: Exploratory Data Analysis, Descriptive Statistics & Patterns)
-  - `Experiment_3_Supervised_Learning_Classifier_Development.ipynb` (Unit-1 Exp 3: Supervised Learning & Classifier Development)
-  - `Experiment_4_Multi_Algorithm_Classification_Benchmark.ipynb` (Unit-1 Exp 4: Multi-Algorithm Benchmark & Model Selection)
-  - `Experiment_5_AI_ML_Concepts_Healthcare_Fraud.ipynb` (Unit-2 Exp 1: AI/ML Concepts, Imbalance, Fairness)
-  - `Experiment_6_Azure_ML_Generative_AI_and_AI_Agents.ipynb` (Unit-2 Exp 2: Azure ML SDK v2 Pipeline & GenAI Agents)
-  - `Experiment_7_Generative_AI_NLP_and_Azure_AI_Tools.ipynb` (Unit-2 Exp 3: Clinical NLP & Azure AI Tools)
-- **`syght_model_training.ipynb`**: End-to-end master training notebook covering data ingestion, feature engineering, model training, cross-validation, and LightGBM model export.
-- **`LAB_MANUAL.md`**: Complete lab manual with theoretical background, step-by-step methodology, expected outputs, and viva questions with answers.
+## 🌟 The Two Primary Notebooks
+
+1. **`syght_syllabus_model_training.ipynb` (Syllabus Lab Training & Interactive Colab Testing Engine)**
+   - **Official Syllabus Implementation**: Strictly follows the practical curriculum for **Unit-1 (Experiments 1.1–1.4)** and **Unit-2 (Experiments 2.1–2.3)**.
+   - **Direct Dataset Upload (Zero API Keys / Zero Auth Required)**: Anyone can simply upload their dataset files (or a `.zip` archive) directly in Google Colab or local environment without requiring any Kaggle API setup or GitHub authentication.
+   - **Full Dataset Training**: Trains across all 5,410 healthcare providers and ~558,000 inpatient, outpatient, and beneficiary claims.
+   - **12 ML Algorithm 10-Fold CV Benchmark**: Benchmarks all 12 syllabus algorithms (`LightGBM`, `GradientBoosting`, `RandomForest`, `ExtraTrees`, `AdaBoost`, `LogisticRegression`, `RidgeClassifier`, `LinearDiscriminantAnalysis`, `DecisionTree`, `KNN`, `GaussianNB`, `Dummy`) with execution times `TT (Sec)`.
+   - **Direct Model Testing Studio on Google Colab**:
+     - *Test 1: Interactive Provider Risk Scanner & Live Adjudication* (with plain-language SHAP drivers and 4-Agent dossiers)
+     - *Test 2: Custom Facility / Claim Simulation Sandbox* (test custom claims and billing metrics)
+     - *Test 3: Full Holdout Test Set Batch Evaluation* (with confusion matrix and metric reports)
+     - *Test 4: One-Click Model Bundle & Deployment Zip Packaging* (triggers automatic browser download in Colab)
+   - **Viva Voce Q&A**: Includes verified viva voce questions and answers for every lab experiment.
+
+2. **`syght_model_training.ipynb` (Clean Production Model Training & Export Engine)**
+   - **Pure Industrial ML Training**: Stripped of syllabus/academic coursework text, focusing purely on industrial-grade ML engineering.
+   - **Full Dataset Training**: Loads all 5,410 providers and ~558,000 claims from `data/raw` or uploaded archive.
+   - **19 Production Stages**:
+     - Pre-flight quality audit
+     - 58 behavioral engineered features
+     - Zero-leakage provider partitioning (80/20)
+     - 5-Fold Stratified Cross-Validation across 7 ML candidates and heuristic rule baselines
+     - 1-SE model selection & feature group ablation
+     - Hyperparameter tuning & out-of-fold threshold optimization
+     - Single-pass frozen test set evaluation with 95% bootstrap confidence intervals
+     - Global SHAP feature attribution & plain-language reason codes
+     - Operational queue simulation
+     - Automated export of `syght_model_bundle.joblib` and `syght_deployment_bundle.zip`
+
+---
+
+## 📘 Laboratory Documentation
+
+- **`LAB_MANUAL.md`**: Formal lab experiments manual containing experiment aims, theoretical backgrounds, step-by-step methodologies on the full dataset, mathematical formulations, and viva voce questions with verified answers.

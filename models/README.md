@@ -6,7 +6,7 @@ This directory stores serialized model binaries, preprocessor pipelines, and met
 
 ## 1. Storage Guidelines & Git Governance
 
-- **Do Not Commit Large Binaries**: Raw `.joblib`, `.pkl`, and `.bin` model files are strictly excluded from git tracking via [.gitignore](file:///c:/toffee/Syght/.gitignore).
+- **Do Not Commit Large Binaries**: Raw `.joblib`, `.pkl`, and `.bin` model files are strictly excluded from git tracking via [.gitignore](../.gitignore).
 - **Deployment Artifact Bundles**: When trained in Google Colab, the pipeline packages:
   - `syght_model_bundle.joblib`
   - `benchmark_report.md`

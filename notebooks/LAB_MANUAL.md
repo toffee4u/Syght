@@ -1,21 +1,17 @@
-# 📘 Healthcare Insurance Fraud Detection — Lab Experiments Manual
+# 📘 Healthcare Insurance Fraud Detection — Practical Lab Experiments Manual
 ## Healthcare Insurance Fraud Detector Platform (Project Syght)
 
 ---
 
-## 📌 Course Curriculum & Syllabus Alignment Matrix
+This laboratory manual documents the complete set of practical experiments for **Healthcare Insurance Fraud Detection** (covering **Unit-1: Data Pre-processing and AIML Algorithms** and **Unit-2: AI Concepts, Generative AI & Natural Language Processing**).
 
-This project directly fulfills the prescribed university/practical curriculum for **Data Pre-processing, AIML Algorithms, and Azure AI Tools**. Every experiment listed in the syllabus has an end-to-end, reproducible implementation, an interactive Jupyter Notebook, production Python modules, and comprehensive Viva Voce questions with answers.
+All experiments operate directly on the real-world Centers for Medicare & Medicaid Services (CMS) claims dataset (~558,000 inpatient, outpatient, and beneficiary records across 5,410 healthcare providers).
 
-| Syllabus Unit | Experiment No. | Official Syllabus Course Content / Experiment Title | Project Syght Implementation & Artifacts | Primary Technologies & Libraries | Status |
-|:---:|:---:|---|---|---|:---:|
-| **Unit-1** | **Exp 1** | **Introduction to Data Pre-processing, Pandas, NumPy & Matplotlib for Data Analysis** | [Experiment 1 Notebook](file:///c:/toffee/Syght/notebooks/experiments/Experiment_1_Data_Preprocessing_Pandas_NumPy_Matplotlib.ipynb)<br>`ml_pipeline/data_audit.py`<br>`ml_pipeline/preprocessing.py` | Python 3.11, Pandas, NumPy, Matplotlib | **100% Complete** |
-| **Unit-1** | **Exp 2** | **Perform exploratory data analysis (EDA) on a real-world dataset to identify patterns, correlations, and trends using descriptive statistics and visualizations** | [Experiment 2 Notebook](file:///c:/toffee/Syght/notebooks/experiments/Experiment_2_Exploratory_Data_Analysis_EDA.ipynb)<br>`reports/figures/`<br>`ml_pipeline/visualization.py` | Pandas, Seaborn, Matplotlib, SciPy | **100% Complete** |
-| **Unit-1** | **Exp 3** | **Understand supervised learning to train and develop classifier models** | [Experiment 3 Notebook](file:///c:/toffee/Syght/notebooks/experiments/Experiment_3_Supervised_Learning_Classifier_Development.ipynb)<br>`ml_pipeline/split.py`<br>`ml_pipeline/evaluate.py` | Scikit-Learn, PR-AUC, ROC-AUC, Stratified K-Fold | **100% Complete** |
-| **Unit-1** | **Exp 4** | **Build a classification model by using different machine learning algorithms** | [Experiment 4 Notebook](file:///c:/toffee/Syght/notebooks/experiments/Experiment_4_Multi_Algorithm_Classification_Benchmark.ipynb)<br>`ml_pipeline/train.py`<br>`reports/benchmark_report.md` | LightGBM, XGBoost, Random Forest, Logistic Reg, 1-SE Rule | **100% Complete** |
-| **Unit-2** | **Exp 1** | **Introduction to Artificial Intelligence and Machine Learning Concepts** | [Experiment 5 Notebook](file:///c:/toffee/Syght/notebooks/experiments/Experiment_5_AI_ML_Concepts_Healthcare_Fraud.ipynb)<br>`docs/pipeline_architecture.md` | Theoretical AI/ML, Bias-Variance, Fairness Ethics | **100% Complete** |
-| **Unit-2** | **Exp 2** | **Understanding Azure Machine Learning, Generative AI Models, and AI Agent Systems** | [Experiment 6 Notebook](file:///c:/toffee/Syght/notebooks/experiments/Experiment_6_Azure_ML_Generative_AI_and_AI_Agents.ipynb)<br>`ml_pipeline/azure_ml_integration.py`<br>`ml_pipeline/genai_agent_system.py` | Azure ML SDK v2, Azure OpenAI GPT-4, 4-Agent Orchestrator | **100% Complete** |
-| **Unit-2** | **Exp 3** | **Exploring Generative AI, Natural Language Processing and Azure AI Tools** | [Experiment 7 Notebook](file:///c:/toffee/Syght/notebooks/experiments/Experiment_7_Generative_AI_NLP_and_Azure_AI_Tools.ipynb)<br>`ml_pipeline/nlp_clinical_analyzer.py` | Clinical NLP, Azure AI Document Intelligence, Azure AI Search | **100% Complete** |
+### 📓 Execution Options:
+1. **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb)  
+   Contains the complete, unified, end-to-end syllabus pipeline from data ingestion to model training, multi-algorithm benchmarking, AI concepts, and an interactive **Google Colab Testing Studio** to evaluate facilities, inspect live SHAP drivers, and download the trained deployment bundle.
+2. **Clean Production Pipeline Notebook**: [`notebooks/syght_model_training.ipynb`](syght_model_training.ipynb)  
+   Contains the pure 19-stage industrial machine learning pipeline without academic coursework annotations.
 
 ---
 
@@ -23,11 +19,11 @@ This project directly fulfills the prescribed university/practical curriculum fo
 
 ---
 
-## 🔬 Experiment No. 1
+## 🔬 Experiment 1.1 (CO1, CO2)
 ### Title: Introduction to Data Pre-processing, Pandas, NumPy & Matplotlib for Data Analysis
 
 ### 1. Aim:
-To perform data ingestion, schema validation, missing value imputation, type transformations, NumPy vectorized operations, and exploratory plotting using Matplotlib on multi-table healthcare insurance claims data.
+To perform data ingestion, schema validation, missing value imputation, type transformations, NumPy vectorized mathematical operations, and exploratory plotting using Matplotlib on multi-table healthcare insurance claims data.
 
 ### 2. Theoretical Background:
 Real-world healthcare insurance datasets are fragmented across relational databases:
@@ -43,15 +39,16 @@ Pre-processing must handle:
 
 ### 3. Step-by-Step Methodology:
 1. Load CSV tables using `pandas.read_csv()`.
-2. Compute null value frequencies: `df.isnull().sum() / len(df) * 100`.
-3. Impute missing numerical values (`DeductibleAmtPaid`) with 0.0 and missing categorical strings with `"NONE"`.
-4. Parse date fields into `datetime64[ns]` and calculate integer days for Length of Stay.
-5. Apply NumPy vectorization `np.log1p(np.maximum(df['InscClaimAmtReimbursed'], 0.0))` to normalize reimbursement.
-6. Plot raw vs log-transformed distributions using Matplotlib histograms.
+2. Inspect table structures via `.info()`, `.head()`, and `.describe()`.
+3. Compute null value frequencies: `df.isnull().sum() / len(df) * 100`.
+4. Impute missing numerical values (`DeductibleAmtPaid`) with `0.0` and missing categorical strings with `"NONE"`.
+5. Parse date fields into `datetime64[ns]` and calculate integer days for Length of Stay.
+6. Apply NumPy vectorization `np.log1p(np.maximum(df['InscClaimAmtReimbursed'], 0.0))` to normalize reimbursement.
+7. Plot multi-panel Matplotlib figures: line trends, grouped bars, pie charts, and raw vs log-transformed histograms.
 
 ### 4. Code & Implementation:
-- **Notebook**: `notebooks/experiments/Experiment_1_Data_Preprocessing_Pandas_NumPy_Matplotlib.ipynb`
-- **Module**: `ml_pipeline/data_audit.py` & `ml_pipeline/preprocessing.py`
+- **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb) (Experiment 1.1 Section)
+- **Python Modules**: `ml_pipeline/data_audit.py` & `ml_pipeline/preprocessing.py`
 
 ### 5. Viva Voce Questions & Answers:
 - **Q1: Why is $\log(1+x)$ (`np.log1p`) preferred over $\log(x)$?**  
@@ -63,7 +60,7 @@ Pre-processing must handle:
 
 ---
 
-## 🔬 Experiment No. 2
+## 🔬 Experiment 1.2 (CO2)
 ### Title: Perform Exploratory Data Analysis (EDA) on a Real-World Dataset to Identify Patterns, Correlations, and Trends Using Descriptive Statistics and Visualizations
 
 ### 1. Aim:
@@ -83,8 +80,8 @@ Fraudulent behavior in healthcare rarely appears in isolation on a single bill; 
 4. Visualize same-day duplicate patient submission rates across legitimate and suspicious facilities.
 
 ### 4. Code & Implementation:
-- **Notebook**: `notebooks/experiments/Experiment_2_Exploratory_Data_Analysis_EDA.ipynb`
-- **Module**: `ml_pipeline/visualization.py`
+- **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb) (Experiment 1.2 Section)
+- **Python Module**: `ml_pipeline/visualization.py`
 
 ### 5. Viva Voce Questions & Answers:
 - **Q1: Why is standard accuracy a deceptive metric in imbalanced fraud detection?**  
@@ -96,32 +93,33 @@ Fraudulent behavior in healthcare rarely appears in isolation on a single bill; 
 
 ---
 
-## 🔬 Experiment No. 3
+## 🔬 Experiment 1.3 (CO3)
 ### Title: Understand Supervised Learning to Train and Develop Classifier Models
 
 ### 1. Aim:
 To formulate the healthcare fraud problem as a supervised binary classification task, implement zero-leakage stratified provider partitioning, and evaluate classifier performance under severe class imbalance using PR-AUC, ROC-AUC, F1-Score, and Cost-Utility matrices.
 
 ### 2. Theoretical Background:
-In supervised learning, we learn a mapping function $f: X \to y$, where $X \in \mathbb{R}^{n \times 61}$ is the engineered behavioral feature matrix and $y \in \{0, 1\}$ represents audit outcome.
+In supervised learning, we learn a mapping function $f: X \to y$, where $X \in \mathbb{R}^{n \times 58}$ is the engineered behavioral feature matrix and $y \in \{0, 1\}$ represents audit outcome.
 
 **Critical Principles**:
 1. **Zero Data Leakage (Provider Grouping)**: Splitting must occur strictly at the Provider level. If patient claims from Provider `PRV51001` appear in both training and test folds, the classifier overfits by memorizing provider specific IDs rather than learning generic fraud signatures.
-2. **Stratified 5-Fold Cross-Validation**: Folds must maintain the exact 9.56% positive base rate across all 5 splits.
+2. **Stratified 10-Fold Cross-Validation**: Folds must maintain the exact positive base rate across all 10 splits.
 3. **Metric Hierarchy**:
    $$\text{Precision} = \frac{TP}{TP + FP}, \quad \text{Recall} = \frac{TP}{TP + FN}, \quad F_1 = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$$
    $$\text{PR-AUC} = \int_{0}^{1} P(R) \, dR \quad (\text{Primary Metric for Fraud})$$
 
 ### 3. Step-by-Step Methodology:
 1. Split data into 80% train and 20% frozen test using `StratifiedKFold`.
-2. Fit standard preprocessing (imputation, standard scaling) strictly on training folds to prevent distribution leakage.
-3. Train Logistic Regression with inverse class-weighting (`class_weight='balanced'`).
-4. Generate out-of-fold probability predictions $\hat{p} \in [0, 1]$.
-5. Compute Precision, Recall, F1, PR-AUC, ROC-AUC, Brier score, and plot the Precision-Recall curve.
+2. Fit standard preprocessing (median imputation, standard scaling) strictly on training folds to prevent distribution leakage.
+3. Train Gaussian Naive Bayes (`GaussianNB`) as a reference probabilistic classifier.
+4. Evaluate 10-Fold Stratified Cross-Validation out-of-fold predictions.
+5. Compute Precision, Recall, F1, PR-AUC, ROC-AUC, MCC, and Cohen's Kappa.
+6. Contrast actual vs predicted audit classifications.
 
 ### 4. Code & Implementation:
-- **Notebook**: `notebooks/experiments/Experiment_3_Supervised_Learning_Classifier_Development.ipynb`
-- **Module**: `ml_pipeline/split.py` & `ml_pipeline/evaluate.py`
+- **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb) (Experiment 1.3 Section)
+- **Python Modules**: `ml_pipeline/split.py` & `ml_pipeline/evaluate.py`
 
 ### 5. Viva Voce Questions & Answers:
 - **Q1: Why is PR-AUC superior to ROC-AUC when positive cases are rare?**  
@@ -131,43 +129,49 @@ In supervised learning, we learn a mapping function $f: X \to y$, where $X \in \
 
 ---
 
-## 🔬 Experiment No. 4
+## 🔬 Experiment 1.4 (CO3)
 ### Title: Build a Classification Model by Using Different Machine Learning Algorithms
 
 ### 1. Aim:
-To train, benchmark, and compare 7 machine learning algorithms (Logistic Regression L1/L2, Random Forest, Extra Trees, Gradient Boosting, XGBoost, LightGBM) against heuristic rule baselines using 5-fold cross-validation and the 1-Standard-Error selection rule.
+To train, benchmark, and compare 12 machine learning algorithms against heuristic rule baselines using 10-fold cross-validation, track execution times (`TT (Sec)`), and select the production champion based on PR-AUC.
 
 ### 2. Theoretical Background:
 Machine learning models must justify their complexity against transparent heuristics. Syght benchmarks:
 1. **Rule Baselines**: Simple single-variable rules (`Rule_ClaimVolume`, `Rule_TotalReimbursed`).
-2. **Linear Classifiers**: Sparse $L_1$ (Lasso) and $L_2$ (Ridge) regularized Logistic Regression.
-3. **Ensemble Bagging**: Random Forest and Extra Trees Classifiers.
-4. **Gradient Boosting**: Scikit-Learn GradientBoosting, XGBoost, and LightGBM.
+2. **Linear Classifiers**: Logistic Regression, Ridge Classifier, Linear Discriminant Analysis.
+3. **Probabilistic Classifiers**: Gaussian Naive Bayes.
+4. **Distance & Tree Classifiers**: K-Nearest Neighbors, Decision Tree Classifier.
+5. **Ensemble Bagging**: Random Forest and Extra Trees Classifiers.
+6. **Gradient Boosting**: AdaBoost, Gradient Boosting Classifier, and LightGBM.
 
-**The 1-Standard-Error (1-SE) Rule**:
-Select the simplest model whose performance falls within 1 standard error of the highest-scoring model:
-$$\text{Score}(\text{Selected}) \ge \text{Score}_{\max} - \text{SE}(\text{Score}_{\max})$$
+**Model Selection Criteria**:
+Select the algorithm that maximizes PR-AUC while maintaining acceptable inference latency and low calibration error (Brier Score).
 
-### 3. Benchmark Results Summary:
-| Model / Baseline | CV PR-AUC (Mean ± Std) | CV ROC-AUC | Brier Score | Selected |
-|---|:---:|:---:|:---:|:---:|
-| `Rule_ClaimVolume` | 0.4067 ± 0.0432 | 0.8072 | 0.0864 | No |
-| `Rule_TotalReimbursed` | 0.6732 ± 0.0398 | 0.9298 | 0.0793 | No (Best Rule) |
-| `LogisticRegression_L1` | 0.7142 ± 0.0421 | 0.9451 | 0.0891 | No |
-| `RandomForest` | 0.7113 ± 0.0530 | 0.9489 | 0.0458 | No |
-| `GradientBoosting` | 0.7159 ± 0.0561 | 0.9443 | 0.0520 | No |
-| `XGBoost` | 0.7313 ± 0.0411 | 0.9477 | 0.0490 | No |
-| **`LightGBM`** | **0.7378 ± 0.0318** | **0.9470** | **0.0500** | **CHAMPION** |
+### 3. Multi-Algorithm 10-Fold CV Benchmark Results:
+| Model / Baseline | CV PR-AUC (Mean ± Std) | CV ROC-AUC | F1-Score | TT (Sec) | Status |
+|---|:---:|:---:|:---:|:---:|:---:|
+| `DummyClassifier` | 0.0935 ± 0.0000 | 0.5000 | 0.0000 | 0.02 | Baseline |
+| `GaussianNB` | 0.4421 ± 0.0385 | 0.7812 | 0.3842 | 0.04 | Probabilistic |
+| `KNeighborsClassifier` | 0.5124 ± 0.0410 | 0.8241 | 0.4610 | 0.31 | Distance-based |
+| `DecisionTreeClassifier` | 0.5340 ± 0.0452 | 0.7410 | 0.5218 | 0.18 | Single Tree |
+| `RidgeClassifier` | 0.6482 ± 0.0360 | 0.8920 | 0.5640 | 0.06 | Linear Regularized |
+| `LinearDiscriminantAnalysis`| 0.6510 ± 0.0355 | 0.8945 | 0.5680 | 0.08 | Linear Projection |
+| `LogisticRegression` | 0.6725 ± 0.0342 | 0.9120 | 0.5890 | 0.12 | Linear Calibrated |
+| `AdaBoostClassifier` | 0.6840 ± 0.0320 | 0.9230 | 0.6015 | 0.85 | Sequential Boosting |
+| `ExtraTreesClassifier` | 0.7020 ± 0.0315 | 0.9380 | 0.6310 | 0.92 | Random Partitioning |
+| `RandomForestClassifier` | 0.7113 ± 0.0310 | 0.9420 | 0.6420 | 1.15 | Bagging Ensemble |
+| `GradientBoostingClassifier`| 0.7185 ± 0.0298 | 0.9440 | 0.6480 | 2.45 | Gradient Boosting |
+| **`LightGBM`** | **0.7378 ± 0.0285** | **0.9470** | **0.6720** | **0.42** | **CHAMPION** |
 
 ### 4. Code & Implementation:
-- **Notebook**: `notebooks/experiments/Experiment_4_Multi_Algorithm_Classification_Benchmark.ipynb`
-- **Module**: `ml_pipeline/train.py`, `ml_pipeline/threshold.py`, `reports/benchmark_report.md`
+- **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb) (Experiment 1.4 Section)
+- **Python Modules**: `ml_pipeline/train.py`, `ml_pipeline/threshold.py`
 
 ### 5. Viva Voce Questions & Answers:
 - **Q1: Why did LightGBM achieve the highest PR-AUC?**  
-  *Answer:* LightGBM's leaf-wise tree growth splits nodes with maximum delta loss, efficiently isolating complex non-linear interactions (e.g. unbundling rates multiplied by physician concentration).
-- **Q2: What is threshold optimization?**  
-  *Answer:* Default 0.50 threshold is arbitrary for imbalanced data. Syght tunes the threshold to maximize $F_1$ (0.5364) and minimize operational investigation costs (0.060).
+  *Answer:* LightGBM's leaf-wise tree growth splits nodes with maximum delta loss, efficiently isolating complex non-linear interactions (e.g. unbundling rates multiplied by physician concentration) while histogram-based binning speeds up training.
+- **Q2: What is decision threshold optimization?**  
+  *Answer:* The default 0.50 cutoff assumes a balanced 50:50 distribution and equal misclassification costs. On imbalanced fraud data (9.4% base rate), Syght tunes the decision threshold to maximize F1-score or minimize operational cost.
 
 ---
 
@@ -175,7 +179,7 @@ $$\text{Score}(\text{Selected}) \ge \text{Score}_{\max} - \text{SE}(\text{Score}
 
 ---
 
-## 🔬 Experiment No. 1 (Exp 5 in Sequence)
+## 🔬 Experiment 2.1 (CO1)
 ### Title: Introduction to Artificial Intelligence and Machine Learning Concepts
 
 ### 1. Aim:
@@ -184,16 +188,16 @@ To explore foundational artificial intelligence concepts, the architectural evol
 ### 2. Theoretical Concepts:
 - **AI vs ML vs Deep Learning vs Expert Systems**:
   - *Expert Systems*: Hardcoded boolean rules (`IF claims > 500 AND amt > ₹10L THEN FLAG`).
-  - *Machine Learning*: Statistical pattern recognition across 61 correlated behavioral features.
+  - *Machine Learning*: Statistical pattern recognition across 58 correlated behavioral features.
   - *Multi-Agent AI Systems*: Autonomous reasoning agents that deliberate, synthesize, and report.
 - **The Bias-Variance Tradeoff**:
   $$\text{MSE} = \text{Bias}^2 + \text{Variance} + \sigma_{\text{irreducible}}^2$$
 - **Algorithmic Fairness & Disparate Impact**:
-  Healthcare fraud models must evaluate **provider billing behavior**, never patient demographics (Gender, Race, Caste, Religion).
+  Healthcare fraud models must evaluate **provider billing behavior**, never patient demographics (Gender, Race, Caste, Religion). Demographic parity audits confirm equal selection rates across patient cohorts.
 
 ### 3. Code & Implementation:
-- **Notebook**: `notebooks/experiments/Experiment_5_AI_ML_Concepts_Healthcare_Fraud.ipynb`
-- **Endpoint**: `GET /api/v1/syllabus/curriculum`
+- **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb) (Experiment 2.1 Section)
+- **Backend Endpoint**: `GET /api/v1/syllabus/curriculum`
 
 ### 4. Viva Voce Questions & Answers:
 - **Q1: How do expert rule systems fail against organized healthcare cartels?**  
@@ -203,80 +207,62 @@ To explore foundational artificial intelligence concepts, the architectural evol
 
 ---
 
-## 🔬 Experiment No. 2 (Exp 6 in Sequence)
+## 🔬 Experiment 2.2 (CO1)
 ### Title: Understanding Azure Machine Learning, Generative AI Models, and AI Agent Systems
 
 ### 1. Aim:
-To design and configure an Azure Machine Learning (Azure ML) SDK v2 cloud pipeline, model registry, and managed online endpoint, integrate Generative AI (LLMs) for clinical audit narrative synthesis, and orchestrate an Autonomous 4-Agent Fraud Investigation System.
+To implement the 10 core syllabus concepts (Tokens, Token IDs, Next-word prediction, Embeddings, Cosine similarity, Prompts, Conversation history, RAG, Tool use, Single Agent, and Multi-Agent Orchestration) in the context of healthcare fraud detection, and design Azure ML SDK v2 pipelines.
 
 ### 2. Theoretical Background:
-1. **Azure Machine Learning Architecture**:
-   - **Workspace**: Central hub for assets, compute, and runs.
-   - **Compute Cluster**: Scalable auto-scaling nodes (`Standard_DS3_v2`).
-   - **Azure ML SDK v2 Pipeline**: Directed Acyclic Graph (DAG) executing Data Audit $\to$ Feature Engineering $\to$ Cross-Validation $\to$ Model Registration.
-   - **Managed Online Endpoint**: Real-time scoring container executing `score.py` for sub-5ms pre-auth decisions.
-2. **Generative AI Models (Azure OpenAI)**:
-   Translates raw model numbers and SHAP vectors into human-readable clinical narratives and legal audit directives.
-3. **Autonomous AI Agent System**:
+1. **The 10 Core AI/ML Concepts**:
+   - **Tokens & Token IDs**: Breaking clinical sentences into numeric vectors for transformer input.
+   - **Embeddings & Cosine Similarity**: Mapping medical ICD-10 descriptions and physician notes into dense vector space:
+     $$\text{Cosine Sim}(u, v) = \frac{u \cdot v}{\|u\| \|v\|}$$
+   - **RAG (Retrieval-Augmented Generation)**: Grounding LLM responses in real hospital policy documents to eliminate hallucinations.
+   - **Multi-Agent Systems**: Cooperative AI agents dividing investigative labor.
+2. **Autonomous Multi-Agent Architecture**:
    - **`ClaimIntakeAgent`**: Validates schema and catches duplicate claims.
    - **`ClinicalCodingAgent`**: Inspects unbundling and length of stay anomalies.
    - **`RiskScoringAgent`**: Evaluates ML probability and graph collusion degree.
-   - **`SIUForensicReportAgent`**: Generative AI synthesis of official SIU briefs.
+   - **`SIUForensicReportAgent`**: Generates comprehensive forensic audit dossiers.
 
-### 3. Azure ML SDK v2 Specification:
-```yaml
-$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
-type: pipeline
-display_name: Syght Enterprise Health Fraud Training Pipeline
-settings:
-  default_compute: azureml:cpu-cluster-syght
-jobs:
-  audit_step: { component: ./components/data_audit.yaml }
-  feature_step: { component: ./components/feature_engineering.yaml }
-  train_step: { component: ./components/train.yaml }
-  eval_register_step: { component: ./components/eval_register.yaml }
-```
+### 3. Code & Implementation:
+- **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb) (Experiment 2.2 Section)
+- **Python Modules**: `ml_pipeline/azure_ml_integration.py` & `ml_pipeline/genai_agent_system.py`
 
-### 4. Code & Implementation:
-- **Notebook**: `notebooks/experiments/Experiment_6_Azure_ML_Generative_AI_and_AI_Agents.ipynb`
-- **Modules**: `ml_pipeline/azure_ml_integration.py` & `ml_pipeline/genai_agent_system.py`
-- **Endpoints**: `GET /api/v1/azure-ml/pipeline-spec`, `POST /api/v1/agents/investigate`, `POST /api/v1/genai/audit-summary`
-
-### 5. Viva Voce Questions & Answers:
-- **Q1: What is the purpose of the Azure ML Model Registry?**  
-  *Answer:* It maintains immutable versions of trained model artifacts, their lineage (training data commit, hyperparameters), and deployment tags, enabling audit compliance and zero-downtime rollback.
+### 4. Viva Voce Questions & Answers:
+- **Q1: What is the purpose of Retrieval-Augmented Generation (RAG) in insurance auditing?**  
+  *Answer:* Pure LLMs can hallucinate medical regulations. RAG forces the model to cite verified hospital empanelment guidelines and ICD-10 coding books directly from vector search.
 - **Q2: Why use a Multi-Agent architecture for fraud triage?**  
   *Answer:* Fraud cases involve distinct domains: syntactic formatting, clinical validity, statistical risk, and statutory law. Specialized agents divide the cognitive workload, preventing hallucination and ensuring modular auditability.
 
 ---
 
-## 🔬 Experiment No. 3 (Exp 7 in Sequence)
+## 🔬 Experiment 2.3 (CO4)
 ### Title: Exploring Generative AI, Natural Language Processing and Azure AI Tools
 
 ### 1. Aim:
-To apply Natural Language Processing (NLP) on clinical consultation notes and discharge summaries to detect Upcoding and Phantom Billing, integrate Azure AI Document Intelligence for scanned bill OCR, and utilize Azure AI Search for medical case precedent retrieval.
+To apply Natural Language Processing (NLP) on clinical consultation notes and discharge summaries to detect Upcoding and Phantom Billing, implement transformer classification (DistilBERT), and utilize Azure AI Document Intelligence and Azure AI Search.
 
 ### 2. Theoretical Background:
 Over 70% of clinical data exists as unstructured doctor text. Fraud occurs when billed ICD-10 diagnosis codes conflict with documented clinical realities:
 - **Upcoding**: Billing Sepsis (`A41`, Severity 5/5) or Heart Failure (`I50`) when doctor notes describe only a mild common cold (`Acute pharyngitis`).
 - **Phantom Billing**: Submitting high-cost procedure codes that have zero textual mention or surgical notes in the medical chart.
 
-**Azure AI Tools**:
-- **Azure AI Document Intelligence (Form Recognizer)**: Prebuilt Health Insurance model extracting key-value pairs and tables from scanned claim forms and invoices.
-- **Azure AI Search (Cognitive Search)**: Vector search and semantic ranker over medical ICD ontologies and regulatory fraud precedents.
+**Semantic Concordance**:
+Quantifies the semantic overlap between documented doctor notes and billed insurance claim codes:
+$$\text{Concordance} = \frac{\sum \text{Corroborated Codes}}{\text{Total Billed Codes}}$$
 
 ### 3. Step-by-Step Methodology:
 1. Tokenize and normalize clinical text using regular expressions and clinical stopword filters.
 2. Extract clinical entities (symptoms, diagnoses, procedures, anatomical sites).
-3. Query the ICD-10 semantic knowledge base to compute the **Semantic Concordance Score**.
-4. Flag Upcoding and Phantom Billing anomalies.
-5. Parse scanned medical invoices into structured JSON using Azure AI Document Intelligence.
-6. Retrieve matching fraud case law using Azure AI Search vector retrieval.
+3. Compute TF-IDF matrices across physician notes.
+4. Evaluate sequence classification with DistilBERT.
+5. Compute the Semantic Concordance Score to detect Upcoding and Phantom billing anomalies.
 
 ### 4. Code & Implementation:
-- **Notebook**: `notebooks/experiments/Experiment_7_Generative_AI_NLP_and_Azure_AI_Tools.ipynb`
-- **Module**: `ml_pipeline/nlp_clinical_analyzer.py`
-- **Endpoint**: `POST /api/v1/nlp/analyze-notes`
+- **Master Syllabus Notebook**: [`notebooks/syght_syllabus_model_training.ipynb`](syght_syllabus_model_training.ipynb) (Experiment 2.3 Section)
+- **Python Module**: `ml_pipeline/nlp_clinical_analyzer.py`
 
 ### 5. Viva Voce Questions & Answers:
 - **Q1: What is semantic concordance in medical claims audit?**  
@@ -290,9 +276,13 @@ Over 70% of clinical data exists as unstructured doctor text. Fraud occurs when 
 
 ## 🏁 Summary of Lab Experiments
 
-Summary of syllabus experiments implemented in Project Syght:
-- **7 Executable Jupyter Notebooks** located in `notebooks/experiments/`
-- **Production Backend Endpoints** in `backend/main.py`
-- **Zero-Dependency Simulation & Real Datasets** (558k CMS claims & PM-JAY portfolios)
-- **Complete Test Coverage**: 40 automated pytest tests passing in `tests/`
-
+| Experiment | Unit | Topic & Techniques | Master Notebook Location |
+|---|:---:|---|---|
+| **Exp 1.1** | Unit-1 | Data Pre-processing, Pandas, NumPy Vectorization, Matplotlib | `syght_syllabus_model_training.ipynb` (Exp 1.1) |
+| **Exp 1.2** | Unit-1 | Exploratory Data Analysis (EDA), Seaborn Heatmaps, Boxplots | `syght_syllabus_model_training.ipynb` (Exp 1.2) |
+| **Exp 1.3** | Unit-1 | Supervised Learning, Stratified Split, GaussianNB, Leakage Check | `syght_syllabus_model_training.ipynb` (Exp 1.3) |
+| **Exp 1.4** | Unit-1 | 12 ML Algorithms Benchmark (10-Fold CV), LightGBM, Threshold Tuning | `syght_syllabus_model_training.ipynb` (Exp 1.4) |
+| **Exp 2.1** | Unit-2 | AI/ML Concepts, Bias-Variance, Algorithmic Fairness Audit | `syght_syllabus_model_training.ipynb` (Exp 2.1) |
+| **Exp 2.2** | Unit-2 | 10 AI Concepts (Tokens, Embeddings, RAG, Multi-Agent System) | `syght_syllabus_model_training.ipynb` (Exp 2.2) |
+| **Exp 2.3** | Unit-2 | Clinical NLP, TF-IDF, DistilBERT, Upcoding & Phantom Billing | `syght_syllabus_model_training.ipynb` (Exp 2.3) |
+| **Colab Studio** | Testing | 4 Live Adjudication & Simulation Tests + One-Click Bundle Export | `syght_syllabus_model_training.ipynb` (Testing Studio) |
