@@ -6,6 +6,7 @@ This directory contains the two primary notebooks and practical manual for the H
 
 1. **`syght_syllabus_model_training.ipynb` (Syllabus Lab Training & Interactive Colab Testing Engine)**
    - **Official Syllabus Implementation**: Strictly follows the practical curriculum for **Unit-1 (Experiments 1.1–1.4)** and **Unit-2 (Experiments 2.1–2.3)**.
+   - **100% Standalone & Independent**: Runs entirely self-contained without needing to clone any git repository or install local packages.
    - **Direct Dataset Upload (Zero API Keys / Zero Auth Required)**: Anyone can simply upload their dataset files (or a `.zip` archive) directly in Google Colab or local environment without requiring any Kaggle API setup or GitHub authentication.
    - **Full Dataset Training**: Trains across all 5,410 healthcare providers and ~558,000 inpatient, outpatient, and beneficiary claims.
    - **12 ML Algorithm 10-Fold CV Benchmark**: Benchmarks all 12 syllabus algorithms (`LightGBM`, `GradientBoosting`, `RandomForest`, `ExtraTrees`, `AdaBoost`, `LogisticRegression`, `RidgeClassifier`, `LinearDiscriminantAnalysis`, `DecisionTree`, `KNN`, `GaussianNB`, `Dummy`) with execution times `TT (Sec)`.
